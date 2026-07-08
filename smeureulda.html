@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스며들다 — Skeep Intelligence System™</title>
+  <link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #fff; color: #000;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    p { margin: 0; }
+
+    .fi { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+    .fi.vis { opacity: 1; transform: none; }
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+    .d4{transition-delay:.32s}.d5{transition-delay:.40s}.d6{transition-delay:.48s}
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 40px; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.88); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .nav-back {
+      font-size: 14px; font-weight: 500; color: rgba(0,0,0,0.45);
+      text-decoration: none; transition: color .2s; letter-spacing: -0.02em;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .nav-back:hover { color: #000; }
+    .nav-title { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.45); letter-spacing: -0.02em; }
+    .nav-logo { display: flex; align-items: center; }
+    .nav-logo img { height: 22px; width: auto; }
+
+    /* ── 1. HERO ── */
+    .hero {
+      height: 75vh; min-height: 580px;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('assets/sensing-hero-bg.jpg') center center / cover no-repeat;
+      z-index: 0;
+    }
+    .hero-dim {
+      position: absolute; inset: 0;
+      background: rgba(0, 0, 0, 0.80);
+      z-index: 1;
+    }
+    .hero-logo {
+      position: absolute; top: 64px; left: 74px; width: 182px;
+      cursor: pointer; z-index: 3;
+      filter: brightness(0) invert(1);
+    }
+    .hero-title {
+      position: relative; z-index: 2;
+      font-size: 72px; font-weight: 600; line-height: 1.4; letter-spacing: -0.03em;
+      max-width: 1220px; word-break: keep-all;
+      color: #ffffff;
+    }
+
+    /* ── 2. KEEP ON KEEPIN' ON ── */
+    .sec-keepon {
+      background: #fff; width: 100%; padding: 116px 160px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; text-align: center;
+    }
+    .skeep-ai-label { font-size: 40px; font-weight: 700; line-height: 1.5; letter-spacing: -0.04em; }
+    .keepon-title { font-size: 120px; font-weight: 700; line-height: 1.2; letter-spacing: -0.04em; }
+    .keepon-chain {
+      display: flex; flex-direction: column; gap: 0;
+      align-items: center; margin: 40px 0;
+    }
+    .chain-word { font-size: 40px; font-weight: 400; line-height: 1.5; letter-spacing: -0.04em; opacity: 0.12; }
+    .chain-word.active { opacity: 1; font-weight: 700; }
+    .thats-how { font-size: 40px; font-weight: 400; line-height: 1.5; letter-spacing: -0.04em; }
+    .thats-how strong { font-weight: 700; }
+
+    /* ── 3. 목적은 행동으로 ── */
+    .sec-img-full { background: #fff; width: 100%; padding: 84px 160px; }
+    .full-card {
+      width: 100%; min-height: 900px; background: #F4F8FC; border-radius: 32px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 90px;
+    }
+    .full-card-title { font-size: 64px; font-weight: 600; line-height: 1.24; letter-spacing: -0.03em; margin-bottom: 20px; }
+    .full-card-desc { font-size: 32px; font-weight: 400; line-height: 1.4; letter-spacing: -0.03em; }
+
+    /* ── 4. TWO-COL ── */
+    .sec-two-col {
+      background: #fff; width: 100%; padding: 84px 160px;
+      display: flex; gap: 40px; align-items: stretch;
+    }
+    .two-left {
+      flex: 0 0 906px; min-height: 900px;
+      background: #F4F8FC; border-radius: 32px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 90px;
+    }
+    .two-left-overline { font-size: 32px; font-weight: 400; line-height: 1.4; letter-spacing: -0.03em; margin-bottom: 20px; }
+    .two-left-h { font-size: 64px; font-weight: 600; line-height: 1.24; letter-spacing: -0.03em; margin-bottom: 20px; }
+    .two-left-p { font-size: 32px; font-weight: 400; line-height: 1.4; letter-spacing: -0.03em; }
+
+    .two-right { flex: 1; display: flex; flex-direction: column; gap: 40px; }
+    .logic-card {
+      flex: 1; background: #F4F8FC; border-radius: 32px;
+      padding: 48px; display: flex; flex-direction: column;
+      justify-content: space-between;
+    }
+    .logic-card-top { display: flex; flex-direction: column; gap: 12px; }
+    .logic-card-tag {
+      font-size: 16px; font-weight: 700; color: #ff0b6c;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .logic-card-desc { font-size: 20px; font-weight: 400; line-height: 1.6; color: rgba(0,0,0,0.5); }
+    .logic-card-name { font-size: 48px; font-weight: 600; line-height: 1.5; letter-spacing: -0.03em; color: #222; }
+    .logic-card-sub { font-size: 24px; font-weight: 600; line-height: 1.5; letter-spacing: -0.02em; color: rgba(34,34,34,0.6); }
+
+    /* ── 5. WORD REVEAL ── */
+    .word-huge { font-size: 160px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .word-huge .ghost { color: transparent; -webkit-text-stroke: 1px rgba(0,0,0,0.08); }
+    .reveal-line { position: absolute; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.07); top: 50%; }
+    .reveal-dot { width: 86px; height: 86px; border-radius: 50%; background: #000; display: inline-block; vertical-align: middle; margin-left: 16px; flex-shrink: 0; }
+
+    /* ── word morph interaction (breaks apart / reassembles) ── */
+    .sec-word-morph { position: relative; height: 300vh; background: #fff; }
+    .word-morph-sticky {
+      position: sticky; top: 0; height: 100vh;
+      display: flex; align-items: center;
+      padding: 0 160px; overflow: hidden;
+    }
+    .word-morph-frame {
+      position: absolute; left: 160px; right: 160px;
+      display: flex; align-items: center;
+      opacity: 0; transform: translateY(28px) scale(.96);
+      transition: opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1);
+      pointer-events: none;
+    }
+    .word-morph-frame.active { opacity: 1; transform: translateY(0) scale(1); }
+    .word-morph-frame.center { justify-content: center; text-align: center; }
+    .word-morph-spread { display: flex; gap: 0; transition: gap .7s cubic-bezier(.34,1.2,.64,1); }
+    .word-morph-frame.active .word-morph-spread { gap: 26px; }
+    .word-morph-spread span { display: inline-block; }
+
+    /* ── 6. PARSING INTRO ── */
+    .sec-parsing-intro {
+      background: #fff; width: 100%; padding: 116px 160px;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 48px;
+    }
+    .parsing-num { font-size: 40px; font-weight: 600; line-height: 1.4; letter-spacing: -0.04em; }
+    .parsing-big { font-size: 120px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .parsing-desc-right {
+      font-size: 40px; font-weight: 600; line-height: 1.4;
+      letter-spacing: -0.04em; max-width: 643px;
+      text-align: right; align-self: flex-end;
+    }
+
+    /* ── 7. DETAIL (Parsing / Mapping) ── */
+    .sec-detail { background: #fff; width: 100%; padding: 116px 160px; }
+    .detail-label { font-size: 32px; font-weight: 600; line-height: 1.3; letter-spacing: -0.05em; color: #ff0b6c; margin-bottom: 28px; }
+    .detail-h { font-size: 60px; font-weight: 700; line-height: 1.5; letter-spacing: -0.04em; margin-bottom: 28px; }
+    .detail-desc { font-size: 36px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; margin-bottom: 64px; }
+    .principle-grid { display: flex; gap: 24px; align-items: stretch; }
+    .principle-card {
+      flex: 1; background: #F4F8FC; border-radius: 24px;
+      padding: 48px 40px; display: flex; flex-direction: column; gap: 17px;
+    }
+    .pr-num { font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; opacity: 0.5; }
+    .pr-title { font-size: 36px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .pr-body { font-size: 24px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; }
+
+    /* ── PILL BTN ── */
+    .pill-btn-wrap { background: #fff; padding: 0 160px 84px; }
+    .pill-detail {
+      display: inline-block; background: #9e9e9e; border-radius: 100px;
+      padding: 16px 30px; font-size: 32px; font-weight: 600; line-height: 1.1;
+      letter-spacing: -0.04em; color: #fff; cursor: default;
+    }
+
+    /* ── 8. SKEEP AI™ BANNER ── */
+    .sec-ai-banner {
+      background: #fff; width: 100%; padding: 84px 160px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ai-name { font-size: 80px; font-weight: 700; line-height: 1.5; letter-spacing: -0.04em; }
+    .ai-sub { font-size: 80px; font-weight: 400; line-height: 1.5; letter-spacing: -0.04em; opacity: 0.4; text-align: right; }
+
+    /* ── 9. FEATURE CARDS (text-only) ── */
+    .sec-3cards { background: #fff; width: 100%; padding: 84px 160px; }
+    .cards-row { display: flex; gap: 40px; }
+    .feat-card {
+      flex: 1; background: #F4F8FC; border-radius: 32px;
+      padding: 56px 48px; display: flex; flex-direction: column;
+      gap: 28px; min-height: 500px; justify-content: space-between;
+    }
+    .feat-card-num { font-size: 80px; font-weight: 700; line-height: 1; letter-spacing: -0.04em; color: rgba(0,0,0,0.08); }
+    .feat-card-body { display: flex; flex-direction: column; gap: 16px; }
+    .feat-card-h { font-size: 40px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; color: #222; }
+    .feat-card-sub { font-size: 20px; font-weight: 600; line-height: 1.5; color: rgba(34,34,34,0.4); letter-spacing: -0.01em; }
+    .feat-card-p { font-size: 22px; font-weight: 400; line-height: 1.6; color: rgba(0,0,0,0.5); }
+
+    /* ── 10. MULTILINGUAL ── */
+    .sec-multilang {
+      background: #fff; width: 100%; height: 588px;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 160px;
+    }
+    .ml-left  { font-size: 102px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .ml-center{ font-size: 160px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .ml-right { font-size: 102px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .ml-fade-l { position: absolute; left: 0; top: 0; bottom: 0; width: 320px; background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,0) 100%); z-index: 2; pointer-events: none; }
+    .ml-fade-r { position: absolute; right: 0; top: 0; bottom: 0; width: 320px; background: linear-gradient(270deg, #fff 0%, rgba(255,255,255,0) 100%); z-index: 2; pointer-events: none; }
+
+    /* ── 11. MAPPING INTRO ── */
+    .sec-mapping-intro { background: #fff; width: 100%; padding: 116px 160px; }
+    .mapping-card {
+      background: #F4F8FC; border-radius: 32px;
+      min-height: 516px; position: relative; overflow: visible;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 64px;
+    }
+    .mapping-num { position: absolute; top: -72px; left: 0; font-size: 40px; font-weight: 600; letter-spacing: -0.04em; }
+    .mapping-big { font-size: 120px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; text-align: right; margin-bottom: 24px; }
+    .mapping-flow { display: flex; align-items: center; gap: 24px; }
+    .mapping-flow-t { font-size: 60px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+
+    /* ── 12. 실행 블록 CARD ── */
+    .sec-exec-card { background: #fff; width: 100%; padding: 84px 160px; }
+    .exec-card {
+      width: 100%; min-height: 900px; background: #F4F8FC; border-radius: 32px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 80px 93px;
+    }
+    .exec-overline { font-size: 19px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; margin-bottom: 22px; }
+    .exec-h { font-size: 50px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; margin-bottom: 22px; }
+    .exec-p { font-size: 19px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; max-width: 707px; }
+
+    /* ── 13. MORPHING BRIDGE ── */
+    .sec-morphing-bridge {
+      background: #fff; width: 100%; padding: 116px 160px;
+      display: flex; align-items: center; justify-content: space-between; gap: 40px;
+    }
+    .morphing-pill {
+      background: #eceef3; border-radius: 32px; padding: 60px 90px;
+      font-size: 80px; font-weight: 600; line-height: 1.5; letter-spacing: -0.04em; flex-shrink: 0;
+    }
+    .morphing-bridge-text {
+      font-size: 72px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; text-align: right;
+    }
+
+    /* ── 14. 스킵하다 스며들다 BANNER ── */
+    .sec-skip-banner {
+      background: #fff; width: 100%; padding: 40px 160px;
+      display: flex; align-items: center; justify-content: space-between; gap: 48px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .skip-banner-t { font-size: 110px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; flex-shrink: 0; }
+    .skip-banner-t .dim { color: #cacaca; }
+    .skip-banner-desc { font-size: 24px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; text-align: right; max-width: 757px; }
+
+    /* ── 15. MORPHING DETAIL ── */
+    .sec-morphing-detail { background: #fff; width: 100%; padding: 116px 160px; }
+    .morphing-detail-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; }
+    .morphing-detail-left { display: flex; flex-direction: column; gap: 28px; flex-shrink: 0; max-width: 760px; }
+    .morphing-detail-h { font-size: 72px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; }
+    .morphing-detail-p { font-size: 36px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; }
+    .morphing-detail-right { flex: 0 0 720px; display: flex; flex-direction: column; gap: 20px; }
+    .morphing-img-card {
+      background: #F4F8FC; border-radius: 32px;
+      padding: 48px; display: flex; flex-direction: column; gap: 16px;
+      min-height: 220px;
+    }
+    .mic-label { font-size: 20px; font-weight: 700; color: #ff0b6c; letter-spacing: 0.08em; text-transform: uppercase; }
+    .mic-title { font-size: 36px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .mic-body { font-size: 22px; font-weight: 400; line-height: 1.6; color: rgba(0,0,0,0.5); }
+
+    /* ── 16. PRINCIPLES VERTICAL ── */
+    .sec-principles-v { background: #fff; width: 100%; padding: 0 160px 116px; }
+    .principle-v-block {
+      padding: 80px 0; border-top: 1px solid rgba(0,0,0,0.08);
+      display: flex; flex-direction: column; gap: 17px;
+    }
+    .principle-v-block:last-child { border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .pv-label { font-size: 32px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; color: #ff0b6c; }
+    .pv-title { font-size: 48px; font-weight: 600; line-height: 1.3; letter-spacing: -0.04em; }
+    .pv-desc { font-size: 36px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; max-width: 600px; }
+
+    /* ── 17. SKEEP AI™ GRADIENT ── */
+    .sec-ai-gradient {
+      background: linear-gradient(180deg, #F4F8FC 0%, rgba(244,248,252,0) 100%);
+      width: 100%; padding: 116px 160px;
+    }
+    .ai-grad-label { font-size: 36px; font-weight: 700; line-height: 1.5; letter-spacing: -0.04em; margin-bottom: 48px; }
+    .ai-grad-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; margin-bottom: 80px; }
+    .ai-grad-h { font-size: 60px; font-weight: 700; line-height: 1.5; letter-spacing: -0.03em; flex-shrink: 0; }
+    .ai-grad-p { font-size: 32px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; max-width: 839px; }
+    .ai-grad-cards { display: flex; gap: 40px; padding-bottom: 116px; }
+    .ai-grad-card {
+      flex: 1; background: rgba(255,255,255,0.7); border-radius: 32px;
+      padding: 56px 48px; display: flex; flex-direction: column;
+      gap: 28px; min-height: 460px; justify-content: space-between;
+    }
+    .agc-num { font-size: 64px; font-weight: 700; line-height: 1; letter-spacing: -0.04em; color: rgba(0,0,0,0.08); }
+    .agc-body { display: flex; flex-direction: column; gap: 16px; }
+    .agc-h { font-size: 40px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; color: #222; }
+    .agc-sub { font-size: 20px; font-weight: 600; line-height: 1.5; color: rgba(34,34,34,0.4); }
+    .agc-p { font-size: 22px; font-weight: 400; line-height: 1.6; color: rgba(0,0,0,0.5); }
+
+    /* ── FOOTER ── */
+    footer { background: #F4F8FC; width: 100%; padding: 80px 160px; text-align: center; }
+    .ft-logo { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .ft-tag  { font-size: 20px; font-weight: 400; color: rgba(0,0,0,0.4); margin-bottom: 40px; }
+    .ft-meta { font-size: 14px; color: rgba(0,0,0,0.25); line-height: 1.8; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1400px) {
+      .hero, .sec-keepon, .sec-img-full, .sec-two-col,
+      .sec-parsing-intro, .sec-detail, .pill-btn-wrap, .sec-ai-banner,
+      .sec-3cards, .sec-mapping-intro, .sec-exec-card,
+      .sec-morphing-bridge, .sec-skip-banner, .sec-morphing-detail,
+      .sec-principles-v, .sec-ai-gradient, footer {
+        padding-left: 80px; padding-right: 80px;
+      }
+      .two-left { flex: 0 0 580px; }
+      .morphing-detail-right { flex: 0 0 520px; }
+    }
+    @media (max-width: 1100px) {
+      .sec-two-col { flex-direction: column; }
+      .two-left { flex: none; width: 100%; }
+      .cards-row { flex-wrap: wrap; }
+      .feat-card { flex: 1 1 calc(50% - 20px); }
+      .principle-grid { flex-direction: column; }
+      .sec-ai-banner { flex-direction: column; gap: 0; }
+      .ai-sub { text-align: left; }
+      .sec-skip-banner { flex-direction: column; }
+      .skip-banner-desc { text-align: left; }
+      .morphing-detail-row { flex-direction: column; }
+      .morphing-detail-right { flex: none; width: 100%; }
+      .ai-grad-cards { flex-wrap: wrap; }
+      .ai-grad-card { flex: 1 1 calc(50% - 20px); }
+      .keepon-title { font-size: 72px; }
+      .parsing-big { font-size: 72px; }
+    }
+    @media (max-width: 768px) {
+      .hero, .sec-keepon, .sec-img-full, .sec-two-col,
+      .sec-parsing-intro, .sec-detail, .pill-btn-wrap, .sec-ai-banner,
+      .sec-3cards, .sec-mapping-intro, .sec-exec-card,
+      .sec-morphing-bridge, .sec-skip-banner, .sec-morphing-detail,
+      .sec-principles-v, .sec-ai-gradient, footer {
+        padding-left: 24px; padding-right: 24px;
+      }
+      .hero-title { font-size: 40px; }
+      .keepon-title { font-size: 48px; }
+      .word-huge { font-size: 72px; }
+      .ml-center { font-size: 80px; }
+      .ml-left, .ml-right { font-size: 52px; }
+      .mapping-big { font-size: 64px; }
+      .skip-banner-t { font-size: 56px; }
+      .ai-name, .ai-sub { font-size: 48px; }
+      .feat-card { flex: 1 1 100%; }
+      .ai-grad-card { flex: 1 1 100%; }
+      .sec-morphing-bridge { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="index.html">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Skeep
+  </a>
+  <span class="nav-logo"><img src="assets/skeep-logo.svg" alt="Skeep"></span>
+  <span class="nav-title">스며들다 · Morphing Logic</span>
+</nav>
+
+<!-- ══ 1. HERO ══ -->
+<section class="hero fi" style="padding-top:80px;">
+  <div class="hero-bg"></div>
+  <div class="hero-dim"></div>
+  <img class="hero-logo" src="assets/skeep-logo.svg" alt="Skeep">
+  <h1 class="hero-title">
+    낯선 곳이더라도 자연스럽게<br>
+    경계를 건너뛰는 유려함
+  </h1>
+</section>
+
+<!-- ══ 2. KEEP ON KEEPIN' ON ══ -->
+<section class="sec-keepon fi">
+  <p class="skeep-ai-label">Skeep AI™</p>
+  <p class="keepon-title">Keep on Keepin' on</p>
+  <div class="keepon-chain">
+    <p class="chain-word">Reads</p>
+    <p class="chain-word active">Thinks</p>
+    <p class="chain-word">Plans</p>
+    <p class="chain-word">Acts</p>
+  </div>
+  <p class="thats-how">That's How <strong>Skeep AI™</strong> Works</p>
+</section>
+
+<!-- ══ 3. 목적은 행동으로 ══ -->
+<section class="sec-img-full fi">
+  <div class="full-card">
+    <p class="full-card-title">
+      목적은 행동으로<br>
+      행동은 온전한 기능으로
+    </p>
+    <p class="full-card-desc">
+      스킵이 없었던 시절 우리는 새로운 환경을 마주할 때마다<br>
+      무엇을 어떻게 조작해야 하는지 스스로 헤매고 고민해야 했죠.
+    </p>
+  </div>
+</section>
+
+<!-- ══ 4. TWO-COL: context + 3 sub-logics ══ -->
+<section class="sec-two-col fi">
+  <div class="two-left">
+    <p class="two-left-overline">Keep on Keepin' on</p>
+    <p class="two-left-h">
+      이해하고 생각하고 계획하고<br>
+      도미노처럼 끊김없이
+    </p>
+    <p class="two-left-p">
+      모든 자원을 영리하게 결합하여, 우리가 미처 생각하지 못한<br>
+      창의적인 해결책을 물밑에서 묵묵히 완수하는 Skeep AI™
+    </p>
+  </div>
+  <div class="two-right">
+    <div class="logic-card fi d1">
+      <div class="logic-card-top">
+        <span class="logic-card-tag">Parsing Logic</span>
+        <p class="logic-card-desc">사용자 의도를 기반으로 목적을 태스크로 구조화하는 단계</p>
+      </div>
+      <div>
+        <p class="logic-card-name">Parsing Logic</p>
+        <p class="logic-card-sub">사용자 의도를 기반으로 목적을 태스크로 구조화하는 단계</p>
+      </div>
+    </div>
+    <div class="logic-card fi d2">
+      <div class="logic-card-top">
+        <span class="logic-card-tag">Mapping Logic</span>
+        <p class="logic-card-desc">구조화된 태스크를 실행 가능한 형태로 변환하는 단계</p>
+      </div>
+      <div>
+        <p class="logic-card-name">Mapping Logic</p>
+        <p class="logic-card-sub">구조화된 태스크를 실행 가능한 형태로 변환하는 단계</p>
+      </div>
+    </div>
+    <div class="logic-card fi d3">
+      <div class="logic-card-top">
+        <span class="logic-card-tag">Morphing Logic</span>
+        <p class="logic-card-desc">실행 블록이 담긴 패킷을 스키퍼블에 전송하는 단계</p>
+      </div>
+      <div>
+        <p class="logic-card-name">Morphing Logic</p>
+        <p class="logic-card-sub">실행 블록이 담긴 패킷을 스키퍼블에 전송하는 단계</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5. PARSING WORD MORPH (breaks apart / reassembles) ══ -->
+<div class="sec-word-morph" data-word-morph>
+  <div class="word-morph-sticky">
+    <div class="reveal-line"></div>
+    <div class="word-morph-frame" data-frame>
+      <p class="word-huge">Pars<span class="ghost">ing</span></p>
+      <span class="reveal-dot"></span>
+    </div>
+    <div class="word-morph-frame" data-frame>
+      <p class="word-huge word-morph-spread"><span>P</span><span>a</span><span>r</span><span>s</span><span>e</span></p>
+      <span class="reveal-dot" style="margin-left:24px;"></span>
+    </div>
+    <div class="word-morph-frame center" data-frame>
+      <p class="word-huge">Parsing</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6. PARSING INTRO ══ -->
+<section class="sec-parsing-intro fi">
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <p class="parsing-num">01</p>
+    <p class="parsing-big">Parsing</p>
+  </div>
+  <p class="parsing-desc-right">
+    거시적인 목적과 목표를 작고 관리하기 쉬운 미시적 목적 및 기능의 범위로 쪼개는 과정
+  </p>
+</section>
+
+<!-- ══ 7. PARSING DETAIL ══ -->
+<section class="sec-detail fi">
+  <p class="detail-label">Parsing</p>
+  <p class="detail-h">
+    툭 던진 생각 너머,<br>내 안의 진짜 목적을 읽다
+  </p>
+  <p class="detail-desc">
+    복잡한 맥락 속에 숨겨진 진짜 의도를 파싱하여,<br>
+    시스템이 처리할 수 있는 논리적 규격으로 변환하는 단계
+  </p>
+  <div class="principle-grid">
+    <div class="principle-card fi d1">
+      <p class="pr-num">Principle 01</p>
+      <p class="pr-title">사용자의 의도 추출</p>
+      <p class="pr-body">사용자의 인풋에서 불필요한 수식어를 걷어내고, 핵심 명사와 동사 위주로 목적을 잘게 쪼갭니다.</p>
+    </div>
+    <div class="principle-card fi d2">
+      <p class="pr-num">Principle 02</p>
+      <p class="pr-title">맥락과 암묵적 목적 반영</p>
+      <p class="pr-body">명시하지 않은 공간적 단서와 사용 패턴을 분석하여, 생략된 암묵적 목적까지 명확하게 찾습니다.</p>
+    </div>
+    <div class="principle-card fi d3">
+      <p class="pr-num">Principle 03</p>
+      <p class="pr-title">데이터 트리플 생성</p>
+      <p class="pr-body">파싱된 모든 파라미터는 스킵 아키텍처의 최상위 트리거인 목적-행위-기능 트리플로 구성됩니다.</p>
+    </div>
+  </div>
+</section>
+<div class="pill-btn-wrap fi"><span class="pill-detail">자세한 파싱 원리</span></div>
+
+<!-- ══ 8. SKEEP AI™ BANNER ══ -->
+<section class="sec-ai-banner fi">
+  <p class="ai-name">Skeep AI™</p>
+  <p class="ai-sub">Physically-Feasible Thinking AI</p>
+</section>
+
+<!-- ══ 9. 3 FEATURE CARDS ══ -->
+<section class="sec-3cards fi">
+  <div class="cards-row">
+    <div class="feat-card fi d1">
+      <p class="feat-card-num">01</p>
+      <div class="feat-card-body">
+        <p class="feat-card-h">물리 세계 이해</p>
+        <p class="feat-card-sub">Physical World Understanding</p>
+        <p class="feat-card-p">공간, 기기, 거리, 사람 수 같은 물리적 제약을 이해하고 현실에서 실행 가능한 경로만을 탐색합니다.</p>
+      </div>
+    </div>
+    <div class="feat-card fi d2">
+      <p class="feat-card-num">02</p>
+      <div class="feat-card-body">
+        <p class="feat-card-h">목적 구조화</p>
+        <p class="feat-card-sub">Intention Structuring</p>
+        <p class="feat-card-p">사용자의 자연어 인풋을 시스템이 처리 가능한 논리적 규격으로 변환하는 핵심 능력입니다.</p>
+      </div>
+    </div>
+    <div class="feat-card fi d3">
+      <p class="feat-card-num">03</p>
+      <div class="feat-card-body">
+        <p class="feat-card-h">실행 블록 생성</p>
+        <p class="feat-card-sub">Execution Block Assembly</p>
+        <p class="feat-card-p">최적 경로로 필터링된 기능들을 결합해 하나의 완벽한 실행 블록 구조로 정형화합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10. 매핑 Mapping マッピング ══ -->
+<div class="sec-multilang fi">
+  <div class="ml-fade-l"></div>
+  <p class="ml-left">매핑</p>
+  <p class="ml-center">Mapping</p>
+  <p class="ml-right">マッピング</p>
+  <div class="ml-fade-r"></div>
+</div>
+
+<!-- ══ 11. MAPPING INTRO ══ -->
+<section class="sec-mapping-intro fi">
+  <div class="mapping-card">
+    <p class="mapping-num">02</p>
+    <p class="mapping-big">Mapping</p>
+    <div class="mapping-flow">
+      <p class="mapping-flow-t">데이터 트리플</p>
+      <p class="mapping-flow-t">→</p>
+      <p class="mapping-flow-t">실행 블록</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12. 실행 블록 CARD ══ -->
+<section class="sec-exec-card fi">
+  <div class="exec-card">
+    <p class="exec-overline">실행 블록</p>
+    <p class="exec-h">
+      하나의 목적<br>모두의 언어로
+    </p>
+    <p class="exec-p">
+      스마트폰부터 자동차, 피지컬 AI까지. 사용자의 목적은 물밑에서 각 환경의 눈높이에 맞는 프로토콜로 완벽하게 동시 통역됩니다. 아무리 파편화된 환경이라도 상관없습니다. 스킵을 거치는 순간, 세상의 모든 기기는 마치 모국어를 듣듯 당신의 의도를 읽고 움직이기 시작하니까요.
+    </p>
+  </div>
+</section>
+
+<!-- ══ 13. MAPPING DETAIL ══ -->
+<section class="sec-detail fi">
+  <p class="detail-label">Mapping</p>
+  <p class="detail-h">
+    수백만 개의 경로 중,<br>가장 완벽한 궤적을 찾아서
+  </p>
+  <p class="detail-desc">
+    파싱을 통해 구조화된 개별 태스크 트리플을<br>
+    실제 환경과 소통 가능한 실행 블록으로 변환하는 단계
+  </p>
+  <div class="principle-grid">
+    <div class="principle-card fi d1">
+      <p class="pr-num">Principle 01</p>
+      <p class="pr-title">도메인 컴포넌트 매칭</p>
+      <p class="pr-body">현재 제어 가능한 스키퍼블의 API 명세를 동적으로 스캔하여 매칭 가능한 리소스를 선별합니다.</p>
+    </div>
+    <div class="principle-card fi d2">
+      <p class="pr-num">Principle 02</p>
+      <p class="pr-title">물리 법칙 시뮬레이션</p>
+      <p class="pr-body">실제 물리 세계의 제약 조건을 반영하여 실행할 수 있는 경로만을 초고속으로 필터링합니다.</p>
+    </div>
+    <div class="principle-card fi d3">
+      <p class="pr-num">Principle 03</p>
+      <p class="pr-title">실행 블록 변환</p>
+      <p class="pr-body">필터링을 거쳐 살아남은 최적의 기능을 결합하여, 하나의 완벽한 '실행 블록' 구조로 정형화합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 14. MORPHING BRIDGE ══ -->
+<section class="sec-morphing-bridge fi">
+  <div class="morphing-pill">Morphing</div>
+  <p class="morphing-bridge-text">
+    선명해진 스킵의 청사진<br>이제 현실로 도약할 시간
+  </p>
+</section>
+
+<!-- ══ 15. 스킵하다 스며들다 BANNER ══ -->
+<section class="sec-skip-banner fi">
+  <p class="skip-banner-t">스킵하다&nbsp;<span class="dim">스며들다</span></p>
+  <p class="skip-banner-desc">
+    각 스키퍼블의 눈높이에 맞춰 완벽하게 변신하는 것<br>
+    그 어떤 공간에 가더라도 마치 처음부터 그곳에 있었던 것처럼<br>
+    자연스럽게 동화되는 스킵만의 영리한 공간 이동 방식, 모핑
+  </p>
+</section>
+
+<!-- ══ 16. MORPHING DETAIL (로마에 가면) ══ -->
+<section class="sec-morphing-detail fi">
+  <div class="morphing-detail-row">
+    <div class="morphing-detail-left">
+      <p class="morphing-detail-h">
+        로마에 가면<br>로마 법을 따르듯, 모핑
+      </p>
+      <p class="morphing-detail-p">
+        스킵은 세상 모든 기기에 무작정 모핑하지 않습니다.<br>
+        당신의 움직임을 미리 읽고, 다음에 도착할 그 공간에만<br>
+        정확하게 패킷을 던지는 물수제비 스페셜리스트죠.
+      </p>
+    </div>
+    <div class="morphing-detail-right">
+      <div class="morphing-img-card fi d1">
+        <span class="mic-label">Principle 01</span>
+        <p class="mic-title">연계준비 감지</p>
+        <p class="mic-body">사용자가 특정 목적을 수행하기 직전의 전조 행동을 포착합니다.</p>
+      </div>
+      <div class="morphing-img-card fi d2">
+        <span class="mic-label">Principle 02</span>
+        <p class="mic-title">명시적 움직임 라우팅</p>
+        <p class="mic-body">유추가 필요 없는, 겉으로 명확하게 드러나는 행동적 확신을 읽어냅니다.</p>
+      </div>
+      <div class="morphing-img-card fi d3">
+        <span class="mic-label">Principle 03</span>
+        <p class="mic-title">비명시적 움직임 동적 보정</p>
+        <p class="mic-body">명확한 신호가 없을 때도 표정, 제스처, 생체 신호를 통해 다음 행동을 추론합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 17. PRINCIPLES VERTICAL ══ -->
+<div class="sec-principles-v fi">
+  <div class="principle-v-block fi d1">
+    <p class="pv-label">Principle 01</p>
+    <p class="pv-title">연계준비 감지</p>
+    <p class="pv-desc">사용자가 특정 목적을 수행하기 직전의<br>전조 행동을 포착합니다.</p>
+  </div>
+  <div class="principle-v-block fi d2">
+    <p class="pv-label">Principle 02</p>
+    <p class="pv-title">명시적 움직임 라우팅</p>
+    <p class="pv-desc">유추가 필요 없는, 겉으로 명확하게<br>드러나는 행동적 확신을 읽어냅니다.</p>
+  </div>
+  <div class="principle-v-block fi d3">
+    <p class="pv-label">Principle 03</p>
+    <p class="pv-title">비명시적 움직임 동적 보정</p>
+    <p class="pv-desc">명확한 신호가 없을 때도 표정, 제스처,<br>생체 신호를 통해 다음 행동을 추론합니다.</p>
+  </div>
+</div>
+<div class="pill-btn-wrap fi"><span class="pill-detail">자세한 모핑 원리</span></div>
+
+<!-- ══ 18. SKEEP AI™ GRADIENT ══ -->
+<section class="sec-ai-gradient fi">
+  <p class="ai-grad-label">Skeep AI™</p>
+  <div class="ai-grad-row">
+    <p class="ai-grad-h">수만 가지 제약 아래,<br>단 하나의 완벽한 현실만</p>
+    <p class="ai-grad-p">스킵은 물리적 실체가 없더라도 공간, 기기, 거리, 사람 수 같은 물리적 제약을 이해하는 것을 전제로 생각합니다. 현실을 필터링하는 이 정밀한 감각이야말로 스킵이 세상을 이해하는 핵심 능력입니다.</p>
+  </div>
+  <div class="ai-grad-cards">
+    <div class="ai-grad-card fi d1">
+      <p class="agc-num">01</p>
+      <div class="agc-body">
+        <p class="agc-h">물리 세계 시뮬레이션</p>
+        <p class="agc-sub">Physics Simulation Engine</p>
+        <p class="agc-p">스킵은 물리 법칙을 내재화하여 실행 가능한 경로만을 탐색하는 독자적인 사고 방식을 갖습니다.</p>
+      </div>
+    </div>
+    <div class="ai-grad-card fi d2">
+      <p class="agc-num">02</p>
+      <div class="agc-body">
+        <p class="agc-h">초고속 필터링</p>
+        <p class="agc-sub">Ultra-Fast Filtering</p>
+        <p class="agc-p">수만 가지 가능성 중 현실에서 작동 가능한 단 하나의 최적 경로를 순식간에 추출합니다.</p>
+      </div>
+    </div>
+    <div class="ai-grad-card fi d3">
+      <p class="agc-num">03</p>
+      <div class="agc-body">
+        <p class="agc-h">환경 동기화</p>
+        <p class="agc-sub">Environment Synchronization</p>
+        <p class="agc-p">각 환경의 프로토콜과 눈높이에 맞춰 실행 블록을 자동으로 번역하고 전달합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="fi">
+  <p class="ft-logo">Skeep</p>
+  <p class="ft-tag">Skip the intro, Keep the flow</p>
+  <p class="ft-meta">Skeep Intelligence System™ &nbsp;·&nbsp; 2026 MEP UX · Samsung<br>가장 매끄러운 경험은 가장 치밀한 설계에서 완성됩니다.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  const wordMorph = document.querySelector('[data-word-morph]');
+  if (wordMorph) {
+    const frames = [...wordMorph.querySelectorAll('[data-frame]')];
+    let wmTicking = false;
+    function updateWordMorph() {
+      wmTicking = false;
+      const rect = wordMorph.getBoundingClientRect();
+      const scrollable = Math.max(1, wordMorph.offsetHeight - window.innerHeight);
+      const progress = Math.min(0.999, Math.max(0, -rect.top / scrollable));
+      const idx = Math.min(frames.length - 1, Math.floor(progress * frames.length));
+      frames.forEach((f, i) => f.classList.toggle('active', i === idx));
+    }
+    function requestWordMorphUpdate() {
+      if (!wmTicking) { wmTicking = true; requestAnimationFrame(updateWordMorph); }
+    }
+    updateWordMorph();
+    window.addEventListener('scroll', requestWordMorphUpdate, { passive: true });
+    window.addEventListener('resize', requestWordMorphUpdate);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skeep Intelligence System™</title>
+  <link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #fff;
+      color: #000;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    p { margin: 0; }
+
+    /* scroll fade */
+    .fi { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+    .fi.vis { opacity: 1; transform: none; }
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+    .d4{transition-delay:.32s}.d5{transition-delay:.40s}.d6{transition-delay:.48s}
+
+    /* ── 1. HERO ─────────────────────────────────── */
+    .sec-hero {
+      background: #e7eaf0;
+      width: 100%;
+      min-height: 100vh;
+      padding: 140px 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .hero-eyebrow {
+      font-size: 24px; font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; margin-bottom: 28px;
+    }
+    .hero-h1 {
+      font-size: 72px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 28px;
+    }
+    .hero-body {
+      font-size: 24px; font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+
+    /* ── 2. LET'S SKEEP IN ───────────────────────── */
+    .sec-skeep-in {
+      background: #e7eaf0;
+      width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 160px;
+    }
+    .pill-gray {
+      background: #9e9e9e; border-radius: 100px;
+      padding: 16px 50px;
+      font-size: 42px; font-weight: 600; line-height: 1.1;
+      letter-spacing: -0.04em; color: #fff;
+    }
+
+    /* ── 3. SKEEEEP ──────────────────────────────── */
+    .sec-skeeeep {
+      background: #e7eaf0;
+      width: 100%;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 84px 160px;
+    }
+    .skeeeep-t1 {
+      font-size: 72px; font-weight: 600; line-height: 1.4;
+      letter-spacing: -0.04em;
+    }
+    .skeeeep-t2 {
+      font-size: 48px; font-weight: 600; line-height: 1.4;
+      letter-spacing: -0.03em;
+    }
+
+    /* ── 4. SKIP THE INTRO ───────────────────────── */
+    .sec-skip-intro {
+      background: #fff;
+      width: 100%;
+      padding: 116px 160px;
+      text-align: center;
+    }
+    .skip-title {
+      font-size: 72px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 28px;
+    }
+    .skip-sub {
+      font-size: 24px; font-weight: 700; line-height: 1.5;
+      letter-spacing: -0.04em;
+    }
+
+    /* ── SUMMARY ROW (label + desc) ──────────────── */
+    .sec-summary {
+      background: #fff;
+      width: 100%; padding: 84px 160px;
+    }
+    .summary-row {
+      display: flex; gap: 64px; align-items: flex-start;
+    }
+    .summary-label {
+      font-size: 40px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; flex-shrink: 0; white-space: nowrap;
+    }
+    .summary-desc {
+      font-size: 24px; font-weight: 400; line-height: 1.4;
+      letter-spacing: -0.03em; max-width: 1008px;
+    }
+
+    /* ── 5. PHILOSOPHY SLIDES ────────────────────── */
+    .sec-phil {
+      background: #fff;
+      width: 100%;
+      padding: 116px 160px;
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 48px;
+    }
+    .phil-left {
+      flex: 0 0 790px; display: flex;
+      flex-direction: column; gap: 28px;
+    }
+    .phil-label-sm {
+      font-size: 40px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; white-space: nowrap;
+    }
+    .phil-tagline {
+      font-size: 64px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em;
+    }
+    .phil-tagline .dim  { color: rgba(0,0,0,0.2); }
+    .phil-tagline .on   { color: #000; }
+
+    .phil-card {
+      flex: 0 0 720px; height: 466px;
+      border-radius: 32px; overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 100%),
+                  #e7eaf0;
+    }
+    .phil-card .blob-wrap {
+      position: absolute; inset: 0 0 140px 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phil-card .card-footer {
+      position: absolute; bottom: 48px; left: 48px; right: 48px;
+    }
+    .phil-card .card-name {
+      font-size: 48px; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.02em; color: #222; margin-bottom: 4px;
+    }
+    .phil-card .card-sub {
+      font-size: 28px; font-weight: 600; line-height: 1.5;
+      letter-spacing: -0.04em; color: #222;
+    }
+
+    /* ── 6. MIGRATABLE AGENT HERO ────────────────── */
+    .sec-agent-hero {
+      background: #fff; width: 100%;
+      min-height: 30vh;
+      padding: 116px 160px;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+    }
+    .agent-hero-inner { display: flex; flex-direction: column; gap: 28px; }
+    .agent-hero-h { font-size: 72px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; }
+    .agent-hero-sub { font-size: 28px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; }
+
+    /* ── 7. MIGRATABLE AGENT DETAIL ──────────────── */
+    .sec-agent-detail {
+      background: #fff; width: 100%;
+      padding: 116px 160px;
+    }
+    .agent-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 48px;
+    }
+    .agent-left { display: flex; flex-direction: column; gap: 28px; flex-shrink: 0; }
+    .agent-title { font-size: 72px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; }
+    .agent-sub   { font-size: 28px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; }
+    .pills-row   { display: flex; gap: 12px; }
+    .pill-sm {
+      background: #9e9e9e; border-radius: 100px;
+      padding: 14px 36px;
+      font-size: 32px; font-weight: 600; line-height: 1.1;
+      letter-spacing: -0.04em; color: #fff;
+    }
+    .pill-sm.dim { opacity: 0.2; }
+
+    .agent-q-col {
+      display: flex; flex-direction: column; gap: 20px;
+      width: 720px; flex-shrink: 0;
+    }
+    .q-card {
+      background: #e7eaf0; border-radius: 32px;
+      padding: 40px; flex: 1; min-height: 220px;
+    }
+    .q-card .q-num {
+      font-size: 56px; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.03em; margin-bottom: 16px;
+    }
+    .q-card .q-text {
+      font-size: 28px; font-weight: 600; line-height: 1.5;
+      letter-spacing: -0.04em;
+    }
+
+    /* ── 8. SYSTEM INTRO ─────────────────────────── */
+    .sec-system-intro {
+      background: #fff; width: 100%;
+      padding: 116px 160px;
+      display: flex; align-items: flex-end;
+      justify-content: space-between; gap: 48px;
+    }
+    .sys-left { display: flex; flex-direction: column; gap: 28px; }
+    .sys-label { font-size: 40px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; white-space: nowrap; }
+    .sys-title { font-size: 64px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; }
+    .sys-right  {
+      font-size: 24px; font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; max-width: 672px; flex-shrink: 0;
+    }
+
+    /* ── 9. SYSTEM DIAGRAM ───────────────────────── */
+    .sec-system-diagram {
+      background: #fff; width: 100%;
+      padding: 84px 160px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 20px;
+    }
+    .diagram-card {
+      width: 100%;
+      background: #e7eaf0; border-radius: 32px;
+      min-height: 600px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .diagram-card-content {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px; text-align: center;
+      opacity: 0.12;
+    }
+    .diagram-brand-name {
+      font-size: 22px; font-weight: 700; letter-spacing: 0.05em;
+    }
+    .diagram-note {
+      font-size: 20px; font-weight: 400; letter-spacing: -0.02em;
+    }
+    .diagram-tabs {
+      background: #e7eaf0; border-radius: 32px;
+      display: flex; gap: 10px; padding: 22px 26px;
+    }
+    .diagram-tab {
+      border-radius: 12px; padding: 8px 16px; min-width: 200px;
+    }
+    .diagram-tab.active { background: #fff; }
+    .diagram-tab .tab-n { font-size: 20px; font-weight: 600; color: #ff0b6c; line-height: 1.5; }
+    .diagram-tab .tab-l { font-size: 26px; font-weight: 600; line-height: 1.5; letter-spacing: -0.03em; }
+
+    /* ── 10. SYSTEM LAYERS ───────────────────────── */
+    .sec-layers {
+      background: linear-gradient(180deg, #e7eaf0 0%, rgba(231,234,240,0) 100%);
+      width: 100%;
+      padding: 84px 160px;
+      min-height: 800px;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+    }
+    .layers-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    }
+    .layer-card {
+      background: #e7eaf0; border-radius: 32px;
+      padding: 40px; min-height: 360px;
+      display: flex; flex-direction: column; gap: 40px;
+    }
+    .layer-card.faded { opacity: 0.4; }
+    .layer-name { font-size: 48px; font-weight: 600; line-height: 1.5; letter-spacing: -0.04em; }
+    .layer-en   { font-size: 28px; font-weight: 600; line-height: 1.5; letter-spacing: -0.02em; }
+    .layer-desc { font-size: 24px; font-weight: 500; line-height: 1.5; letter-spacing: -0.04em; opacity: 0.4; }
+
+    /* ── 11. PACKET INTRO ────────────────────────── */
+    .sec-packet-intro {
+      background: #fff; width: 100%; padding: 84px 160px;
+    }
+    .packet-tag {
+      display: inline-block; background: #e7eaf0;
+      border-radius: 100px; padding: 12px 32px;
+      font-size: 28px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 28px;
+    }
+    .packet-title {
+      font-size: 72px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 28px;
+    }
+    .packet-desc {
+      font-size: 24px; font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; max-width: 1200px;
+    }
+
+    /* ── 12. PACKET Q&A ──────────────────────────── */
+    .sec-packet-qa {
+      background: #fff; width: 100%;
+      padding: 84px 160px;
+    }
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .qa-card {
+      background: #e7eaf0; border-radius: 24px;
+      padding: 48px 40px; min-height: 230px;
+    }
+    .qa-card .qn {
+      font-size: 32px; font-weight: 400; line-height: 1.3;
+      letter-spacing: -0.04em; display: block; margin-bottom: 0;
+    }
+    .qa-card .qt {
+      font-size: 32px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.04em;
+    }
+
+    /* ── 13. SKEEPABLES ──────────────────────────── */
+    .sec-skeepables-intro {
+      background: #fff; width: 100%; padding: 84px 160px;
+    }
+    .sk-title {
+      font-size: 72px; font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 28px;
+    }
+    .sk-desc {
+      font-size: 24px; font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; max-width: 1200px;
+    }
+    .sk-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      margin-top: 48px;
+    }
+    .sk-card {
+      background: #e7eaf0; border-radius: 24px; padding: 40px 36px;
+    }
+    .sk-type { font-size: 14px; font-weight: 700; color: #ff0b6c; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+    .sk-name { font-size: 36px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .sk-body { font-size: 20px; font-weight: 400; line-height: 1.6; color: rgba(0,0,0,0.5); }
+
+    /* ── 14. UX LOGIC INTRO ──────────────────────── */
+    .sec-ux-intro {
+      background: #fff; width: 100%;
+      padding: 116px 160px;
+      display: flex; align-items: flex-end;
+      justify-content: space-between; gap: 48px;
+    }
+    .ux-left { display: flex; flex-direction: column; gap: 28px; }
+    .ux-label { font-size: 40px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; white-space: nowrap; }
+    .ux-title { font-size: 64px; font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; }
+    .ux-right  { font-size: 24px; font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; max-width: 680px; flex-shrink: 0; }
+
+    /* ── 15. UX LOGIC STAGES ─────────────────────── */
+    .sec-ux-stage {
+      background: #fff; width: 100%; padding: 84px 160px;
+    }
+    .stage-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 64px;
+    }
+    .stage-left { flex-shrink: 0; width: 380px; }
+    .stage-kr-label {
+      font-size: 14px; font-weight: 700; color: #ff0b6c;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .stage-kr {
+      font-size: 64px; font-weight: 600; line-height: 1.2;
+      letter-spacing: -0.03em; margin-bottom: 20px;
+    }
+    .stage-en {
+      display: inline-block;
+      background: #ffe7f1; border-radius: 100px;
+      padding: 6px 20px;
+      font-size: 18px; font-weight: 600; color: #ff0b6c;
+      letter-spacing: -0.01em;
+    }
+    .stage-right { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .stage-card {
+      background: #e7eaf0; border-radius: 20px;
+      padding: 32px 36px;
+    }
+    .stage-card-title {
+      font-size: 20px; font-weight: 700; line-height: 1.4;
+      letter-spacing: -0.02em; margin-bottom: 8px;
+    }
+    .stage-card-body {
+      font-size: 18px; font-weight: 400; line-height: 1.6;
+      color: rgba(0,0,0,0.5); letter-spacing: -0.01em;
+    }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      background: #e7eaf0; width: 100%;
+      padding: 80px 160px; text-align: center;
+    }
+    .ft-logo { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .ft-tag  { font-size: 20px; font-weight: 400; color: rgba(0,0,0,0.4); margin-bottom: 40px; }
+    .ft-meta { font-size: 14px; color: rgba(0,0,0,0.25); line-height: 1.8; }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 1400px) {
+      .sec-hero, .sec-skeep-in, .sec-skeeeep, .sec-skip-intro,
+      .sec-summary, .sec-phil, .sec-agent-hero, .sec-agent-detail,
+      .sec-system-intro, .sec-system-diagram, .sec-layers,
+      .sec-packet-intro, .sec-packet-qa, .sec-skeepables-intro,
+      .sec-ux-intro, .sec-ux-stage, footer {
+        padding-left: 80px; padding-right: 80px;
+      }
+    }
+    @media (max-width: 1100px) {
+      .sec-phil { flex-direction: column; }
+      .phil-left { flex: none; max-width: 100%; }
+      .phil-card { flex: none; width: 100%; }
+      .agent-row { flex-direction: column; }
+      .agent-q-col { width: 100%; }
+      .sec-system-intro, .sec-ux-intro { flex-direction: column; }
+      .sys-right, .ux-right { max-width: 100%; }
+      .layers-grid { grid-template-columns: 1fr; }
+      .qa-grid { grid-template-columns: 1fr; }
+      .sk-grid { grid-template-columns: 1fr 1fr; }
+      .stage-row { flex-direction: column; }
+      .stage-left { width: 100%; }
+    }
+    @media (max-width: 768px) {
+      .sec-hero, .sec-skeep-in, .sec-skeeeep, .sec-skip-intro,
+      .sec-summary, .sec-phil, .sec-agent-hero, .sec-agent-detail,
+      .sec-system-intro, .sec-system-diagram, .sec-layers,
+      .sec-packet-intro, .sec-packet-qa, .sec-skeepables-intro,
+      .sec-ux-intro, .sec-ux-stage, footer {
+        padding-left: 24px; padding-right: 24px;
+      }
+      .hero-h1 { font-size: 48px; }
+      .skeeeep-t1 { font-size: 40px; }
+      .skeeeep-t2 { font-size: 28px; }
+      .skip-title, .agent-title, .packet-title, .sk-title { font-size: 40px; }
+      .sys-title, .ux-title { font-size: 40px; }
+      .phil-tagline { font-size: 36px; }
+      .pill-gray { font-size: 28px; padding: 12px 32px; }
+      .sk-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════
+  1. HERO
+═══════════════════════ -->
+<section class="sec-hero fi">
+  <p class="hero-eyebrow">Skeep Intelligence System™</p>
+  <h1 class="hero-h1">새로운 시대를 위한<br>새로운 기준</h1>
+  <p class="hero-body">
+    누구세요, 무엇을 좋아하세요, 어떻게 도와드릴까요.<br>
+    지금까지 우리는 새로운 제품과 서비스를 마주할 때면 매번 우리의 맥락과 목적을 설명해야만 했습니다.<br>
+    그 서먹한 통성명의 반복이 너무 당연해진 나머지, 불편하다는 사실조차 잊고 살았죠.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  2. LET'S SKEEP IN
+═══════════════════════ -->
+<div class="sec-skeep-in fi">
+  <div class="pill-gray">Let's Skeep in</div>
+</div>
+
+<!-- ═══════════════════════
+  3. SKEEEEP
+═══════════════════════ -->
+<section class="sec-skeeeep fi">
+  <div>
+    <p class="skeeeep-t1">Skeeeeep into the new era</p>
+    <p class="skeeeep-t2">Skip the intro, Keep the flow</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  4. SKIP THE INTRO
+═══════════════════════ -->
+<section class="sec-skip-intro fi">
+  <p class="skip-title">Skip the intro, Keep the flow</p>
+  <p class="skip-sub">
+    당신이 누구인지, 지금 어떤 상태인지를 환경에 정확하게 전달하는 스킵.<br>
+    가장 매끄러운 경험은 가장 치밀한 설계에서 완성됩니다.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  5. PHILOSOPHY SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">Skeep<br>Philosophy</div>
+    <div class="summary-desc">
+      스킵이 사용자 곁에 머무는 방식,<br>
+      그리고 스킵이 세상을 이해하는 방식,<br>
+      모든 경험은 스킵의 핵심 가치에서 출발했습니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  PHILOSOPHY 1: Universal Flow
+═══════════════════════ -->
+<section class="sec-phil fi">
+  <div class="phil-left">
+    <div class="phil-label-sm">Skeep<br>Philosophy</div>
+    <div class="phil-tagline">
+      <p class="on">특정 기기에 얽매이지 않고,</p>
+      <p class="dim">사용자의 맥락과 목적을 담아</p>
+      <p class="dim">주변 환경에 매끄럽게 모핑하는</p>
+    </div>
+  </div>
+  <div class="phil-card">
+    <div class="blob-wrap">
+      <svg width="540" height="280" viewBox="0 0 540 280" fill="none">
+        <ellipse cx="220" cy="140" rx="200" ry="130" fill="#d4a87c" opacity="0.35" transform="rotate(11 220 140)"/>
+        <ellipse cx="350" cy="145" rx="165" ry="115" fill="#e8c4a0" opacity="0.45" transform="rotate(120 350 145)"/>
+        <ellipse cx="290" cy="148" rx="100" ry="78" fill="#f0d4ba" opacity="0.5" transform="rotate(30 290 148)"/>
+      </svg>
+    </div>
+    <div class="card-footer">
+      <p class="card-name">Universal Flow</p>
+      <p class="card-sub">스킵은 특정한 기기나 제조사에 얽매이지 않습니다</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  PHILOSOPHY 2: Keeeeeep Flow
+═══════════════════════ -->
+<section class="sec-phil fi">
+  <div class="phil-left">
+    <div class="phil-label-sm">Skeep<br>Philosophy</div>
+    <div class="phil-tagline">
+      <p class="dim">특정 기기에 얽매이지 않고,</p>
+      <p class="on">사용자의 맥락과 목적을 담아</p>
+      <p class="dim">주변 환경에 매끄럽게 모핑하는</p>
+    </div>
+  </div>
+  <div class="phil-card">
+    <div class="blob-wrap">
+      <svg width="540" height="280" viewBox="0 0 540 280" fill="none">
+        <ellipse cx="270" cy="140" rx="210" ry="130" fill="#d4a87c" opacity="0.3" transform="rotate(30 270 140)"/>
+        <ellipse cx="265" cy="138" rx="155" ry="100" fill="#e8c4a0" opacity="0.4" transform="rotate(30 265 138)"/>
+        <ellipse cx="268" cy="142" rx="90" ry="68" fill="#f0d4ba" opacity="0.55" transform="rotate(30 268 142)"/>
+      </svg>
+    </div>
+    <div class="card-footer">
+      <p class="card-name">Keeeeeep Flow</p>
+      <p class="card-sub">스킵은 사용자의 맥락과 목적을 기억하고 지켜줍니다</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  PHILOSOPHY 3: Morphing Flow
+═══════════════════════ -->
+<section class="sec-phil fi">
+  <div class="phil-left">
+    <div class="phil-label-sm">Skeep<br>Philosophy</div>
+    <div class="phil-tagline">
+      <p class="dim">특정 기기에 얽매이지 않고,</p>
+      <p class="dim">사용자의 맥락과 목적을 담아</p>
+      <p class="on">주변 환경에 매끄럽게 모핑하는</p>
+    </div>
+  </div>
+  <div class="phil-card">
+    <div class="blob-wrap">
+      <svg width="540" height="280" viewBox="0 0 540 280" fill="none">
+        <ellipse cx="160" cy="130" rx="130" ry="88" fill="#d4a87c" opacity="0.3" transform="rotate(-135 160 130)"/>
+        <ellipse cx="300" cy="120" rx="150" ry="102" fill="#e8c4a0" opacity="0.38" transform="rotate(165 300 120)"/>
+        <ellipse cx="430" cy="138" rx="95" ry="78" fill="#f0d4ba" opacity="0.5" transform="rotate(165 430 138)"/>
+      </svg>
+    </div>
+    <div class="card-footer">
+      <p class="card-name">Morphing Flow</p>
+      <p class="card-sub">스킵은 서비스와 제품, 공간을 자유자재로 옮겨 다닙니다</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  6. MIGRATABLE AGENT HERO
+═══════════════════════ -->
+<section class="sec-agent-hero fi">
+  <div class="agent-hero-inner">
+    <p class="agent-hero-h">Migratable Agent</p>
+    <p class="agent-hero-sub">
+      사용자의 현재 맥락과 아이덴티티를 유지한 채<br>
+      환경 사이를 스스로 이동하며 사용자의 목적 달성을 돕는 에이전트
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  7. MIGRATABLE AGENT DETAIL
+═══════════════════════ -->
+<section class="sec-agent-detail fi">
+  <div class="agent-row">
+    <div class="agent-left">
+      <p class="agent-title">Migratable Agent</p>
+      <p class="agent-sub">
+        사용자의 현재 맥락과 아이덴티티를 유지한 채<br>
+        환경 사이를 스스로 이동하며 사용자의 목적 달성을 돕는 에이전트
+      </p>
+      <div class="pills-row">
+        <div class="pill-sm dim">Principles</div>
+        <div class="pill-sm">Questions</div>
+      </div>
+    </div>
+    <div class="agent-q-col">
+      <div class="q-card fi d1">
+        <p class="q-num">Q.</p>
+        <p class="q-text">스킵이 모핑할 수 있는<br>환경은 무엇인가요?</p>
+      </div>
+      <div class="q-card fi d2">
+        <p class="q-num">Q.</p>
+        <p class="q-text">스킵은 어디까지 대신해주는<br>에이전트인가요?</p>
+      </div>
+      <div class="q-card fi d3">
+        <p class="q-num">Q.</p>
+        <p class="q-text">스킵은 모든 것을<br>기억하나요?</p>
+      </div>
+      <div class="q-card fi d4">
+        <p class="q-num">Q.</p>
+        <p class="q-text">마룩강아지도 스킵을<br>사용할 수 있나요?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  8. SYSTEM SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">Skeep<br>System</div>
+    <div class="summary-desc">
+      스킵이 어떻게 작동하는지에 대한 기술적 제반<br>
+      사용자가 경험하는 세계와 스킵이 바라보는 세계<br>
+      두 레이어가 어떻게 맞물리는지를 보여줍니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  9. SYSTEM INTRO
+═══════════════════════ -->
+<section class="sec-system-intro fi">
+  <div class="sys-left">
+    <p class="sys-label">Skeep<br>System</p>
+    <p class="sys-title">수면 위의 매끄러운 경험<br>사용자를 위한 부단한 발길질</p>
+  </div>
+  <p class="sys-right">
+    필요한 만큼만 나를 소개하고, 공간의 능력을 잠시 빌리며, 함께 있는 사람들과 조율한 뒤 흔적 없이 떠나는 스킵의 매끄러운 경험. 그 이면에는 보이지 않는 곳에서 완벽하게 맞물려 돌아가는 촘촘한 시스템이 존재합니다.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  10. SYSTEM DIAGRAM
+═══════════════════════ -->
+<section class="sec-system-diagram fi">
+  <div class="diagram-card">
+    <div class="diagram-card-content">
+      <p class="diagram-brand-name"><b>Skeep</b> Intelligence System™</p>
+      <p class="diagram-note">사용자 맥락 플로우의 경우 예쁘게 디자인된 플로우 구조도가 들어감</p>
+    </div>
+  </div>
+  <div class="diagram-tabs">
+    <div class="diagram-tab active">
+      <p class="tab-n">01</p>
+      <p class="tab-l">사용자 경험 플로우</p>
+    </div>
+    <div class="diagram-tab">
+      <p class="tab-n">02</p>
+      <p class="tab-l">사용자 맥락 플로우</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  11. SYSTEM LAYERS
+═══════════════════════ -->
+<section class="sec-layers fi">
+  <div class="layers-grid">
+    <div class="layer-card">
+      <div>
+        <p class="layer-name">상시 레이어</p>
+        <p class="layer-en">Passive Layer</p>
+      </div>
+      <p class="layer-desc">
+        항상 사용자의 주변 환경을 스캔하며<br>
+        가능성을 파악하고 있습니다.<br>
+        목적이 없는 순간에도 결코 쉬지 않죠.
+      </p>
+    </div>
+    <div class="layer-card faded">
+      <div>
+        <p class="layer-name">활성 레이어</p>
+        <p class="layer-en">Active Layer</p>
+      </div>
+      <p class="layer-desc">
+        사용자의 목적이 발생하는 순간 활성화되어,<br>
+        그 목적을 구조화하고 실행 블록으로 만들어<br>
+        환경에 전달하는 역할을 합니다.
+      </p>
+    </div>
+    <div class="layer-card faded">
+      <div>
+        <p class="layer-name">데이터 베이스</p>
+        <p class="layer-en">Database Structure</p>
+      </div>
+      <p class="layer-desc">
+        사용자의 목적이 발생하는 순간 활성화되어,<br>
+        그 목적을 구조화하고 실행 블록으로 만들어<br>
+        환경에 전달하는 역할을 합니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  12. PACKET SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">Skeep<br>Packet</div>
+    <div class="summary-desc">
+      스킵이 환경을 이동할 때마다 들고 다니는 맥락 꾸러미<br>
+      환경이 사용자를 미리 알고 준비할 수 있도록<br>
+      스킵이 먼저 건네는 디지털 명함입니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  13. PACKET INTRO
+═══════════════════════ -->
+<section class="sec-packet-intro fi">
+  <div class="packet-tag">더도 말고 덜도 말고, Pack it.</div>
+  <p class="packet-title">지금 나를 설명하는 맥락 꾸러미</p>
+  <p class="packet-desc">
+    스킵은 환경을 이동할 때마다 패킷을 들고 다닙니다. 이 안에는 사용자가 어떤 사람인지, 지금 주변에 무엇이 있는지, 그리고 지금 사용자는 무엇을 원하는지에 대한 정보가 담겨있어요. 덕분에 스킵은 어떤 환경에 모핑하든 사용자가 누구인지, 무엇을 원하는지를 대신 전달합니다.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  14. PACKET Q&A
+═══════════════════════ -->
+<section class="sec-packet-qa fi">
+  <div class="qa-grid">
+    <div class="qa-card fi d1">
+      <span class="qn">Q1.</span>
+      <p class="qt">Skeep 에이전트 생태계에서<br>Packet은 어떤 역할을 수행하나요?</p>
+    </div>
+    <div class="qa-card fi d2">
+      <span class="qn">Q2.</span>
+      <p class="qt">Skeep의 Packet 안에는<br>어떠한 정보들이 담겨있나요?</p>
+    </div>
+    <div class="qa-card fi d3">
+      <span class="qn">Q5.</span>
+      <p class="qt">Skeep 에이전트 생태계에서<br>Packet은 어떻게 이동하나요?</p>
+    </div>
+    <div class="qa-card fi d4">
+      <span class="qn">Q3.</span>
+      <p class="qt">Skeep의 Packet의 구성은<br>언제, 어떻게, 왜 바뀌나요?</p>
+    </div>
+    <div class="qa-card fi d5">
+      <span class="qn">Q4.</span>
+      <p class="qt">Skeep 환경에 Packet이 모핑되면<br>어떤 일이 일어나나요?</p>
+    </div>
+    <div class="qa-card fi d6">
+      <span class="qn">Q6.</span>
+      <p class="qt">그렇다면 Skeep의 사용자는<br>Packet을 직접 볼 수 없는건가요?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  15. SKEEPABLES SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">Skeep<br>System</div>
+    <div class="summary-desc">
+      스킵이 어떻게 작동하는지에 대한 기술적 제반<br>
+      사용자가 경험하는 세계와 스킵이 바라보는 세계<br>
+      두 레이어가 어떻게 맞물리는지를 보여줍니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  16. SKEEPABLES
+═══════════════════════ -->
+<section class="sec-skeepables-intro fi">
+  <p class="sk-title">서비스와 제품, 그리고 공간<br>스킵이 뛰어들 수 있는 무한한 세계</p>
+  <p class="sk-desc">
+    스킵에게 한계는 없습니다. 우리 손끝에 닿는 제품, 눈앞의 서비스, 머무는 공간까지, 이 모든 세계가 스킵과 연결될 수 있는 가능성의 영역이죠. 스킵에게는 정해진 몸이 없기 때문에 역설적으로 세상 모든 환경을 자신의 몸처럼 빌려 쓰며 세계를 자유롭게 유영할 수 있습니다.
+  </p>
+  <div class="sk-grid">
+    <div class="sk-card fi d1">
+      <p class="sk-type">Service</p>
+      <p class="sk-name">서비스</p>
+      <p class="sk-body">사용자의 디지털 정보가 발생하는 소프트웨어. SaaS 앱, 결제 플랫폼, 사용 내역 알고리즘 등.</p>
+    </div>
+    <div class="sk-card fi d2">
+      <p class="sk-type">Product</p>
+      <p class="sk-name">제품</p>
+      <p class="sk-body">사용자의 물리적 맥락을 포착하거나 물리적 행동이 가능한 모든 실체. 디스플레이 기기, 센서, 하드웨어 등.</p>
+    </div>
+    <div class="sk-card fi d3">
+      <p class="sk-type">Space</p>
+      <p class="sk-name">공간</p>
+      <p class="sk-body">사용자가 특정 목적을 가지고 방문하는 장소. 개인·공공·열린 공간을 포함하며, 운영 목적을 가진 에이전트가 상주하는 것이 조건.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  17. UX LOGIC SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">Skeep<br>UX Logic</div>
+    <div class="summary-desc">
+      사용자의 목적이 발생하는 순간부터<br>
+      그 목적이 달성되고 흔적 없이 사라지기까지,<br>
+      스킵 경험의 기반이 되는 로직을 보여줍니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  18. UX LOGIC INTRO
+═══════════════════════ -->
+<section class="sec-ux-intro fi">
+  <div class="ux-left">
+    <p class="ux-label">Skeep<br>UX Logic</p>
+    <p class="ux-title">쉿. 보이지 않게<br>그러나 가장 완벽하게</p>
+  </div>
+  <p class="ux-right">
+    스킵은 사용자가 어디에 있든 항상 곁에서 조용히 기다리고 있습니다. 평소엔 주변을 살피며 준비 상태를 유지하다가, 사용자의 목적이 생기는 순간 그 목적을 이해하고 실행하고 마무리짓는 플로우가 매끄럽게 이어지죠.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 1: 새겨듣다
+═══════════════════════ -->
+<section class="sec-ux-stage fi">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Sensing Logic</p>
+      <p class="stage-kr">새겨듣다</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-card fi d1">
+        <p class="stage-card-title">말하기 전, 스킵은 이미 귀 기울이고 있죠. 언제든 주변을 살피며 다음을 준비합니다.</p>
+        <p class="stage-card-body">스키퍼블 탐색 · 주변 기능 라인업<br>24시간 조용히 찰나를 준비하는 일<br>당신이 경험하는 모든 시간이 곧 스킵의 시간</p>
+      </div>
+      <div class="stage-card fi d2">
+        <p class="stage-card-title">Input Logic — 액티브 레이어를 여는 첫 단추</p>
+        <p class="stage-card-body">사용자 인풋 · 명시적-암묵적 목적<br>말은 새겨듣고, 마음은 헤아리는</p>
+      </div>
+      <div class="stage-card fi d3">
+        <p class="stage-card-title">Pause Logic — 스킵의 심리스한 온앤 오프 경험</p>
+        <p class="stage-card-body">사용자 인풋 비활성화 · 일시정지<br>2보 전진을 위한 1보 후퇴</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 2: 스며들다
+═══════════════════════ -->
+<section class="sec-ux-stage fi">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Morphing Logic</p>
+      <p class="stage-kr">스며들다</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-card fi d1">
+        <p class="stage-card-title">Parsing Logic — 툭 던진 생각, 내 안의 진짜 목적을 파악하는 스킵</p>
+        <p class="stage-card-body">사용자 의도 구조화 · 실행 블록의 범위 지정<br>발길이 닿는 곳으로 가장 먼저 다가갑니다.</p>
+      </div>
+      <div class="stage-card fi d2">
+        <p class="stage-card-title">Mapping Logic — 수백만 개의 경로 중, 가장 완벽한 궤적을 찾는 알고리즘</p>
+        <p class="stage-card-body">필요 기능 정렬 · 실행 블록 생성</p>
+      </div>
+      <div class="stage-card fi d3">
+        <p class="stage-card-title">Morphing Logic — 선명해진 스킵의 청사진, 이제 현실로 도약할 시간</p>
+        <p class="stage-card-body">스키퍼블 활성화 · 거리재기</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 3: 조율하다
+═══════════════════════ -->
+<section class="sec-ux-stage fi">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Negotiation Logic</p>
+      <p class="stage-kr">조율하다</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-card fi d1">
+        <p class="stage-card-title">여럿이 함께 있어도 불편할 일은 없습니다. 모두의 시간이 지켜지도록, 똑부러지는 스킵.</p>
+        <p class="stage-card-body">목적간 충돌 조율 · DCOP 알고리즘<br>경험이 끊이지 않도록 도와주는 협상<br>당신이 원하는 그대로 가장 자연스럽게</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 4: 빌려쓰다
+═══════════════════════ -->
+<section class="sec-ux-stage fi">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Borrowing Logic</p>
+      <p class="stage-kr">빌려쓰다</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-card fi d1">
+        <p class="stage-card-title">Borrowing Logic — 곁에 있는 스키퍼블의 능력을 내 것처럼. 지금 딱 필요한 기능을 찾아줍니다.</p>
+        <p class="stage-card-body">아이스브레이킹 · 실행 블록 처리<br>각자의 역할을 모아 하나의 흐름으로, 환경의 능력을 내 것으로</p>
+      </div>
+      <div class="stage-card fi d2">
+        <p class="stage-card-title">Download Logic — 사용자가 익숙한 제품으로 새로운 가능성의 지평을 여는 기능 다운로드</p>
+        <p class="stage-card-body">기능 및 경험 확장 · AI 스킬 다운로드</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 5: 지켜주다
+═══════════════════════ -->
+<section class="sec-ux-stage fi">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Keep Logic</p>
+      <p class="stage-kr">지켜주다</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-card fi d1">
+        <p class="stage-card-title">스키퍼블을 떠나는 순간, 나의 모든 흔적은 지워집니다. 철통보안 스킵.</p>
+        <p class="stage-card-body">사용 종료 · 보안 시스템<br>아무 일도 없었던 것처럼<br>완벽한 리셋</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 6: 기억하다
+═══════════════════════ -->
+<section class="sec-ux-stage fi">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">See You Logic</p>
+      <p class="stage-kr">기억하다</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-card fi d1">
+        <p class="stage-card-title">오늘의 경험은 다음을 위한 배려가 됩니다. 내일을 만드는 오늘, 또 만나요 우리.</p>
+        <p class="stage-card-body">상호작용 경험 피드백 · 개인화 학습<br>오늘의 경험이 내일의 기준으로<br>설명하지 않아도 알아서 척척</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  FOOTER
+═══════════════════════ -->
+<footer class="fi">
+  <p class="ft-logo">Skeep</p>
+  <p class="ft-tag">Skip the intro, Keep the flow</p>
+  <p class="ft-meta">Skeep Intelligence System™ &nbsp;·&nbsp; 2026 MEP UX · Samsung<br>가장 매끄러운 경험은 가장 치밀한 설계에서 완성됩니다.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

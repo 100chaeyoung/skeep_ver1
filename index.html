@@ -1,0 +1,3444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skeep Intelligence System™</title>
+  <link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #fff;
+      color: #111;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    p { margin: 0; }
+    .logo-img {
+      display: block;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* scroll fade */
+    .fi { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+    .fi.vis { opacity: 1; transform: none; }
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+    .d4{transition-delay:.32s}.d5{transition-delay:.40s}.d6{transition-delay:.48s}
+
+    /* ── HERO GNB (pill → bar) ──────────────────────── */
+    .hero-gnb {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 40px;
+      height: 0;
+      z-index: 50;
+    }
+    .hero-gnb-shape {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 0);
+      opacity: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 96px;
+      height: 96px;
+      padding: 14px;
+      border-radius: 48px;
+      background-color: #ff1a7d;
+      box-shadow: 0 0 0 0 rgba(14,24,37,0);
+      overflow: hidden;
+      pointer-events: auto;
+      will-change: transform, opacity, width, height;
+      transition:
+        transform .6s cubic-bezier(.22,1,.36,1),
+        opacity .5s ease,
+        width .42s cubic-bezier(.65,0,.35,1) .1s,
+        height .42s cubic-bezier(.65,0,.35,1) .1s,
+        border-radius .42s cubic-bezier(.65,0,.35,1) .1s,
+        background-color .42s cubic-bezier(.65,0,.35,1) .1s,
+        box-shadow .42s ease .1s;
+    }
+    .hero-gnb-shape.gnb-away {
+      transform: translate(-50%, 140px);
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        transform .38s cubic-bezier(.55,0,1,.45),
+        opacity .28s ease,
+        width .32s cubic-bezier(.65,0,.35,1),
+        height .32s cubic-bezier(.65,0,.35,1),
+        border-radius .32s cubic-bezier(.65,0,.35,1),
+        background-color .32s cubic-bezier(.65,0,.35,1);
+    }
+    .hero-gnb.hero-gnb-expanded .hero-gnb-shape {
+      width: 738px;
+      height: 138px;
+      border-radius: 28px;
+      background-color: #ffffff;
+      box-shadow: 0 20px 50px rgba(14,24,37,.10);
+    }
+    .hero-gnb-card {
+      display: block;
+      width: 110px;
+      height: 110px;
+      border-radius: 16px;
+      padding: 16px 0 0 13px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: #000;
+      text-decoration: none;
+      opacity: 0;
+      flex-shrink: 0;
+      transition: opacity .2s ease;
+    }
+    .hero-gnb.hero-gnb-expanded .hero-gnb-card {
+      opacity: 1;
+      transition: opacity .38s ease .52s;
+    }
+    .hero-gnb.hero-gnb-expanded .hero-gnb-card:nth-child(2) { transition-delay: .59s; }
+    .hero-gnb.hero-gnb-expanded .hero-gnb-card:nth-child(3) { transition-delay: .66s; }
+    .hero-gnb.hero-gnb-expanded .hero-gnb-card:nth-child(4) { transition-delay: .73s; }
+    .hero-gnb.hero-gnb-expanded .hero-gnb-card:nth-child(5) { transition-delay: .80s; }
+    .hero-gnb.hero-gnb-expanded .hero-gnb-card:nth-child(6) { transition-delay: .87s; }
+
+    /* ── 1. HERO ─────────────────────────────────── */
+    .sec-hero {
+      background: #F4F8FC;
+      width: 100%;
+      min-height: 100vh;
+      padding: 140px 160px 240px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
+    .hero-brand {
+      position: absolute;
+      top: 52px; left: 160px;
+      width: 128px;
+      cursor: pointer;
+    }
+    .hero-eyebrow {
+      font-size: 20px; font-weight: 700; line-height: 1.5;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #ff0b6c; margin-bottom: 32px;
+    }
+    .hero-h1 {
+      font-size: 76px; font-weight: 700; line-height: 1.25;
+      letter-spacing: -0.04em; margin-bottom: 32px;
+    }
+    .hero-body {
+      font-size: 22px; font-weight: 400; line-height: 1.7;
+      letter-spacing: -0.02em; color: rgba(0,0,0,0.6); max-width: 880px;
+    }
+
+    /* ── 2. LET'S SKEEP IN ───────────────────────── */
+    .sec-skeep-in {
+      background: #F4F8FC;
+      width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 160px;
+    }
+    .pill-gray {
+      background: #111; border-radius: 100px;
+      padding: 16px 50px;
+      font-size: 42px; font-weight: 600; line-height: 1.1;
+      letter-spacing: -0.04em; color: #fff;
+    }
+
+    /* ── 3. SKEEEEP ──────────────────────────────── */
+    .sec-skeeeep {
+      background: #F4F8FC;
+      width: 100%;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 84px 160px;
+    }
+    .skeeeep-t1 {
+      font-size: 72px; font-weight: 700; line-height: 1.3;
+      letter-spacing: -0.04em;
+    }
+    .skeeeep-t2 {
+      font-size: 44px; font-weight: 500; line-height: 1.5;
+      letter-spacing: -0.03em; color: rgba(0,0,0,0.55);
+    }
+
+    /* ── 4. SKIP THE INTRO ───────────────────────── */
+    .sec-skip-intro {
+      background: #fff;
+      width: 100%;
+      padding: 116px 160px;
+      text-align: center;
+    }
+    .skip-title {
+      font-size: 72px; font-weight: 700; line-height: 1.25;
+      letter-spacing: -0.04em; margin-bottom: 28px;
+    }
+    .skip-sub {
+      font-size: 22px; font-weight: 500; line-height: 1.7;
+      letter-spacing: -0.02em; color: rgba(0,0,0,0.55);
+    }
+
+    /* ── SUMMARY ROW (label + desc) ──────────────── */
+    .sec-summary {
+      background: #fff;
+      width: 100%; padding: 88px 160px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+    .summary-row {
+      display: flex; gap: 72px; align-items: flex-start;
+    }
+    .summary-label {
+      font-size: 40px; font-weight: 700; line-height: 1.5;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #ff0b6c; flex-shrink: 0; white-space: nowrap;
+      padding-top: 4px;
+    }
+    .summary-desc {
+      font-size: 24px; font-weight: 600; line-height: 1.5;
+      letter-spacing: -0.03em; max-width: 1008px; color: #111;
+    }
+
+    /* ── 5. PHILOSOPHY SLIDES ────────────────────── */
+    .phil-scroll {
+      background: #fff;
+      width: 100%;
+      min-height: 300vh;
+      position: relative;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    .phil-sticky {
+      min-height: 100vh;
+      padding: 96px 160px;
+      position: sticky;
+      top: 0;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 48px;
+      background: #fff;
+    }
+    .phil-left {
+      flex: 0 0 790px; display: flex;
+      flex-direction: column; gap: 32px;
+    }
+    .phil-label-sm {
+      font-size: 16px; font-weight: 700; line-height: 1.3;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #ff0b6c; white-space: nowrap;
+    }
+    .phil-tagline {
+      font-size: calc(68px * var(--phil-zoom-ratio, 1));
+      font-weight: 700;
+      line-height: calc(116px * var(--phil-zoom-ratio, 1));
+      letter-spacing: -0.04em;
+    }
+    .phil-tagline .dim  { color: rgba(0,0,0,0.13); }
+    .phil-tagline .on,
+    .phil-tagline p.active {
+      color: #111;
+    }
+    .phil-tagline p {
+      color: rgba(0,0,0,0.13);
+      transition: color .28s ease;
+    }
+
+    .phil-card-stack {
+      flex: 0 0 700px;
+      height: 466px;
+      position: relative;
+    }
+    .phil-card {
+      position: absolute;
+      inset: 0;
+      height: 466px;
+      border-radius: 28px; overflow: hidden;
+      background: linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 100%);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(22px);
+      transition: opacity .34s ease, transform .34s ease;
+    }
+    .phil-card.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .phil-card .blob-wrap {
+      position: absolute; inset: 0 0 140px 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phil-card .card-footer {
+      position: absolute; bottom: 48px; left: 48px; right: 48px;
+    }
+    .phil-card .card-name {
+      font-size: 44px; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.03em; color: #111; margin-bottom: 8px;
+    }
+    .phil-card .card-sub {
+      font-size: 22px; font-weight: 500; line-height: 1.6;
+      letter-spacing: -0.02em; color: rgba(0,0,0,0.55);
+    }
+
+    /* ── 6. MIGRATABLE AGENT HERO ────────────────── */
+    .sec-agent-hero {
+      display: none;
+    }
+    .agent-hero-inner { display: flex; flex-direction: column; gap: 24px; }
+    .agent-hero-h { font-size: 76px; font-weight: 700; line-height: 1.25; letter-spacing: -0.04em; }
+    .agent-hero-sub { font-size: 22px; font-weight: 400; line-height: 1.7; letter-spacing: -0.02em; color: rgba(0,0,0,0.55); }
+
+    /* ── 7. MIGRATABLE AGENT DETAIL ──────────────── */
+    .sec-agent-detail {
+      background: #fff; width: 100%;
+      height: 360vh;
+      padding: 0;
+      position: relative;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+    .agent-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 116px 160px;
+      overflow: hidden;
+      --agent-bg-opacity: 0;
+      --agent-bg-y: 0px;
+      isolation: isolate;
+    }
+    .agent-sticky::before,
+    .agent-sticky::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      opacity: var(--agent-bg-opacity);
+      z-index: -1;
+      transition: opacity .2s ease;
+    }
+    .agent-sticky::before {
+      left: -30vw;
+      right: -30vw;
+      top: 10vh;
+      height: 112vh;
+      background:
+        radial-gradient(ellipse at 12% 72%, rgba(255, 107, 174, 0.74) 0%, rgba(255, 155, 201, 0.46) 28%, transparent 62%),
+        radial-gradient(ellipse at 38% 49%, rgba(255, 176, 211, 0.58) 0%, rgba(255, 207, 226, 0.34) 31%, transparent 66%),
+        radial-gradient(ellipse at 69% 43%, rgba(255, 216, 198, 0.64) 0%, rgba(255, 232, 216, 0.38) 35%, transparent 70%),
+        radial-gradient(ellipse at 91% 76%, rgba(255, 246, 239, 0.72) 0%, rgba(255, 226, 214, 0.34) 38%, transparent 73%),
+        linear-gradient(155deg, rgba(255,255,255,0) 4%, rgba(255, 220, 232, 0.44) 42%, rgba(255, 238, 224, 0.36) 76%, rgba(255,255,255,0.78) 100%);
+      filter: blur(72px);
+      transform: translate3d(0, var(--agent-bg-y), 0);
+    }
+    .agent-sticky::after {
+      left: 2vw;
+      right: -8vw;
+      top: 32vh;
+      height: 62vh;
+      background:
+        radial-gradient(ellipse at 18% 38%, rgba(255, 132, 188, 0.46) 0%, rgba(255, 178, 211, 0.28) 32%, transparent 66%),
+        radial-gradient(ellipse at 76% 62%, rgba(255, 226, 207, 0.48) 0%, rgba(255, 240, 228, 0.24) 36%, transparent 72%);
+      filter: blur(66px);
+      transform: translate3d(0, var(--agent-bg-y), 0);
+    }
+    .agent-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 48px;
+      width: 100%;
+      will-change: transform;
+    }
+    .agent-left {
+      display: flex; flex-direction: column; gap: 28px; flex-shrink: 0;
+      align-items: flex-start;
+      text-align: left;
+      position: relative;
+      will-change: transform;
+    }
+    .agent-title {
+      font-size: 96px; font-weight: 700; line-height: 1.18; letter-spacing: -0.04em;
+      color: #ff1f78;
+      background: radial-gradient(circle at 50% 72%, rgba(255,31,120,.44) 0%, #ff1f78 42%, #ff3784 49%, #ff508f 56%, #ff80a6 71%, #ffb1bd 85%, #ffe1d4 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      transform-origin: left center;
+      will-change: opacity, transform;
+    }
+    .agent-sub   {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.7;
+      letter-spacing: -0.02em;
+      color: rgba(0,0,0,0.6);
+      width: max-content;
+    }
+    .agent-sub-line {
+      display: block;
+      width: max-content;
+      white-space: nowrap;
+      margin: 0;
+      opacity: 0;
+      will-change: transform;
+    }
+    .pills-row   {
+      display: flex; gap: 12px;
+      opacity: 0;
+      transform: translateY(32px);
+      will-change: opacity, transform;
+    }
+    .pill-sm {
+      background: #111; border-radius: 100px;
+      padding: 12px 32px;
+      width: 190px;
+      font-size: 28px; font-weight: 600; line-height: 1.1;
+      letter-spacing: -0.03em; color: #fff;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: background .2s ease, color .2s ease;
+    }
+    .pill-sm.dim { background: rgba(0,0,0,0.1); color: rgba(0,0,0,0.4); }
+
+    .agent-q-col,
+    .agent-principles-col {
+      display: flex; flex-direction: column; gap: 16px;
+      width: 700px; flex-shrink: 0;
+      opacity: 0;
+      transform: translateY(56px);
+      will-change: opacity, transform;
+    }
+    .agent-view-hidden { visibility: hidden; pointer-events: none; }
+    .agent-principles-col {
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+    .agent-left .agent-principles-col {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 96px);
+      width: calc(100vw - 160px);
+      max-width: none;
+      gap: 0;
+    }
+    .principles-scroll {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 2px 0;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 78%, rgba(0,0,0,.58) 90%, transparent 100%);
+      mask-image: linear-gradient(90deg, #000 0%, #000 78%, rgba(0,0,0,.58) 90%, transparent 100%);
+      cursor: grab;
+      user-select: none;
+    }
+    .principles-scroll.scrolled-left {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.58) 5%, #000 14%, #000 78%, rgba(0,0,0,.58) 90%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.58) 5%, #000 14%, #000 78%, rgba(0,0,0,.58) 90%, transparent 100%);
+    }
+    .principles-scroll.dragging {
+      cursor: grabbing;
+      scroll-snap-type: none;
+    }
+    .agent-left .principles-scroll {
+      width: 100%;
+    }
+    .principles-scroll::-webkit-scrollbar { display: none; }
+    .principle-mini-card {
+      width: 360px;
+      height: 360px;
+      flex: 0 0 360px;
+      border-radius: 36px;
+      padding: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 22px;
+      scroll-snap-align: start;
+    }
+    .principle-mini-card.type-a {
+      background:
+        radial-gradient(ellipse at 50% 29%, rgba(255,13,134,.15) 0%, rgba(255,38,104,.1125) 25%, rgba(255,63,74,.075) 50%, rgba(255,114,13,0) 100%),
+        linear-gradient(180deg, rgb(255, 203, 223) 0%, rgb(242, 248, 255) 100%);
+    }
+    .principle-mini-card.type-b {
+      background:
+        radial-gradient(ellipse at 50% 29%, rgba(255,13,98,.15) 0%, rgba(255,13,57,.075) 50%, rgba(255,13,17,0) 100%),
+        linear-gradient(180deg, rgb(255, 218, 203) 0%, rgb(255, 242, 242) 100%);
+    }
+    .principle-mini-card.type-c {
+      background:
+        radial-gradient(ellipse at 50% 29%, rgba(255,13,13,.15) 0%, rgba(255,38,13,.1125) 25%, rgba(255,63,13,.075) 50%, rgba(255,114,13,0) 100%),
+        linear-gradient(180deg, rgb(255, 239, 203) 0%, rgb(242, 248, 255) 100%);
+    }
+    .principle-mini-title {
+      margin: 0;
+      font-family: 'SUIT', 'Pretendard', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -1.8px;
+      white-space: nowrap;
+      color: transparent;
+      background: linear-gradient(180deg, #3b0018 0%, #95003c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    .principle-mini-title p,
+    .principle-mini-note {
+      margin: 0;
+    }
+    .principle-mini-title .thin {
+      font-family: 'Pretendard', sans-serif;
+      font-weight: 400;
+    }
+    .principle-mini-note {
+      font-family: 'SUIT', 'Pretendard', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.8px;
+      color: #413037;
+    }
+    .q-card {
+      background: #F4F8FC; border-radius: 24px;
+      padding: 36px; flex: 1; min-height: 200px;
+      border: 1px solid rgba(0,0,0,0.04);
+      cursor: pointer;
+      overflow: hidden;
+      transition: background .25s ease, min-height .35s ease, box-shadow .25s ease;
+    }
+    .q-card.open {
+      min-height: 380px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.05);
+    }
+    .q-card .q-num {
+      font-size: 48px; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.04em; margin-bottom: 12px;
+      color: #ff0b6c;
+    }
+    .q-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .q-head .q-num {
+      margin-bottom: 0;
+    }
+    .q-chevron {
+      width: 34px;
+      height: 22px;
+      margin-right: 4px;
+      position: relative;
+      flex: 0 0 auto;
+      opacity: .5;
+      transition: transform .25s ease, opacity .25s ease;
+    }
+    .q-chevron::before,
+    .q-chevron::after {
+      content: "";
+      position: absolute;
+      top: 7px;
+      width: 22px;
+      height: 7px;
+      border-radius: 999px;
+      background: #111;
+    }
+    .q-chevron::before {
+      left: 0;
+      transform: rotate(40deg);
+      transform-origin: right center;
+    }
+    .q-chevron::after {
+      right: 0;
+      transform: rotate(-40deg);
+      transform-origin: left center;
+    }
+    .q-card.open .q-chevron {
+      transform: rotate(180deg);
+      opacity: .85;
+    }
+    .q-card .q-text {
+      font-size: 26px; font-weight: 600; line-height: 1.5;
+      letter-spacing: -0.03em; color: #111;
+    }
+    .q-answer {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      margin-top: 0;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.65;
+      letter-spacing: -0.03em;
+      color: rgba(0,0,0,0.62);
+      transition: max-height .35s ease, opacity .25s ease, margin-top .25s ease;
+    }
+    .q-card.open .q-answer {
+      max-height: 360px;
+      opacity: 1;
+      margin-top: 22px;
+    }
+
+    /* ── 8. SYSTEM INTRO ─────────────────────────── */
+    .sec-system-intro {
+      background: #fff; width: 100%;
+      padding: 120px 160px;
+      display: flex; align-items: flex-end;
+      justify-content: space-between; gap: 64px;
+    }
+    .sys-left { display: flex; flex-direction: column; gap: 20px; }
+    .sys-label { font-size: 40px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ff0b6c; }
+    .sys-title { font-size: 64px; font-weight: 700; line-height: 1.25; letter-spacing: -0.04em; color: #111; }
+    .sys-right  {
+      font-size: 24px; font-weight: 400; line-height: 1.7;
+      letter-spacing: -0.02em; max-width: 672px; flex-shrink: 0;
+      color: rgba(0,0,0,0.6);
+    }
+
+    /* ── 9. SYSTEM DIAGRAM ───────────────────────── */
+    .sec-system-diagram {
+      background: #fff; width: 100%;
+      padding: 84px 160px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 20px;
+    }
+    .diagram-card {
+      width: 100%;
+      background: #F4F8FC; border-radius: 28px;
+      min-height: 600px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .diagram-card-content {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px; text-align: center;
+      opacity: 0.12;
+    }
+    .diagram-brand-name {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      font-size: 22px; font-weight: 700; letter-spacing: 0.05em;
+    }
+    .diagram-logo {
+      width: 116px;
+    }
+    .diagram-note {
+      font-size: 20px; font-weight: 400; letter-spacing: -0.02em;
+    }
+    .diagram-tabs {
+      background: #F4F8FC; border-radius: 24px;
+      display: flex; gap: 8px; padding: 16px 20px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .diagram-tab {
+      border-radius: 12px; padding: 10px 20px; min-width: 200px;
+    }
+    .diagram-tab.active { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .diagram-tab .tab-n { font-size: 20px; font-weight: 700; color: #ff0b6c; line-height: 1.5; letter-spacing: 0.04em; text-transform: uppercase; }
+    .diagram-tab .tab-l { font-size: 30px; font-weight: 600; line-height: 1.5; letter-spacing: -0.03em; color: #111; }
+
+    /* ── 10. SYSTEM LAYERS ───────────────────────── */
+    .sec-layers {
+      background: linear-gradient(180deg, #F4F8FC 0%, rgba(244,248,252,0) 100%);
+      width: 100%;
+      padding: 84px 160px;
+      min-height: 800px;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+    }
+    .layers-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    }
+    .layer-card {
+      background: #F4F8FC; border-radius: 28px;
+      padding: 40px; min-height: 360px;
+      display: flex; flex-direction: column; gap: 36px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .layer-card.faded { opacity: 0.4; }
+    .layer-name { font-size: 48px; font-weight: 700; line-height: 1.3; letter-spacing: -0.04em; color: #111; }
+    .layer-en   { font-size: 28px; font-weight: 600; line-height: 1.5; letter-spacing: -0.01em; color: rgba(0,0,0,0.5); }
+    .layer-desc { font-size: 24px; font-weight: 400; line-height: 1.6; letter-spacing: -0.02em; color: rgba(0,0,0,0.4); }
+
+    /* ── 11. PACKET INTRO ────────────────────────── */
+    .sec-packet-intro {
+      background: #fff; width: 100%; padding: 104px 160px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+    .packet-tag {
+      display: inline-block;
+      border: 1.5px solid #ff0b6c;
+      border-radius: 100px; padding: 8px 28px;
+      font-size: 22px; font-weight: 700; line-height: 1.3;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: #ff0b6c; margin-bottom: 36px;
+    }
+    .packet-title {
+      font-size: 64px; font-weight: 700; line-height: 1.25;
+      letter-spacing: -0.04em; margin-bottom: 28px; color: #111;
+    }
+    .packet-desc {
+      font-size: 24px; font-weight: 400; line-height: 1.7;
+      letter-spacing: -0.02em; max-width: 1100px;
+      color: rgba(0,0,0,0.6);
+    }
+
+    /* ── 12. PACKET Q&A ──────────────────────────── */
+    .sec-packet-qa {
+      background: #fff; width: 100%;
+      padding: 84px 160px;
+    }
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .qa-card {
+      background: #F4F8FC; border-radius: 20px;
+      padding: 40px 36px; min-height: 220px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .qa-card .qn {
+      font-size: 32px; font-weight: 700; line-height: 1.3;
+      letter-spacing: -0.02em; display: block; margin-bottom: 8px;
+      color: #ff0b6c;
+    }
+    .qa-card .qt {
+      font-size: 32px; font-weight: 600; line-height: 1.45;
+      letter-spacing: -0.03em; color: #111;
+    }
+
+    /* ── 13. SKEEPABLES ──────────────────────────── */
+    .sec-skeepables-intro {
+      background: #fff; width: 100%; padding: 104px 160px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+    .sk-title {
+      font-size: 64px; font-weight: 700; line-height: 1.25;
+      letter-spacing: -0.04em; margin-bottom: 24px; color: #111;
+    }
+    .sk-desc {
+      font-size: 24px; font-weight: 400; line-height: 1.7;
+      letter-spacing: -0.02em; max-width: 1100px;
+      color: rgba(0,0,0,0.6);
+    }
+
+    /* ── 14. UX LOGIC INTRO ──────────────────────── */
+    .sec-ux-intro {
+      background: #fff; width: 100%;
+      padding: 120px 160px;
+      display: flex; align-items: flex-end;
+      justify-content: space-between; gap: 64px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+    .ux-left { display: flex; flex-direction: column; gap: 20px; }
+    .ux-label { font-size: 40px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ff0b6c; white-space: nowrap; }
+    .ux-title { font-size: 64px; font-weight: 700; line-height: 1.25; letter-spacing: -0.04em; color: #111; }
+    .ux-right  { font-size: 24px; font-weight: 400; line-height: 1.7; letter-spacing: -0.02em; max-width: 680px; flex-shrink: 0; color: rgba(0,0,0,0.6); }
+
+    /* ── UX LOGIC STAGE OVERVIEW ─────────────────── */
+    .sec-ux-overview { background: #fff; width: 100%; padding: 0 160px 84px; }
+    .ux-overview-row { display: flex; gap: 31px; }
+    .ux-overview-card {
+      width: 240px; height: 240px; flex-shrink: 0;
+      border-radius: 32px; padding: 36px 0 0 29px;
+      display: block; text-decoration: none;
+      transition: transform .2s ease;
+    }
+    .ux-overview-card:hover { transform: translateY(-4px); }
+    .ux-overview-title {
+      font-size: 36px; font-weight: 700; letter-spacing: -0.04em;
+      color: #111; margin-bottom: 18px;
+    }
+    .ux-overview-sub {
+      font-size: 24px; font-weight: 400; line-height: 1.3;
+      letter-spacing: -0.04em; color: #111; opacity: 0.2;
+    }
+
+    /* ── 15. UX LOGIC STAGES ─────────────────────── */
+    .sec-ux-stage {
+      background: #fff; width: 100%; padding: 80px 160px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .stage-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 80px;
+    }
+    .stage-left { flex-shrink: 0; width: 460px; }
+    .stage-kr-label {
+      font-size: 16px; font-weight: 700; color: #ff0b6c;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;
+    }
+    .stage-kr {
+      font-size: 60px; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.04em; margin-bottom: 24px; color: #111;
+    }
+    .stage-desc {
+      font-size: 36px; font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; color: rgba(0,0,0,0.55);
+      margin: 0 0 24px; white-space: nowrap;
+    }
+    .stage-en {
+      display: inline-block;
+      background: #fff3f7; border-radius: 100px;
+      border: 1.5px solid #ff0b6c;
+      padding: 6px 20px;
+      font-size: 32px; font-weight: 700; color: #ff0b6c;
+      letter-spacing: 0.02em;
+    }
+    .stage-right { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+    .sec-ux-stage[data-open-detail] {
+      cursor: pointer;
+    }
+    .stage-logic-card {
+      background: #F4F8FC; border-radius: 32px;
+      padding: 44px 48px 40px;
+      display: flex; flex-direction: column; gap: 20px;
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .sec-ux-stage[data-open-detail]:hover .stage-logic-card {
+      background: #edf0f6;
+      border-color: rgba(0,0,0,0.07);
+    }
+    .stage-logic-title {
+      font-size: 52px; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.04em; color: #222;
+    }
+    .stage-logic-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .stage-logic-tag {
+      background: #494949; color: #fff;
+      font-size: 20px; font-weight: 700; letter-spacing: -0.04em;
+      padding: 10px 20px; border-radius: 22px; white-space: nowrap;
+    }
+    .stage-logic-desc {
+      font-size: 28px; font-weight: 600; line-height: 1.5;
+      letter-spacing: -0.04em; color: #222; opacity: 0.4;
+    }
+
+    /* ── SENSING DETAIL FROM FIGMA ─────────────────── */
+    #sensing-detail {
+      display: none;
+      width: 100%;
+      background: #fff;
+    }
+    body.sensing-detail-mode > :not(#sensing-detail) {
+      display: none !important;
+    }
+    body.sensing-detail-mode #sensing-detail {
+      display: block;
+    }
+    #morphing-detail {
+      display: none;
+      width: 100%;
+      background: #fff;
+    }
+    body.morphing-detail-mode > :not(#morphing-detail) {
+      display: none !important;
+    }
+    body.morphing-detail-mode #morphing-detail {
+      display: block;
+    }
+    .sd-section {
+      width: 100%;
+      padding: 116px 160px;
+      background: #fff;
+    }
+    .sd-section.sd-bg-grad {
+      background: linear-gradient(160deg, #fff 0%, #F4F8FC 55%, #F4F8FC 100%);
+    }
+    .sd-section.sd-bg-deep {
+      background: linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 45%, #F4F8FC 100%);
+    }
+    .sd-hero {
+      height: 100vh;
+      min-height: 760px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .sd-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('assets/sensing-hero-bg.jpg') center center / cover no-repeat;
+      z-index: 0;
+    }
+    .sd-hero-dim {
+      position: absolute;
+      inset: 0;
+      background: rgba(14, 24, 37, 0.90);
+      z-index: 1;
+    }
+    .sd-logo {
+      position: absolute;
+      top: 64px;
+      left: 74px;
+      width: 182px;
+      cursor: pointer;
+      z-index: 3;
+      filter: brightness(0) invert(1);
+    }
+    .sd-hero h1 {
+      position: relative;
+      z-index: 2;
+      font-size: 72px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
+      max-width: 1220px;
+      word-break: keep-all;
+      color: #ffffff;
+    }
+    .sd-intro {
+      display: flex;
+      flex-direction: column;
+      gap: 52px;
+    }
+    .sd-copy-block {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 760px;
+    }
+    .sd-title {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .sd-body {
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.4;
+      letter-spacing: -0.03em;
+      color: #000;
+    }
+    .sd-pill-row {
+      display: grid;
+      grid-template-columns: 8fr 5fr 3fr;
+      gap: 0;
+      width: 100%;
+    }
+    .sd-pill {
+      height: 300px;
+      border-radius: 150px;
+      background: linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 50%, #F4F8FC 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+    }
+    .sd-pink { color: #ff076a; }
+    .sd-sensing-scene {
+      min-height: 1060px;
+      position: relative;
+      padding-top: 150px;
+    }
+    .sd-compass {
+      width: 646px;
+      height: 646px;
+      object-fit: contain;
+    }
+    .sd-sensing-title {
+      position: absolute;
+      left: 54.1%;
+      top: 330px;
+      font-size: 120px;
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+      color: #0e1825;
+    }
+    .sd-caption-right {
+      position: absolute;
+      right: 160px;
+      bottom: 82px;
+      text-align: right;
+      font-size: 40px;
+      line-height: 1.4;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+    }
+    .sd-vline {
+      width: 2px;
+      height: 180px;
+      background: #ff076a;
+      margin-left: 183px;
+      opacity: .65;
+    }
+    .sd-two-col {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 72px;
+    }
+    .sd-visual-round {
+      width: 370px;
+      height: 370px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .sd-text-right {
+      max-width: 1047px;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .sd-text-right h2 {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.5;
+      letter-spacing: -0.04em;
+    }
+    .sd-text-right p {
+      font-size: 28px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .sd-clock-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .sd-clock-row img {
+      width: 370px;
+      height: 370px;
+      object-fit: contain;
+    }
+    .sd-clock-row img:nth-child(2) { opacity: .8; }
+    .sd-clock-row img:nth-child(3) { opacity: .6; }
+    .sd-clock-row img:nth-child(4) { opacity: .4; }
+    .sd-orbit-scroll {
+      height: 360vh;
+      padding: 0;
+      position: relative;
+      overflow: visible;
+    }
+    .sd-orbit-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .sd-orbit-visual {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 370px;
+      height: 370px;
+      transform: translate(-50%, -50%);
+    }
+    .sd-orbit-visual img {
+      width: 370px;
+      height: 370px;
+      object-fit: contain;
+      will-change: opacity, transform;
+    }
+    .sd-orbit-radar,
+    .sd-orbit-main-clock {
+      position: absolute;
+      inset: 0;
+    }
+    .sd-orbit-main-clock {
+      opacity: 0;
+    }
+    .sd-orbit-trail {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+    .sd-orbit-trail img {
+      position: absolute;
+      inset: 0;
+    }
+    .sd-orbit-copy {
+      position: absolute;
+      right: 160px;
+      top: 50%;
+      transform: translateY(-50%);
+      max-width: 1047px;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      will-change: opacity, transform;
+    }
+    .sd-tick {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 64px;
+    }
+    .sd-tick h2 {
+      font-size: 110px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+      color: #0e1825;
+    }
+    .sd-tick h2 span { color: #F4F8FC; }
+    .sd-tick p {
+      max-width: 760px;
+      text-align: right;
+      font-size: 24px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .sd-walk {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      overflow: hidden;
+    }
+    .sd-walk-strip {
+      width: 100%;
+      height: 532px;
+      border-radius: 0;
+      object-fit: cover;
+      opacity: .55;
+      display: block;
+    }
+    .sd-walk-caption {
+      text-align: center;
+      padding-top: 0;
+    }
+    .sd-walk-caption h2 {
+      font-size: 60px;
+      line-height: 1.5;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+    .sd-walk-caption p {
+      margin-top: 28px;
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .sd-input-word {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 560px;
+      position: relative;
+    }
+    .sd-input-word h2 {
+      font-size: 200px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+    }
+    .sd-input-word img {
+      position: absolute;
+      right: -280px;
+      width: 765px;
+      opacity: .95;
+    }
+    .sd-input-summary {
+      display: grid;
+      grid-template-columns: 365px 1fr;
+      gap: 355px;
+      align-items: start;
+    }
+    .sd-input-summary h2 {
+      font-size: 60px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .sd-input-summary p {
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .sd-card-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .sd-info-card {
+      border-radius: 32px;
+      overflow: hidden;
+      background: linear-gradient(155deg, #F4F8FC 0%, #F4F8FC 100%);
+      min-height: 760px;
+      display: flex;
+      flex-direction: column;
+    }
+    .sd-card-img {
+      flex: 1 1 auto;
+      min-height: 360px;
+      background:
+        radial-gradient(ellipse at 30% 45%, rgba(255,11,108,0.28) 0%, rgba(255,11,108,0) 58%),
+        linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 50%, #F4F8FC 100%);
+    }
+    .sd-info-card:nth-child(2) .sd-card-img {
+      background:
+        radial-gradient(ellipse at 50% 38%, rgba(255,11,108,0.22) 0%, rgba(255,11,108,0) 55%),
+        linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 45%, #F4F8FC 100%);
+    }
+    .sd-info-card:nth-child(3) .sd-card-img {
+      background:
+        radial-gradient(ellipse at 28% 50%, rgba(255,11,108,0.25) 0%, rgba(255,11,108,0) 58%),
+        linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 50%, #F4F8FC 100%);
+    }
+    .sd-card-text {
+      height: 400px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      color: #222;
+    }
+    .sd-card-text h3 {
+      font-size: 60px;
+      line-height: 1.5;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+    .sd-card-text h3 span {
+      display: block;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+    }
+    .sd-card-text p {
+      font-size: 24px;
+      line-height: 1.5;
+      font-weight: 500;
+      opacity: .4;
+      letter-spacing: -0.03em;
+    }
+    .sd-active {
+      display: grid;
+      grid-template-columns: 620px 720px;
+      justify-content: space-between;
+      gap: 80px;
+      align-items: center;
+    }
+    .sd-active-label {
+      color: #ff076a;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+    .sd-active h2 {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.5;
+      letter-spacing: -0.04em;
+      margin-bottom: 28px;
+    }
+    .sd-active p {
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .sd-main-image {
+      height: 466px;
+      border-radius: 32px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.88) 100%),
+        linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 50%, #F4F8FC 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      letter-spacing: -0.03em;
+    }
+    .sd-flow-panel {
+      margin: 66px 151px;
+      border-radius: 32px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 127.56%),
+        #EBF0F5;
+      min-height: 377px;
+      padding: 42px;
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .sd-flow-side .label {
+      color: #ff076a;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .sd-flow-side h3 {
+      font-size: 40px;
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+    .sd-flow-side p {
+      font-size: 20px;
+      line-height: 1.5;
+      letter-spacing: -0.04em;
+    }
+    .sd-flow-cards {
+      display: flex;
+      gap: 23px;
+      align-items: center;
+      width: 100%;
+    }
+    .sd-flow-cards.grouped {
+      align-items: flex-start;
+      gap: 32px;
+    }
+    .sd-flow-group {
+      flex: 3 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .sd-flow-group.strong {
+      flex: 2 1 0;
+    }
+    .sd-flow-group-row {
+      position: relative;
+      display: flex;
+      gap: 23px;
+      width: 100%;
+    }
+    .sd-flow-group-row::before {
+      content: '';
+      position: absolute;
+      inset: -9px;
+      border: 3.6px dashed #6e6e6e;
+      border-radius: 35.2px;
+      background: rgba(0,0,0,.05);
+      opacity: .5;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .sd-flow-group.strong .sd-flow-group-row::before { opacity: 1; }
+    .sd-flow-caption {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding-left: 22px;
+    }
+    .sd-flow-caption .bracket {
+      width: 17.6px;
+      height: 37px;
+      border-left: 1.5px solid #c2c2c2;
+      border-bottom: 1.5px solid #c2c2c2;
+      flex-shrink: 0;
+    }
+    .sd-flow-caption-text {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: rgba(0,0,0,.5);
+    }
+    .sd-flow-card {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 0;
+      min-width: 0;
+      height: 250px;
+      border-radius: 25px;
+      background: rgba(245,250,254,.72);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .sd-flow-card.active {
+      background: linear-gradient(180deg, #ff0b6c 0%, #ff61a0 100%);
+      color: #fff;
+    }
+    .sd-flow-card.step2 { background: #e2e8ef; }
+    .sd-flow-card.step3 { background: #d8dee6; }
+    .sd-flow-card.step4 { background: #d0d7e0; }
+    .sd-flow-card.step5 { background: #c4ccd7; }
+    .sd-flow-card h4 {
+      font-size: 36px;
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+    .sd-flow-card:not(.active) h4 {
+      font-weight: 600;
+      opacity: .6;
+    }
+    .sd-flow-card span {
+      font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+      font-weight: 400;
+      font-size: 36px;
+      line-height: .96;
+      opacity: .55;
+      letter-spacing: -0.04em;
+    }
+    .sd-flow-card:not(.active) span { opacity: .2; }
+    .sd-pause-phrase {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 78px;
+      align-items: center;
+    }
+    .sd-pause-phrase .round {
+      width: 240px;
+      height: 240px;
+      object-fit: contain;
+    }
+    .sd-phrase-track {
+      display: flex;
+      gap: 25px;
+      overflow: hidden;
+    }
+    .sd-phrase {
+      height: 240px;
+      border-radius: 32px;
+      background: linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 55%, #F4F8FC 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 164px;
+      font-size: 80px;
+      font-weight: 700;
+      white-space: nowrap;
+      letter-spacing: -0.04em;
+    }
+    .sd-phrase.dim { opacity: .22; }
+    .sd-pause-title {
+      margin-top: 217px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 80px;
+    }
+    .sd-pause-title h2 {
+      font-size: 72px;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+    }
+    .sd-principles {
+      display: flex;
+      flex-direction: column;
+      gap: 120px;
+      margin-left: auto;
+      width: 600px;
+    }
+    .sd-principle .kicker {
+      font-size: 32px;
+      color: #ff076a;
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      margin-bottom: 17px;
+    }
+    .sd-principle h3 {
+      font-size: 48px;
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      margin-bottom: 17px;
+    }
+    .sd-principle p {
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+
+    /* ── MORPHING DETAIL FROM FIGMA ───────────────── */
+    .md-section {
+      width: 100%;
+      padding: 116px 160px;
+      background: #fff;
+    }
+    .md-hero {
+      height: 100vh;
+      min-height: 760px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .md-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('assets/sensing-hero-bg.jpg') center center / cover no-repeat;
+      z-index: 0;
+    }
+    .md-hero-dim {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.80);
+      z-index: 1;
+    }
+    .md-logo {
+      position: absolute;
+      top: 64px;
+      left: 74px;
+      width: 182px;
+      cursor: pointer;
+      z-index: 3;
+      filter: brightness(0) invert(1);
+    }
+    .md-hero h1 {
+      position: relative;
+      z-index: 2;
+      font-size: 72px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
+      max-width: 1220px;
+      word-break: keep-all;
+      color: #ffffff;
+    }
+    .md-big-card {
+      height: 900px;
+      border-radius: 32px;
+      background: #F4F8FC;
+      position: relative;
+      overflow: hidden;
+    }
+    .md-big-copy {
+      position: absolute;
+      left: 90px;
+      bottom: 102px;
+      color: #000;
+    }
+    .md-big-copy .eyebrow {
+      font-size: 32px;
+      line-height: 1.4;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .md-big-copy h2 {
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1.24;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .md-big-copy p {
+      font-size: 32px;
+      line-height: 1.4;
+      letter-spacing: -0.03em;
+      max-width: 726px;
+    }
+    .md-skeep-ai {
+      display: grid;
+      grid-template-columns: 906px 686px;
+      gap: 40px;
+      align-items: stretch;
+    }
+    .md-ai-left {
+      height: 900px;
+      border-radius: 32px;
+      background: #F4F8FC;
+      position: relative;
+      overflow: hidden;
+    }
+    .md-ai-left .md-big-copy {
+      left: 90px;
+      right: 90px;
+      bottom: 87px;
+    }
+    .md-ai-list {
+      height: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .md-ai-card {
+      flex: 1;
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+      background: #F4F8FC;
+      display: flex;
+      align-items: flex-end;
+    }
+    .md-ai-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/morphing-card-basic.png');
+      background-size: cover;
+      opacity: .65;
+    }
+    .md-ai-card-text {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 200px;
+      padding: 40px;
+      background: linear-gradient(180deg, rgba(244,248,252,0) 0%, #F4F8FC 100%);
+      color: #222;
+    }
+    .md-ai-card-text h3 {
+      font-size: 48px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+    }
+    .md-ai-card-text p {
+      font-size: 28px;
+      line-height: 1.5;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+    }
+    .md-parsing-word {
+      height: 588px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+    }
+    .md-parsing-word h2 {
+      font-size: 160px;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+    .md-parsing-word .ghost {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(0,0,0,.08);
+    }
+    .md-parsing-word::before,
+    .md-parsing-word::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 625px;
+      height: 1px;
+      background: rgba(255,7,106,.32);
+    }
+    .md-parsing-word::before { left: 8px; }
+    .md-parsing-word::after { right: 8px; }
+    .md-split-summary {
+      display: grid;
+      grid-template-columns: 390px 643px;
+      justify-content: space-between;
+      align-items: start;
+      gap: 80px;
+    }
+    .md-number {
+      font-size: 40px;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+    .md-label-xl {
+      font-size: 120px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+    }
+    .md-summary-text {
+      font-size: 40px;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      text-align: right;
+    }
+    .md-principle-block {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .md-kicker {
+      font-size: 32px;
+      color: #ff076a;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+    }
+    .md-principle-title {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.5;
+      letter-spacing: -0.04em;
+      max-width: 748px;
+    }
+    .md-principle-body {
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+      max-width: 748px;
+    }
+    .md-principle-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .md-principle-card {
+      min-height: 267px;
+      border-radius: 24px;
+      background: #F4F8FC;
+      padding: 48px 40px 40px;
+    }
+    .md-principle-card .mini {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      opacity: .5;
+      margin-bottom: 17px;
+    }
+    .md-principle-card h3 {
+      font-size: 36px;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      margin-bottom: 17px;
+    }
+    .md-principle-card p {
+      font-size: 24px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .md-ability {
+      display: grid;
+      grid-template-columns: 355px 1fr;
+      gap: 240px;
+      align-items: start;
+    }
+    .md-ability h2 {
+      font-size: 80px;
+      line-height: 1.5;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+    }
+    .md-ability p {
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .md-map-word {
+      height: 588px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 80px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .md-map-word span {
+      font-size: 102px;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .md-map-word .center {
+      font-size: 160px;
+    }
+    .md-mapping {
+      display: grid;
+      grid-template-columns: 457px 1052px;
+      gap: 90px;
+      align-items: center;
+    }
+    .md-mapping-left .num {
+      font-size: 40px;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+    .md-mapping-left h2 {
+      font-size: 120px;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      text-align: right;
+    }
+    .md-triple-box {
+      height: 516px;
+      border-radius: 32px;
+      background: #F4F8FC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 112px;
+    }
+    .md-triple-box span {
+      font-size: 60px;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+    }
+    .md-exec-card {
+      height: 900px;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 70% 40%, rgba(255,7,106,.14), transparent 28%),
+        #F4F8FC;
+      position: relative;
+      overflow: hidden;
+    }
+    .md-exec-card .md-big-copy .eyebrow {
+      font-size: 19px;
+    }
+    .md-exec-card .md-big-copy h2 {
+      font-size: 50px;
+      line-height: 1.3;
+    }
+    .md-exec-card .md-big-copy p {
+      font-size: 19px;
+      line-height: 1.5;
+      max-width: 707px;
+    }
+    .md-morph-word {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 80px;
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+    .md-morph-word h2 {
+      font-size: 110px;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+    }
+    .md-morph-word h2 span { color: #cacaca; }
+    .md-morph-word p {
+      max-width: 757px;
+      text-align: right;
+      font-size: 24px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .md-gems {
+      min-height: 700px;
+      position: relative;
+    }
+    .md-gem {
+      position: absolute;
+      object-fit: contain;
+      filter: saturate(1.05);
+    }
+    .md-gem.g1 { left: 42%; top: 180px; width: 394px; }
+    .md-gem.g2 { right: 12%; top: 80px; width: 609px; }
+    .md-gem.g3 { left: 18%; top: 150px; width: 441px; }
+    .md-morph-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 80px;
+    }
+    .md-morph-pill {
+      height: 240px;
+      border-radius: 32px;
+      background: #eceef3;
+      display: inline-flex;
+      align-items: center;
+      padding: 60px 164px;
+      font-size: 80px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.5;
+    }
+    .md-morph-title h2 {
+      font-size: 72px;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+      text-align: right;
+    }
+    .md-last {
+      display: grid;
+      grid-template-columns: 1fr 600px;
+      gap: 120px;
+      align-items: start;
+      min-height: 1200px;
+    }
+    .md-last h2 {
+      font-size: 72px;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+    .md-last p {
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    .md-last-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 120px;
+      padding-top: 143px;
+    }
+    .md-last-item .kicker {
+      font-size: 32px;
+      color: #ff076a;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      margin-bottom: 17px;
+    }
+    .md-last-item h3 {
+      font-size: 48px;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
+      font-weight: 600;
+      margin-bottom: 17px;
+    }
+    .md-last-item p {
+      font-size: 36px;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+    }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      background: #F4F8FC; width: 100%;
+      padding: 100px 160px; text-align: center;
+    }
+    .ft-logo { width: 188px; margin: 0 auto 18px; }
+    .ft-tag  { font-size: 18px; font-weight: 500; color: rgba(0,0,0,0.45); margin-bottom: 48px; letter-spacing: -0.01em; }
+    .ft-meta { font-size: 13px; color: rgba(0,0,0,0.3); line-height: 2; letter-spacing: 0.01em; }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 1400px) {
+      .sec-hero, .sec-skeep-in, .sec-skeeeep, .sec-skip-intro,
+      .sec-summary, .sec-agent-hero, .sec-agent-detail,
+      .sec-system-intro, .sec-system-diagram, .sec-layers,
+      .sec-packet-intro, .sec-packet-qa, .sec-skeepables-intro,
+      .sec-ux-intro, .sec-ux-stage, footer {
+        padding-left: 80px; padding-right: 80px;
+      }
+      .phil-sticky {
+        padding-left: 80px;
+        padding-right: 80px;
+      }
+      .sd-hero,
+      .md-hero {
+        padding-left: 80px;
+        padding-right: 80px;
+      }
+      .sd-hero h1,
+      .md-hero h1 {
+        font-size: clamp(48px, 5.15vw, 72px);
+      }
+      .sd-logo,
+      .md-logo {
+        left: 48px;
+      }
+      .hero-brand {
+        left: 80px;
+      }
+    }
+    @media (max-width: 1100px) {
+      .phil-sticky { flex-direction: column; }
+      .phil-left { flex: none; max-width: 100%; }
+      .phil-card-stack { flex: none; width: 100%; max-width: 700px; }
+      .phil-card { width: 100%; }
+      .agent-row { flex-direction: column; }
+      .agent-q-col, .agent-principles-col { width: 100%; }
+      .sec-system-intro, .sec-ux-intro { flex-direction: column; }
+      .sys-right, .ux-right { max-width: 100%; }
+      .layers-grid { grid-template-columns: 1fr; }
+      .qa-grid { grid-template-columns: 1fr; }
+      .stage-row { flex-direction: column; }
+      .stage-left { width: 100%; }
+      .sd-section { padding-left: 80px; padding-right: 80px; }
+      .md-section { padding-left: 80px; padding-right: 80px; }
+      .sd-pill-row, .sd-card-list, .sd-active, .sd-input-summary { grid-template-columns: 1fr; }
+      .md-skeep-ai, .md-split-summary, .md-ability, .md-mapping, .md-last { grid-template-columns: 1fr; }
+      .md-principle-cards { grid-template-columns: 1fr; }
+      .sd-two-col, .sd-tick, .sd-flow-panel, .sd-pause-phrase, .sd-pause-title { flex-direction: column; display: flex; }
+      .md-morph-word, .md-morph-title { flex-direction: column; display: flex; align-items: flex-start; }
+      .sd-sensing-title, .sd-caption-right { position: static; margin-top: 40px; text-align: left; }
+      .sd-clock-row { flex-wrap: wrap; }
+    }
+    @media (max-width: 768px) {
+      .sec-hero, .sec-skeep-in, .sec-skeeeep, .sec-skip-intro,
+      .sec-summary, .sec-agent-hero, .sec-agent-detail,
+      .sec-system-intro, .sec-system-diagram, .sec-layers,
+      .sec-packet-intro, .sec-packet-qa, .sec-skeepables-intro,
+      .sec-ux-intro, .sec-ux-stage, footer {
+        padding-left: 24px; padding-right: 24px;
+      }
+      .phil-sticky { padding: 80px 24px; }
+      .hero-h1 { font-size: 48px; }
+      .skeeeep-t1 { font-size: 40px; }
+      .skeeeep-t2 { font-size: 28px; }
+      .skip-title, .agent-title, .packet-title, .sk-title { font-size: 40px; }
+      .sys-title, .ux-title { font-size: 40px; }
+      .hero-brand {
+        top: 36px;
+        left: 24px;
+        width: 112px;
+      }
+      .sd-logo,
+      .md-logo {
+        top: 36px;
+        left: 24px;
+        width: 142px;
+      }
+      .phil-card-stack, .phil-card { height: 340px; }
+      .phil-card .blob-wrap { inset-bottom: 112px; }
+      .phil-card .card-footer { left: 28px; right: 28px; bottom: 30px; }
+      .phil-card .card-name { font-size: 32px; }
+      .phil-card .card-sub { font-size: 16px; }
+      .phil-card svg { width: 380px; height: auto; }
+      .pill-gray { font-size: 28px; padding: 12px 32px; }
+      .sd-section { padding-left: 24px; padding-right: 24px; }
+      .md-section { padding-left: 24px; padding-right: 24px; }
+      .sd-hero,
+      .md-hero {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .sd-hero h1, .sd-title, .sd-text-right h2, .sd-walk-caption h2, .sd-active h2 { font-size: 40px; }
+      .md-hero h1, .md-big-copy h2, .md-principle-title, .md-active h2 { font-size: 40px; }
+      .md-parsing-word h2, .md-map-word .center, .md-label-xl, .md-mapping-left h2 { font-size: 64px; }
+      .md-morph-pill { font-size: 36px; padding: 40px; height: auto; }
+      .sd-input-word h2 { font-size: 88px; }
+      .sd-body, .sd-text-right p, .sd-walk-caption p, .sd-active p { font-size: 22px; }
+      .md-big-copy p, .md-principle-body, .md-ability p, .md-last p, .md-last-item p { font-size: 22px; }
+      .sd-pill { height: 140px; font-size: 32px; }
+      .sd-compass { width: 100%; height: auto; }
+      .sd-sensing-title { font-size: 54px; }
+      .sd-tick h2 { font-size: 52px; white-space: normal; }
+      .sd-flow-cards { flex-wrap: wrap; }
+      .sd-phrase { font-size: 36px; padding: 40px; }
+      .md-ai-card-text h3, .md-last-item h3 { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════
+  1. HERO
+═══════════════════════ -->
+<section class="sec-hero fi">
+  <img class="hero-brand logo-img" src="assets/skeep-logo.svg" alt="Skeep 홈으로" data-home-logo tabindex="0" role="button">
+  <p class="hero-eyebrow">Skeep Intelligence System™</p>
+  <h1 class="hero-h1">새로운 시대를 위한<br>새로운 기준</h1>
+  <p class="hero-body">
+    누구세요, 무엇을 좋아하세요, 어떻게 도와드릴까요.<br>
+    지금까지 우리는 새로운 제품과 서비스를 마주할 때면 매번 우리의 맥락과 목적을 설명해야만 했습니다.<br>
+    그 서먹한 통성명의 반복이 너무 당연해진 나머지, 불편하다는 사실조차 잊고 살았죠.
+  </p>
+
+  <div class="hero-gnb" id="heroGnb">
+    <div class="hero-gnb-shape gnb-away" id="heroGnbShape">
+      <a class="hero-gnb-card" style="background:#EBF0F5" href="saegyeodeutda.html">새겨듣다</a>
+      <a class="hero-gnb-card" style="background:#EBF0F5" href="smeureulda.html">스며들다</a>
+      <a class="hero-gnb-card" style="background:#E2E8EF" href="#negotiation">조율하다</a>
+      <a class="hero-gnb-card" style="background:#D8DEE6" href="#borrowing">빌려쓰다</a>
+      <a class="hero-gnb-card" style="background:#D0D7E0" href="#keep">지켜주다</a>
+      <a class="hero-gnb-card" style="background:#C4CCD7" href="#seeyou">기억하다</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  2. LET'S SKEEP IN
+═══════════════════════ -->
+<div class="sec-skeep-in fi">
+  <div class="pill-gray">Let's Skeep in</div>
+</div>
+
+<!-- ═══════════════════════
+  3. SKEEEEP
+═══════════════════════ -->
+<section class="sec-skeeeep fi">
+  <div>
+    <p class="skeeeep-t1">Skeeeeep into the new era</p>
+    <p class="skeeeep-t2">Skip the intro, Keep the flow</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  4. SKIP THE INTRO
+═══════════════════════ -->
+<section class="sec-skip-intro fi">
+  <p class="skip-title">Skip the intro, Keep the flow</p>
+  <p class="skip-sub">
+    당신이 누구인지, 지금 어떤 상태인지를 환경에 정확하게 전달하는 스킵.<br>
+    가장 매끄러운 경험은 가장 치밀한 설계에서 완성됩니다.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  5. PHILOSOPHY SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">Philosophy</div>
+    <div class="summary-desc">
+      스킵이 사용자 곁에 머무는 방식,<br>
+      그리고 스킵이 세상을 이해하는 방식,<br>
+      모든 경험은 스킵의 핵심 가치에서 출발했습니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  PHILOSOPHY SCROLL
+═══════════════════════ -->
+<section class="phil-scroll fi" data-phil-scroll>
+  <div class="phil-sticky">
+    <div class="phil-left">
+      <div class="phil-label-sm" data-phil-label>Philosophy 01</div>
+      <div class="phil-tagline">
+        <p class="active" data-phil-line>특정 기기에 얽매이지 않고,</p>
+        <p data-phil-line>사용자의 맥락과 목적을 담아</p>
+        <p data-phil-line>주변 환경에 매끄럽게 모핑하는</p>
+      </div>
+    </div>
+    <div class="phil-card-stack">
+      <article class="phil-card active" data-phil-card>
+        <div class="blob-wrap">
+          <svg width="540" height="280" viewBox="0 0 540 280" fill="none">
+            <ellipse cx="220" cy="140" rx="200" ry="130" fill="#d4a87c" opacity="0.35" transform="rotate(11 220 140)"/>
+            <ellipse cx="350" cy="145" rx="165" ry="115" fill="#e8c4a0" opacity="0.45" transform="rotate(120 350 145)"/>
+            <ellipse cx="290" cy="148" rx="100" ry="78" fill="#f0d4ba" opacity="0.5" transform="rotate(30 290 148)"/>
+          </svg>
+        </div>
+        <div class="card-footer">
+          <p class="card-name">Universal Flow</p>
+          <p class="card-sub">스킵은 특정한 기기나 제조사에 얽매이지 않습니다</p>
+        </div>
+      </article>
+      <article class="phil-card" data-phil-card>
+        <div class="blob-wrap">
+          <svg width="540" height="280" viewBox="0 0 540 280" fill="none">
+            <ellipse cx="270" cy="140" rx="210" ry="130" fill="#d4a87c" opacity="0.3" transform="rotate(30 270 140)"/>
+            <ellipse cx="265" cy="138" rx="155" ry="100" fill="#e8c4a0" opacity="0.4" transform="rotate(30 265 138)"/>
+            <ellipse cx="268" cy="142" rx="90" ry="68" fill="#f0d4ba" opacity="0.55" transform="rotate(30 268 142)"/>
+          </svg>
+        </div>
+        <div class="card-footer">
+          <p class="card-name">Keeeeeep Flow</p>
+          <p class="card-sub">스킵은 사용자의 맥락과 목적을 기억하고 지켜줍니다</p>
+        </div>
+      </article>
+      <article class="phil-card" data-phil-card>
+        <div class="blob-wrap">
+          <svg width="540" height="280" viewBox="0 0 540 280" fill="none">
+            <ellipse cx="160" cy="130" rx="130" ry="88" fill="#d4a87c" opacity="0.3" transform="rotate(-135 160 130)"/>
+            <ellipse cx="300" cy="120" rx="150" ry="102" fill="#e8c4a0" opacity="0.38" transform="rotate(165 300 120)"/>
+            <ellipse cx="430" cy="138" rx="95" ry="78" fill="#f0d4ba" opacity="0.5" transform="rotate(165 430 138)"/>
+          </svg>
+        </div>
+        <div class="card-footer">
+          <p class="card-name">Morphing Flow</p>
+          <p class="card-sub">스킵은 서비스와 제품, 공간을 자유자재로 옮겨 다닙니다</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  6. MIGRATABLE AGENT
+═══════════════════════ -->
+<section class="sec-agent-detail fi" data-agent-scroll>
+  <div class="agent-sticky">
+    <div class="agent-row">
+      <div class="agent-left" data-agent-left>
+        <p class="agent-title">Migratable Agent</p>
+        <div class="agent-sub">
+          <p class="agent-sub-line">사용자의 현재 맥락과 아이덴티티를 유지한 채</p>
+          <p class="agent-sub-line">환경 사이를 스스로 이동하며 사용자의 목적 달성을 돕는 에이전트</p>
+        </div>
+        <div class="pills-row">
+          <button class="pill-sm dim" type="button" data-agent-tab="principles">Principles</button>
+          <button class="pill-sm" type="button" data-agent-tab="questions">Questions</button>
+        </div>
+      </div>
+      <div class="agent-q-col" data-agent-questions>
+        <div class="q-card fi d1">
+          <div class="q-head"><p class="q-num">Q.</p><span class="q-chevron" aria-hidden="true"></span></div>
+          <p class="q-text">스킵이 모핑할 수 있는<br>환경은 무엇인가요?</p>
+          <p class="q-answer">패킷을 주고받을 수 있는 통신 능력이 있고, 패킷을 해석하고 기능을 실행할 수 있는 자체 AI가 있는 곳이라면 어디든요. 서비스·제품·공간의 종류나 제조사는 상관없습니다. 스킵 인증을 받은 환경이라면, 그곳이 렌터카든 카페 키오스크든 호텔 방이든 즉시 연결됩니다.</p>
+        </div>
+        <div class="q-card fi d2">
+          <div class="q-head"><p class="q-num">Q.</p><span class="q-chevron" aria-hidden="true"></span></div>
+          <p class="q-text">스킵은 어디까지 대신해주는<br>에이전트인가요?</p>
+          <p class="q-answer">사용자가 매번 직접 해야 했던 것들입니다. 목적을 달성할 기능과 방법을 찾는 일, 환경에 자신이 누구인지·무엇을 원하는지 설명하는 일, 같은 공간의 다른 사용자와 충돌이 생길 때 최적의 방안을 조율하는 일. 사용자는 목적만 가지면 됩니다.</p>
+        </div>
+        <div class="q-card fi d3">
+          <div class="q-head"><p class="q-num">Q.</p><span class="q-chevron" aria-hidden="true"></span></div>
+          <p class="q-text">스킵은 모든 것을<br>기억하나요?</p>
+          <p class="q-answer">사용자의 맥락과 아이덴티티는 클라우드에 보관됩니다. 하지만 환경에는 아무것도 남기지 않아요. 환경을 떠나는 순간 공유했던 맥락은 즉시 회수되며, SKEEPable 기기는 사용자의 허락 없이 신원 맥락을 보존할 수 없습니다. 기억은 스킵이 하고, 환경은 모릅니다.</p>
+        </div>
+        <div class="q-card fi d4">
+          <div class="q-head"><p class="q-num">Q.</p><span class="q-chevron" aria-hidden="true"></span></div>
+          <p class="q-text">스킵을 끄면<br>어떻게 되나요?</p>
+          <p class="q-answer">완전히 꺼지지 않습니다. 스킵은 목적 단위로 잠시 멈출 뿐이에요. "이따 집 갈 때까지 잠깐 쉬자"라고 하면, 스킵은 사라지는 것이 아니라 다음 목적 맥락에서 조용히 대기합니다. 사용자가 그 순간에 도달하면, 스킵은 말없이 다시 시작됩니다.</p>
+        </div>
+      </div>
+      <div class="agent-principles-col agent-view-hidden" data-agent-principles>
+        <div class="principles-scroll" aria-label="Migratable Agent principles">
+          <article class="principle-mini-card type-a">
+            <div class="principle-mini-title">
+              <p>스킵 인증을</p>
+              <p>받은 환경<span class="thin">*</span>에서</p>
+              <p>경험가능함</p>
+            </div>
+            <p class="principle-mini-note">*서비스, 제품, 공간</p>
+          </article>
+          <article class="principle-mini-card type-a">
+            <div class="principle-mini-title">
+              <p>상호작용 하는</p>
+              <p>환경의 소유 </p>
+              <p>여부와 무관함</p>
+            </div>
+          </article>
+          <article class="principle-mini-card type-a">
+            <div class="principle-mini-title">
+              <p>특정 제조사 </p>
+              <p>생태계에 </p>
+              <p>종속되지 않음</p>
+            </div>
+          </article>
+          <article class="principle-mini-card type-b">
+            <div class="principle-mini-title">
+              <p>사용자의 곁에서</p>
+              <p>맥락과 목적<span class="thin">*</span>을</p>
+              <p>수집함</p>
+            </div>
+            <p class="principle-mini-note">*명시적·암묵적 목적</p>
+          </article>
+          <article class="principle-mini-card type-b">
+            <div class="principle-mini-title">
+              <p>사용자의 목적 </p>
+              <p>달성을 위해</p>
+              <p>환경을 빌림</p>
+            </div>
+          </article>
+          <article class="principle-mini-card type-b">
+            <div class="principle-mini-title">
+              <p>전달된 맥락은 </p>
+              <p>보안과 학습을</p>
+              <p>위해 회수됨</p>
+            </div>
+          </article>
+          <article class="principle-mini-card type-c">
+            <div class="principle-mini-title">
+              <p>스킵 경험은</p>
+              <p>단절되지 않는</p>
+              <p>것을 전제로 함</p>
+            </div>
+            <p class="principle-mini-note">*대신 목적단위 PAUSE가 가능함</p>
+          </article>
+          <article class="principle-mini-card type-c">
+            <div class="principle-mini-title">
+              <p>스킵이 모핑된</p>
+              <p>환경은 곧</p>
+              <p>주력 디바이스임</p>
+            </div>
+            <p class="principle-mini-note">*주력 디바이스는 곧 인터페이스임</p>
+          </article>
+          <article class="principle-mini-card type-c">
+            <div class="principle-mini-title">
+              <p>스킵은 패킷을</p>
+              <p>통해 자신을</p>
+              <p>환경에 모핑함</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  8. SYSTEM SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">System</div>
+    <div class="summary-desc">
+      스킵이 어떻게 작동하는지에 대한 기술적 제반<br>
+      사용자가 경험하는 세계와 스킵이 바라보는 세계<br>
+      두 레이어가 어떻게 맞물리는지를 보여줍니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  9. SYSTEM INTRO
+═══════════════════════ -->
+<section class="sec-system-intro fi">
+  <div class="sys-left">
+    <p class="sys-label">Skeep System</p>
+    <p class="sys-title">수면 위의 매끄러운 경험<br>사용자를 위한 부단한 발길질</p>
+  </div>
+  <p class="sys-right">
+    필요한 만큼만 나를 소개하고, 공간의 능력을 잠시 빌리며, 함께 있는 사람들과 조율한 뒤 흔적 없이 떠나는 스킵의 매끄러운 경험. 그 이면에는 보이지 않는 곳에서 완벽하게 맞물려 돌아가는 촘촘한 시스템이 존재합니다.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  10. SYSTEM DIAGRAM
+═══════════════════════ -->
+<section class="sec-system-diagram fi">
+    <div class="diagram-card">
+    <div class="diagram-card-content">
+      <p class="diagram-brand-name"><img class="diagram-logo logo-img" src="assets/skeep-logo.svg" alt="Skeep"> Intelligence System™</p>
+      <p class="diagram-note">사용자 맥락 플로우의 경우 예쁘게 디자인된 플로우 구조도가 들어감</p>
+    </div>
+  </div>
+  <div class="diagram-tabs">
+    <div class="diagram-tab active">
+      <p class="tab-n">01</p>
+      <p class="tab-l">사용자 경험 플로우</p>
+    </div>
+    <div class="diagram-tab">
+      <p class="tab-n">02</p>
+      <p class="tab-l">사용자 맥락 플로우</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  11. SYSTEM LAYERS
+═══════════════════════ -->
+<section class="sec-layers fi">
+  <div class="layers-grid">
+    <div class="layer-card">
+      <div>
+        <p class="layer-name">상시 레이어</p>
+        <p class="layer-en">Passive Layer</p>
+      </div>
+      <p class="layer-desc">
+        항상 사용자의 주변 환경을 스캔하며<br>
+        가능성을 파악하고 있습니다.<br>
+        목적이 없는 순간에도 결코 쉬지 않죠.
+      </p>
+    </div>
+    <div class="layer-card faded">
+      <div>
+        <p class="layer-name">활성 레이어</p>
+        <p class="layer-en">Active Layer</p>
+      </div>
+      <p class="layer-desc">
+        사용자의 목적이 발생하는 순간 활성화되어,<br>
+        그 목적을 구조화하고 실행 블록으로 만들어<br>
+        환경에 전달하는 역할을 합니다.
+      </p>
+    </div>
+    <div class="layer-card faded">
+      <div>
+        <p class="layer-name">데이터 베이스</p>
+        <p class="layer-en">Database Structure</p>
+      </div>
+      <p class="layer-desc">
+        사용자의 목적이 발생하는 순간 활성화되어,<br>
+        그 목적을 구조화하고 실행 블록으로 만들어<br>
+        환경에 전달하는 역할을 합니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  13. PACKET INTRO
+═══════════════════════ -->
+<section class="sec-packet-intro fi">
+  <div class="packet-tag">더도 말고 덜도 말고, Pack it.</div>
+  <p class="packet-title">지금 나를 설명하는 맥락 꾸러미</p>
+  <p class="packet-desc">
+    스킵은 환경을 이동할 때마다 패킷을 들고 다닙니다. 이 안에는 사용자가 어떤 사람인지, 지금 주변에 무엇이 있는지, 그리고 지금 사용자는 무엇을 원하는지에 대한 정보가 담겨있어요. 덕분에 스킵은 어떤 환경에 모핑하든 사용자가 누구인지, 무엇을 원하는지를 대신 전달합니다.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  14. PACKET Q&A
+═══════════════════════ -->
+<section class="sec-packet-qa fi">
+  <div class="qa-grid">
+    <div class="qa-card fi d1">
+      <span class="qn">Q1.</span>
+      <p class="qt">Skeep 에이전트 생태계에서<br>Packet은 어떤 역할을 수행하나요?</p>
+    </div>
+    <div class="qa-card fi d2">
+      <span class="qn">Q2.</span>
+      <p class="qt">Skeep의 Packet 안에는<br>어떠한 정보들이 담겨있나요?</p>
+    </div>
+    <div class="qa-card fi d3">
+      <span class="qn">Q5.</span>
+      <p class="qt">Skeep 에이전트 생태계에서<br>Packet은 어떻게 이동하나요?</p>
+    </div>
+    <div class="qa-card fi d4">
+      <span class="qn">Q3.</span>
+      <p class="qt">Skeep의 Packet의 구성은<br>언제, 어떻게, 왜 바뀌나요?</p>
+    </div>
+    <div class="qa-card fi d5">
+      <span class="qn">Q4.</span>
+      <p class="qt">Skeep 환경에 Packet이 모핑되면<br>어떤 일이 일어나나요?</p>
+    </div>
+    <div class="qa-card fi d6">
+      <span class="qn">Q6.</span>
+      <p class="qt">그렇다면 Skeep의 사용자는<br>Packet을 직접 볼 수 없는건가요?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  16. SKEEPABLES
+═══════════════════════ -->
+<section class="sec-skeepables-intro fi">
+  <p class="sk-title">서비스와 제품, 그리고 공간<br>스킵이 뛰어들 수 있는 무한한 세계</p>
+  <p class="sk-desc">
+    스킵에게 한계는 없습니다. 우리 손끝에 닿는 제품, 눈앞의 서비스, 머무는 공간까지, 이 모든 세계가 스킵과 연결될 수 있는 가능성의 영역이죠. 스킵에게는 정해진 몸이 없기 때문에 역설적으로 세상 모든 환경을 자신의 몸처럼 빌려 쓰며 세계를 자유롭게 유영할 수 있습니다.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  17. UX LOGIC SUMMARY
+═══════════════════════ -->
+<div class="sec-summary fi">
+  <div class="summary-row">
+    <div class="summary-label">UX Logic</div>
+    <div class="summary-desc">
+      사용자의 목적이 발생하는 순간부터<br>
+      그 목적이 달성되고 흔적 없이 사라지기까지,<br>
+      스킵 경험의 기반이 되는 로직을 보여줍니다.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+  18. UX LOGIC INTRO
+═══════════════════════ -->
+<section class="sec-ux-intro fi">
+  <div class="ux-left">
+    <p class="ux-label">Skeep UX Logic</p>
+    <p class="ux-title">쉿. 보이지 않게<br>그러나 가장 완벽하게</p>
+  </div>
+  <p class="ux-right">
+    스킵은 사용자가 어디에 있든 항상 곁에서 조용히 기다리고 있습니다. 평소엔 주변을 살피며 준비 상태를 유지하다가, 사용자의 목적이 생기는 순간 그 목적을 이해하고 실행하고 마무리짓는 플로우가 매끄럽게 이어지죠.
+  </p>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC STAGE OVERVIEW
+═══════════════════════ -->
+<section class="sec-ux-overview fi">
+  <div class="ux-overview-row">
+    <a class="ux-overview-card" style="background: rgba(190,197,210,0.2)" href="saegyeodeutda.html">
+      <p class="ux-overview-title">새겨듣다</p>
+      <p class="ux-overview-sub">Sensing<br>Input<br>Pause</p>
+    </a>
+    <a class="ux-overview-card" style="background: rgba(190,197,210,0.3)" href="smeureulda.html">
+      <p class="ux-overview-title">스며들다</p>
+      <p class="ux-overview-sub">Morphing<br>Parsing<br>Mapping</p>
+    </a>
+    <a class="ux-overview-card" style="background: rgba(190,197,210,0.4)" href="#negotiation">
+      <p class="ux-overview-title">조율하다</p>
+      <p class="ux-overview-sub">Negotiation</p>
+    </a>
+    <a class="ux-overview-card" style="background: rgba(190,197,210,0.5)" href="#borrowing">
+      <p class="ux-overview-title">빌려쓰다</p>
+      <p class="ux-overview-sub">Borrowing<br>Download</p>
+    </a>
+    <a class="ux-overview-card" style="background: rgba(190,197,210,0.6)" href="#keep">
+      <p class="ux-overview-title">지켜주다</p>
+      <p class="ux-overview-sub">Keep</p>
+    </a>
+    <a class="ux-overview-card" style="background: rgba(190,197,210,0.7)" href="#seeyou">
+      <p class="ux-overview-title">기억하다</p>
+      <p class="ux-overview-sub">Seeyou</p>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 1: 새겨듣다
+═══════════════════════ -->
+<section class="sec-ux-stage fi" data-open-detail="sensing" tabindex="0" role="button" aria-label="새겨듣다 상세 페이지 열기">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Sensing Logic</p>
+      <p class="stage-kr">새겨듣다</p>
+      <p class="stage-desc">말하기 전, 스킵은 이미 귀 기울이고 있어요.<br>언제든 주변을 살피며 다음을 준비합니다.</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-logic-card fi d1">
+        <p class="stage-logic-title">Sensing Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">스키퍼블 탐색</span>
+          <span class="stage-logic-tag">주변 기능 라인업</span>
+        </div>
+        <p class="stage-logic-desc">24시간 조용히 찰나를 준비하는 일<br>당신이 경험하는 모든 시간이 곧 스킵의 시간</p>
+      </div>
+      <div class="stage-logic-card fi d2">
+        <p class="stage-logic-title">Input Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">사용자 인풋</span>
+          <span class="stage-logic-tag">명시적-암묵적 목적</span>
+        </div>
+        <p class="stage-logic-desc">말은 새겨듣고, 마음은 헤아리는<br>액티브 레이어를 여는 첫 단추</p>
+      </div>
+      <div class="stage-logic-card fi d3">
+        <p class="stage-logic-title">Pause Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">사용자 인풋 비활성화</span>
+          <span class="stage-logic-tag">일시정지</span>
+        </div>
+        <p class="stage-logic-desc">2보 전진을 위한 1보 후퇴<br>스킵의 심리스한 온앤 오프 경험</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 2: 스며들다
+═══════════════════════ -->
+<section class="sec-ux-stage fi" data-open-detail="morphing" tabindex="0" role="button" aria-label="스며들다 상세 페이지 열기">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Morphing Logic</p>
+      <p class="stage-kr">스며들다</p>
+      <p class="stage-desc">발길이 닿는 곳으로 가장 먼저 다가갑니다.<br>낯선 곳이더라도 자연스럽게, 자신있게.</p>
+      <a href="smeureulda.html" class="stage-en" style="text-decoration:none; display:inline-block;">로직 스토리텔링 →</a>
+    </div>
+    <div class="stage-right">
+      <div class="stage-logic-card fi d1">
+        <p class="stage-logic-title">Parsing Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">사용자 의도 구조화</span>
+          <span class="stage-logic-tag">실행 블록의 범위 지정</span>
+        </div>
+        <p class="stage-logic-desc">툭 던진 생각, 일상적인 순간 너머<br>내 안의 진짜 목적을 파악하는 스킵</p>
+      </div>
+      <div class="stage-logic-card fi d2">
+        <p class="stage-logic-title">Mapping Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">필요 기능 정렬</span>
+          <span class="stage-logic-tag">실행 블록 생성</span>
+        </div>
+        <p class="stage-logic-desc">수백만 개의 경로 중,<br>가장 완벽한 궤적을 찾는 알고리즘</p>
+      </div>
+      <div class="stage-logic-card fi d3">
+        <p class="stage-logic-title">Morphing Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">스키퍼블 활성화</span>
+          <span class="stage-logic-tag">거리재기</span>
+        </div>
+        <p class="stage-logic-desc">선명해진 스킵의 청사진<br>이제 현실로 도약할 시간, 모핑</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 3: 조율하다
+═══════════════════════ -->
+<section class="sec-ux-stage fi" id="negotiation">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Negotiation Logic</p>
+      <p class="stage-kr">조율하다</p>
+      <p class="stage-desc">여럿이 함께 있어도 불편할 일은 없습니다.<br>모두의 시간이 지켜지도록, 똑부러지는 스킵.</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-logic-card fi d1">
+        <p class="stage-logic-title">Negotiation Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">목적간 충돌 조율</span>
+          <span class="stage-logic-tag">DCOP 알고리즘</span>
+        </div>
+        <p class="stage-logic-desc">경험이 끊이지 않도록 도와주는 협상<br>당신이 원하는 그대로 가장 자연스럽게</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 4: 빌려쓰다
+═══════════════════════ -->
+<section class="sec-ux-stage fi" id="borrowing">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Borrowing Logic</p>
+      <p class="stage-kr">빌려쓰다</p>
+      <p class="stage-desc">곁에 있는 스키퍼블의 능력을 내 것처럼.<br>지금 딱 필요한 기능을 찾아줍니다.</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-logic-card fi d1">
+        <p class="stage-logic-title">Borrowing Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">아이스브레이킹</span>
+          <span class="stage-logic-tag">실행 블록 처리</span>
+        </div>
+        <p class="stage-logic-desc">각자의 역할을 모아<br>하나의 흐름으로, 환경의 능력을 내 것으로</p>
+      </div>
+      <div class="stage-logic-card fi d2">
+        <p class="stage-logic-title">Download Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">기능 및 경험 확장</span>
+          <span class="stage-logic-tag">AI 스킬 다운로드</span>
+        </div>
+        <p class="stage-logic-desc">사용자가 익숙한 제품으로<br>새로운 가능성의 지평을 여는 기능 다운로드</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 5: 지켜주다
+═══════════════════════ -->
+<section class="sec-ux-stage fi" id="keep">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">Keep Logic</p>
+      <p class="stage-kr">지켜주다</p>
+      <p class="stage-desc">스키퍼블을 떠나는 순간, 나의 모든<br>흔적은 지워집니다. 철통보안 스킵.</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-logic-card fi d1">
+        <p class="stage-logic-title">Keep Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">사용 종료</span>
+          <span class="stage-logic-tag">보안 시스템</span>
+        </div>
+        <p class="stage-logic-desc">아무 일도 없었던 것처럼<br>완벽한 리셋</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  UX LOGIC 6: 기억하다
+═══════════════════════ -->
+<section class="sec-ux-stage fi" id="seeyou">
+  <div class="stage-row">
+    <div class="stage-left">
+      <p class="stage-kr-label">See You Logic</p>
+      <p class="stage-kr">기억하다</p>
+      <p class="stage-desc">오늘의 경험은 다음을 위한 배려가 됩니다.<br>내일을 만드는 오늘, 또 만나요 우리.</p>
+      <span class="stage-en">로직 스토리텔링</span>
+    </div>
+    <div class="stage-right">
+      <div class="stage-logic-card fi d1">
+        <p class="stage-logic-title">See You Logic</p>
+        <div class="stage-logic-tags">
+          <span class="stage-logic-tag">상호작용 경험 피드백</span>
+          <span class="stage-logic-tag">개인화 학습</span>
+        </div>
+        <p class="stage-logic-desc">오늘의 경험이 내일의 기준으로<br>설명하지 않아도 알아서 척척</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════
+  SENSING DETAIL: 새겨듣다
+═══════════════════════ -->
+<main id="sensing-detail" aria-hidden="true">
+  <section class="sd-hero">
+    <div class="sd-hero-bg"></div>
+    <div class="sd-hero-dim"></div>
+    <img class="sd-logo logo-img" src="assets/skeep-logo.svg" alt="Skeep 홈으로" data-home-logo tabindex="0" role="button">
+    <h1>어떤 형태의 의도든 완벽하게<br>항상 준비되어 있으니까</h1>
+  </section>
+
+  <section class="sd-section sd-intro sd-bg-grad">
+    <div class="sd-copy-block">
+      <h2 class="sd-title">24/7, 365<br>Always Awake</h2>
+      <p class="sd-body">말하기 전, 스킵은 이미 귀 기울이고 있죠.<br>언제든 주변을 살피며 다음을 준비합니다.</p>
+    </div>
+    <div class="sd-pill-row">
+      <div class="sd-pill">Sensing</div>
+      <div class="sd-pill">Input</div>
+      <div class="sd-pill">Pause</div>
+    </div>
+  </section>
+
+  <section class="sd-section sd-sensing-scene sd-bg-deep">
+    <img class="sd-compass" src="assets/sensing-compass.png" alt="탐지를 상징하는 나침반 모티프">
+    <h2 class="sd-sensing-title">Sensing Logic</h2>
+    <div class="sd-vline"></div>
+    <p class="sd-caption-right">24시간 조용히 찰나를 준비하는 일<br>당신이 경험하는 모든 시간이 곧 스킵의 시간</p>
+  </section>
+
+  <section class="sd-orbit-scroll sd-bg-grad" data-sd-orbit>
+    <div class="sd-orbit-sticky">
+      <div class="sd-orbit-visual">
+        <img class="sd-orbit-radar" src="assets/sensing-radar.png" alt="발견을 상징하는 레이더 모티프">
+        <img class="sd-orbit-main-clock" src="assets/sensing-clock-1.png" alt="24시간 센싱을 상징하는 시계 모티프">
+        <div class="sd-orbit-trail" aria-hidden="true">
+          <img src="assets/sensing-clock-1.png" alt="">
+          <img src="assets/sensing-clock-2.png" alt="">
+          <img src="assets/sensing-clock-3.png" alt="">
+          <img src="assets/sensing-clock-4.png" alt="">
+        </div>
+      </div>
+      <div class="sd-text-right sd-orbit-copy">
+        <h2>돌다리도 두드려보고 건너는 꼼꼼함<br>스킵이 완성하는 경험의 디딤돌</h2>
+        <p>스킵은 당신이 발을 내딛기도 전에 공간의 돌다리를 먼저 두드려봅니다. 첨단 RIS* 기술과 정밀 무선 통신으로 주변을 탐색하여, 안전하게 디딜 수 있는 주변 환경과 그 기능들을 실시간으로 리스트업하죠.<br>이제 철저하게 확인된 디딤돌 위에서, 그저 물수제비를 뜨듯 가볍게 흐름을 이어가기만 하면 됩니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sd-section sd-bg-grad">
+    <div class="sd-tick">
+      <h2>째깍째깍 <span>재깍재깍</span></h2>
+      <p>스킵의 패시브 레이어는 배경에서 끊임없이 움직이고 있습니다.<br>당신이 깊이 잠든 새벽이든, 분주하게 움직이는 낮이든, 어디에 있든 말이죠.<br>덕분에 목적이 생기는 그 찰나, 곧바로 완벽한 실행 경로가 완성됩니다.</p>
+    </div>
+  </section>
+
+  <section class="sd-section sd-walk">
+    <img class="sd-walk-strip" src="assets/sensing-walk-strip.png" alt="스킵 센싱과 함께 이어지는 보행 시퀀스">
+  </section>
+
+  <section class="sd-section sd-walk-caption">
+    <h2>한 발짝 한 발짝 센스있게, 센싱</h2>
+    <p>당신의 모든 걸음은 스킵의 새로운 기준이자 세상이 됩니다.<br>걸음을 옮길 때마다, 센싱 로직이 배경에서 끊임없이 함께하니까요.</p>
+  </section>
+
+  <section class="sd-section sd-input-word sd-bg-deep">
+    <h2>Input</h2>
+    <img src="assets/input-icons.png" alt="Input을 상징하는 핑크 아이콘 그래픽">
+  </section>
+
+  <section class="sd-section sd-bg-grad">
+    <div class="sd-input-summary">
+      <h2>말은 새겨듣고,<br>마음은 헤아리는</h2>
+      <p>완벽하게 다듬어진 지시나 명령은 필요 없습니다. 스킵은 발화의 운율과 문장 속 섬세한 단서에서 맥락을 완벽하게 파악하니까요. 때로는 말하지 않더라도, 당신의 마음을 찰떡같이 알아줍니다.</p>
+    </div>
+  </section>
+
+  <section class="sd-section">
+    <div class="sd-card-list">
+      <article class="sd-info-card">
+        <div class="sd-card-img"></div>
+        <div class="sd-card-text">
+          <h3>음성 발화<span>Voice Input</span></h3>
+          <p>사용자가 직접 건네는 발화 신호의 경우 음성 데이터와 함께 목소리의 톤, 높낮이, 속도 등 미세한 운율 모두를 명시적 인풋으로 포착합니다.</p>
+        </div>
+      </article>
+      <article class="sd-info-card">
+        <div class="sd-card-img"></div>
+        <div class="sd-card-text">
+          <h3>텍스트 입력<span>Text Input</span></h3>
+          <p>타이핑을 통해 입력된 문자 신호의 경우 구두점이나 부사처럼 사용자가 텍스트에 남긴 미세한 흔적들을 명시적 인풋으로 획득합니다.</p>
+        </div>
+      </article>
+      <article class="sd-info-card">
+        <div class="sd-card-img"></div>
+        <div class="sd-card-text">
+          <h3>행동 및 맥락<span>Contextual Input</span></h3>
+          <p>사용자가 직접 말하지 않은 암묵적 신호로, 스키퍼블에 있는 외재적 데이터와 사용자 고유의 내재적 루틴을 입체적으로 종합해 받아들입니다.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sd-section sd-bg-grad">
+    <div class="sd-active">
+      <div>
+        <p class="sd-active-label">Input Logic</p>
+        <h2>액티브 레이어를<br>여는 첫 단추</h2>
+        <p>목적이 시작되는 이 순간은 액티브 레이어라는 거대한 시공간적 바운더리가 열리는 시점입니다. 이제 사용자의 목적은 A2A 연산 형태로 변환되며 본격적인 연산이 시작되죠.</p>
+      </div>
+      <div class="sd-main-image">사용자 인풋 → 액티브 레이어 활성화</div>
+    </div>
+  </section>
+
+  <section class="sd-flow-panel">
+    <div class="sd-flow-side">
+      <p class="label">Active Layer</p>
+      <h3>사용자<br>목적 구간</h3>
+      <p>사용자의 목적이 최초로 발생한 시점부터 달성되는 시점까지의 시공간적 바운더리</p>
+    </div>
+    <div class="sd-flow-cards grouped">
+      <div class="sd-flow-group">
+        <div class="sd-flow-group-row">
+          <div class="sd-flow-card active"><h4>사용자<br>목적 전달</h4><span>User Input</span></div>
+          <div class="sd-flow-card step2"><h4>의도<br>구조화</h4><span>Parsing</span></div>
+          <div class="sd-flow-card step3"><h4>실행 블록<br>생성</h4><span>Mapping</span></div>
+        </div>
+        <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 연산 구간</span></div>
+      </div>
+      <div class="sd-flow-group strong">
+        <div class="sd-flow-group-row">
+          <div class="sd-flow-card step4"><h4>실행 블록<br>처리</h4><span>Execution</span></div>
+          <div class="sd-flow-card step5"><h4>종료 및<br>개인화</h4><span>Feedback</span></div>
+        </div>
+        <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 달성 구간</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sd-flow-panel">
+    <div class="sd-flow-side">
+      <p class="label" style="color:#7f95a7">Active Layer</p>
+      <h3>Paused</h3>
+      <p>직접 상호작용은 멈추지만, 배경의 센싱은 계속 유지됩니다.</p>
+    </div>
+    <div class="sd-flow-cards">
+      <div class="sd-flow-card"><h4>Paused</h4><span>Paused</span></div>
+      <div class="sd-flow-card"><h4>대기</h4><span>Standby</span></div>
+      <div class="sd-flow-card"><h4>맥락</h4><span>Context</span></div>
+      <div class="sd-flow-card"><h4>예측</h4><span>Predict</span></div>
+      <div class="sd-flow-card"><h4>복구</h4><span>Resume</span></div>
+    </div>
+  </section>
+
+  <section class="sd-section sd-bg-deep">
+    <div class="sd-pause-phrase">
+      <img class="round" src="assets/sensing-clock-1.png" alt="일시중단을 상징하는 원형 그래픽">
+      <div class="sd-phrase-track">
+        <div class="sd-phrase">스킵, 우리 시간 좀 갖자</div>
+        <div class="sd-phrase dim">스킵, 우리 시간 좀 갖자</div>
+      </div>
+    </div>
+    <div class="sd-pause-title">
+      <h2>Skip the noise<br>Skeep the <span class="sd-pink">pause</span></h2>
+      <div class="sd-principles">
+        <article class="sd-principle">
+          <p class="kicker">Principle 01</p>
+          <h3>인풋은 스킵, 센싱은 킵</h3>
+          <p>스킵과의 직접 상호작용은 잠시 멈추지만, 여전히 센싱을 통해 준비 상태를 유지합니다.</p>
+        </article>
+        <article class="sd-principle">
+          <p class="kicker">Principle 02</p>
+          <h3>맥락적 예측 대기</h3>
+          <p>스킵은 사용자의 발화 단서를 미리 추론하여 예측되는 다음 시공간 속에서 기다립니다.</p>
+        </article>
+        <article class="sd-principle">
+          <p class="kicker">Principle 03</p>
+          <h3>심리스한 온앤 오프</h3>
+          <p>새로운 목적 구간이 시작되는 순간 별도의 조작 없이 깨어나며, 흐름을 복구합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════════════
+  MORPHING DETAIL: 스며들다
+═══════════════════════ -->
+<main id="morphing-detail" aria-hidden="true">
+  <section class="md-hero">
+    <div class="md-hero-bg"></div>
+    <div class="md-hero-dim"></div>
+    <img class="md-logo logo-img" src="assets/skeep-logo.svg" alt="Skeep 홈으로" data-home-logo tabindex="0" role="button">
+    <h1>낯선 곳이더라도 자연스럽게<br>경계를 건너뛰는 유려함</h1>
+  </section>
+
+  <section class="md-section">
+    <div class="md-big-card">
+      <div class="md-big-copy">
+        <h2>목적은 행동으로<br>행동은 온전한 기능으로</h2>
+        <p>스킵이 없었던 시절 우리는 새로운 환경을 마주할 때마다<br>무엇을 어떻게 조작해야 하는지 스스로 헤매고 고민해야 했죠.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="md-section">
+    <div class="md-skeep-ai">
+      <div class="md-ai-left">
+        <div class="md-big-copy">
+          <p class="eyebrow">Keep on Keepin’ on</p>
+          <h2>이해하고 생각하고 계획하고<br>도미노처럼 끊김없이</h2>
+          <p>모든 자원을 영리하게 결합하여, 우리가 미처 생각하지 못한<br>창의적인 해결책을 물밑에서 묵묵히 완수하는 Skeep AI™</p>
+        </div>
+      </div>
+      <div class="md-ai-list">
+        <article class="md-ai-card">
+          <div class="md-ai-card-text">
+            <h3>Parsing Logic</h3>
+            <p>사용자 의도를 기반으로 목적을 태스크로 구조화하는 단계</p>
+          </div>
+        </article>
+        <article class="md-ai-card">
+          <div class="md-ai-card-text">
+            <h3>Mapping Logic</h3>
+            <p>구조화된 태스크를 실행 가능한 블록으로 바꾸는 단계</p>
+          </div>
+        </article>
+        <article class="md-ai-card">
+          <div class="md-ai-card-text">
+            <h3>Morphing Logic</h3>
+            <p>사용자의 다음 동선을 예측해 패킷을 던지는 단계</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="md-parsing-word">
+    <h2>Pars<span class="ghost">ing</span></h2>
+  </section>
+  <section class="md-parsing-word">
+    <h2>P&nbsp;arse<span class="ghost">ing</span></h2>
+  </section>
+  <section class="md-parsing-word">
+    <h2>Parsing</h2>
+  </section>
+
+  <section class="md-section">
+    <div class="md-split-summary">
+      <div>
+        <p class="md-number">01</p>
+        <h2 class="md-label-xl">Parsing</h2>
+      </div>
+      <p class="md-summary-text">거시적인 목적과 목표를 작고 관리하기 쉬운<br>미시적 목적 및 기능의 범위로 쪼개는 과정</p>
+    </div>
+  </section>
+
+  <section class="md-section">
+    <div class="md-principle-block">
+      <p class="md-kicker">Service</p>
+      <h2 class="md-principle-title">툭 던진 생각 너머,<br>내 안의 진짜 목적을 읽다</h2>
+      <p class="md-principle-body">복잡한 맥락 속에 숨겨진 진짜 의도를 파싱하여, 시스템이 처리할 수 있는 논리적 규격으로 변환하는 단계</p>
+    </div>
+    <div class="md-principle-cards">
+      <article class="md-principle-card">
+        <p class="mini">Principle 01</p>
+        <h3>사용자의 의도 추출</h3>
+        <p>사용자의 인풋에서 불필요한 수식어를 걷어내고, 핵심 명사와 동사 위주로 목적을 잘게 쪼갭니다.</p>
+      </article>
+      <article class="md-principle-card">
+        <p class="mini">Principle 02</p>
+        <h3>맥락과 암묵적 목적 반영</h3>
+        <p>명시하지 않은 공간적 단서와 사용 패턴을 분석하여, 생략된 암묵적 목적까지 명확하게 찾습니다.</p>
+      </article>
+      <article class="md-principle-card">
+        <p class="mini">Principle 03</p>
+        <h3>데이터 트리플 생성</h3>
+        <p>파싱된 모든 파라미터는 스킵 아키텍처의 최상위 트리거인 목적-행위-기능 트리플로 구성됩니다.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="md-section">
+    <div class="md-ability">
+      <h2>Skeep AI™</h2>
+      <div>
+        <h2>Physically-Feasible Thinking AI</h2>
+        <p>스킵은 물리적 실체가 없더라도 공간, 기기, 거리, 사람 수 같은 물리적 제약을 이해하는 것을 전제로 생각합니다. 현실을 필터링하는 이 정밀한 감각이야말로 스킵이 세상을 이해하는 핵심 능력입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="md-map-word">
+    <span>매핑</span>
+    <span class="center">Mapping</span>
+    <span>マッピング</span>
+  </section>
+
+  <section class="md-section">
+    <div class="md-mapping">
+      <div class="md-mapping-left">
+        <p class="num">02</p>
+        <h2>Mapping</h2>
+      </div>
+      <div class="md-triple-box">
+        <span>데이터 트리플</span>
+        <span>→</span>
+        <span>실행 블록</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="md-section">
+    <div class="md-exec-card">
+      <div class="md-big-copy">
+        <p class="eyebrow">실행 블록</p>
+        <h2>하나의 목적<br>모두의 언어로</h2>
+        <p>스마트폰부터 자동차, 피지컬 AI까지. 사용자의 목적은 물밑에서 각 환경의 눈높이에 맞는 프로토콜로 완벽하게 동시 통역됩니다. 아무리 파편화된 환경이라도 상관없습니다. 스킵을 거치는 순간, 세상의 모든 기기는 마치 모국어를 듣듯 당신의 의도를 읽고 움직이기 시작하니까요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="md-section">
+    <div class="md-principle-block">
+      <p class="md-kicker">Mapping</p>
+      <h2 class="md-principle-title">수백만 개의 경로 중,<br>가장 완벽한 궤적을 찾아서</h2>
+      <p class="md-principle-body">파싱을 통해 구조화된 개별 태스크 트리플을 실제 환경과 소통 가능한 실행 블록으로 변환하는 단계</p>
+    </div>
+    <div class="md-principle-cards">
+      <article class="md-principle-card">
+        <p class="mini">Principle 01</p>
+        <h3>도메인 컴포넌트 매칭</h3>
+        <p>현재 제어 가능한 스키퍼블의 API 명세를 동적으로 스캔하여 매칭 가능한 리소스를 선별합니다.</p>
+      </article>
+      <article class="md-principle-card">
+        <p class="mini">Principle 02</p>
+        <h3>물리 법칙 시뮬레이션</h3>
+        <p>실제 물리 세계의 제약 조건을 반영하여 실행할 수 있는 경로만을 초고속으로 필터링합니다.</p>
+      </article>
+      <article class="md-principle-card">
+        <p class="mini">Principle 03</p>
+        <h3>실행 블록 변환</h3>
+        <p>필터링을 거쳐 살아남은 최적의 기능을 결합하여, 하나의 완벽한 '실행 블록' 구조로 정형화 합니다.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="md-section md-morph-word">
+    <h2>스킵하다 <span>스며들다</span></h2>
+    <p>각 스키퍼블의 눈높이에 맞춰 완벽하게 변신하는 것<br>그 어떤 공간에 가더라도 마치 처음부터 그곳에 있었던 것처럼<br>자연스럽게 동화되는 스킵만의 영리한 공간 이동 방식, 모핑</p>
+  </section>
+
+  <section class="md-section md-gems">
+    <img class="md-gem g1" src="assets/morphing-gem-1.png" alt="모핑 오브젝트 1">
+    <img class="md-gem g2" src="assets/morphing-gem-2.png" alt="모핑 오브젝트 2">
+    <img class="md-gem g3" src="assets/morphing-gem-3.png" alt="모핑 오브젝트 3">
+  </section>
+
+  <section class="md-section">
+    <div class="md-morph-title">
+      <div class="md-morph-pill">Morphing</div>
+      <h2>선명해진 스킵의 청사진<br>이제 현실로 도약할 시간</h2>
+    </div>
+  </section>
+
+  <section class="md-section">
+    <div class="md-last">
+      <div>
+        <h2>로마에 가면<br>로마 법을 따르듯, 모핑</h2>
+        <p>스킵은 세상 모든 기기에 무작정 모핑하지 않습니다.<br>당신의 움직임을 미리 읽고, 다음에 도착할 그 공간에만<br>정확하게 패킷을 던지는 물수제비 스페셜리스트죠.</p>
+      </div>
+      <div class="md-last-stack">
+        <article class="md-last-item">
+          <p class="kicker">Principle 01</p>
+          <h3>연계준비 감지</h3>
+          <p>사용자가 특정 목적을 수행하기 직전의 전조 행동을 포착합니다.</p>
+        </article>
+        <article class="md-last-item">
+          <p class="kicker">Principle 02</p>
+          <h3>명시적 움직임 라우팅</h3>
+          <p>유추가 필요 없는, 겉으로 명확하게 드러나는 행동적 확신을 읽어냅니다.</p>
+        </article>
+        <article class="md-last-item">
+          <p class="kicker">Principle 03</p>
+          <h3>비명시적 움직임 동적 보정</h3>
+          <p>명확한 신호가 없을 때도 표정, 제스처, 생체 신호를 통해 다음 행동을 추론합니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════════════
+  FOOTER
+═══════════════════════ -->
+<footer class="fi">
+  <img class="ft-logo logo-img" src="assets/skeep-logo.svg" alt="Skeep">
+  <p class="ft-tag">Skip the intro, Keep the flow</p>
+  <p class="ft-meta">Skeep Intelligence System™ &nbsp;·&nbsp; 2026 MEP UX · Samsung<br>가장 매끄러운 경험은 가장 치밀한 설계에서 완성됩니다.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  const heroGnb = document.getElementById('heroGnb');
+  const heroGnbShape = document.getElementById('heroGnbShape');
+  const heroSectionEl = document.querySelector('.sec-hero');
+  if (heroGnb && heroGnbShape && heroSectionEl) {
+    const SHAPE_MORPH_MS = 260;
+    let entranceDone = false;
+
+    let gnbTicking = false;
+    let wasPastHero = false;
+    const updateHeroGnb = () => {
+      gnbTicking = false;
+      if (!entranceDone) return;
+      const heroBottom = heroSectionEl.getBoundingClientRect().bottom;
+      const pastHero = heroBottom <= 0;
+
+      if (pastHero && !wasPastHero) {
+        const wasExpanded = heroGnb.classList.contains('hero-gnb-expanded');
+        heroGnb.classList.remove('hero-gnb-expanded');
+        if (wasExpanded) {
+          setTimeout(() => { heroGnbShape.classList.add('gnb-away'); }, SHAPE_MORPH_MS);
+        } else {
+          heroGnbShape.classList.add('gnb-away');
+        }
+      } else if (!pastHero) {
+        if (wasPastHero) heroGnbShape.classList.remove('gnb-away');
+        heroGnb.classList.toggle('hero-gnb-expanded', window.scrollY > 48);
+      }
+      wasPastHero = pastHero;
+    };
+    window.addEventListener('scroll', () => {
+      if (!gnbTicking) {
+        gnbTicking = true;
+        requestAnimationFrame(updateHeroGnb);
+      }
+    }, { passive: true });
+
+    // always enter as the plain circle first, regardless of restored scroll
+    // position on reload, then sync to the real scroll state once it's settled
+    setTimeout(() => {
+      heroGnbShape.classList.remove('gnb-away');
+      setTimeout(() => {
+        entranceDone = true;
+        updateHeroGnb();
+      }, 750);
+    }, 340);
+  }
+
+  const philScroll = document.querySelector('[data-phil-scroll]');
+  if (philScroll) {
+    const label = philScroll.querySelector('[data-phil-label]');
+    const lines = [...philScroll.querySelectorAll('[data-phil-line]')];
+    const cards = [...philScroll.querySelectorAll('[data-phil-card]')];
+    const labels = ['Philosophy 01', 'Philosophy 02', 'Philosophy 03'];
+    const baseDevicePixelRatio = window.devicePixelRatio || 1;
+    let currentPhil = -1;
+    let ticking = false;
+
+    function updatePhilZoomRatio() {
+      const currentDevicePixelRatio = window.devicePixelRatio || baseDevicePixelRatio;
+      const ratio = baseDevicePixelRatio / currentDevicePixelRatio;
+      philScroll.style.setProperty('--phil-zoom-ratio', ratio);
+    }
+
+    function setPhil(index) {
+      if (index === currentPhil) return;
+      currentPhil = index;
+      label.textContent = labels[index];
+      lines.forEach((line, i) => line.classList.toggle('active', i === index));
+      cards.forEach((card, i) => card.classList.toggle('active', i === index));
+    }
+
+    function updatePhil() {
+      ticking = false;
+      const rect = philScroll.getBoundingClientRect();
+      const scrollable = Math.max(1, philScroll.offsetHeight - window.innerHeight);
+      const progress = Math.min(0.999, Math.max(0, -rect.top / scrollable));
+      setPhil(Math.min(2, Math.floor(progress * 3)));
+    }
+
+    function requestPhilUpdate() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updatePhil);
+    }
+
+    updatePhilZoomRatio();
+    updatePhil();
+    window.addEventListener('scroll', requestPhilUpdate, { passive: true });
+    window.addEventListener('resize', () => {
+      updatePhilZoomRatio();
+      requestPhilUpdate();
+    });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updatePhilZoomRatio);
+    }
+  }
+
+  const agentScroll = document.querySelector('[data-agent-scroll]');
+  if (agentScroll) {
+    const agentSticky = agentScroll.querySelector('.agent-sticky');
+    const agentLeft = agentScroll.querySelector('[data-agent-left]');
+    const agentTitle = agentScroll.querySelector('.agent-title');
+    const agentSub = agentScroll.querySelector('.agent-sub');
+    const agentLines = [...agentScroll.querySelectorAll('.agent-sub-line')];
+    const agentPills = agentScroll.querySelector('.pills-row');
+    const questions = agentScroll.querySelector('[data-agent-questions]');
+    const principles = agentScroll.querySelector('[data-agent-principles]');
+    const agentViews = [questions, principles].filter(Boolean);
+    const agentTabs = [...agentScroll.querySelectorAll('[data-agent-tab]')];
+    let activeAgentTab = 'questions';
+    let agentTicking = false;
+
+    if (principles && agentLeft && principles.parentElement !== agentLeft) {
+      agentLeft.appendChild(principles);
+    }
+
+    function clamp01(value) {
+      return Math.min(1, Math.max(0, value));
+    }
+    function smooth(value) {
+      const t = clamp01(value);
+      return t * t * (3 - 2 * t);
+    }
+
+    function updateAgent() {
+      agentTicking = false;
+      const rect = agentScroll.getBoundingClientRect();
+      const scrollable = Math.max(1, agentScroll.offsetHeight - window.innerHeight);
+      const progress = clamp01(-rect.top / scrollable);
+      const titleIn = smooth((progress - 0.02) / 0.22);
+      const subIn = smooth((progress - 0.22) / 0.24);
+      const move = smooth((progress - 0.50) / 0.30);
+      const pillsIn = smooth((progress - 0.68) / 0.20);
+      const questionsIn = clamp01((progress - 0.74) / 0.20);
+      const bgDrift = smooth((progress - 0.36) / 0.42);
+      const titleScale = 1.38 - move * 0.50;
+      const titleWidth = agentTitle.offsetWidth * titleScale;
+      const lineWidths = agentLines.map(line => line.offsetWidth);
+      const subWidth = Math.max(...lineWidths);
+      const baseWidth = Math.max(titleWidth, subWidth, agentPills.offsetWidth);
+      const centerX = (window.innerWidth - baseWidth) / 2 - 160;
+      const baseLeftHeight = (agentTitle.offsetHeight * titleScale) + agentSub.offsetHeight + agentPills.offsetHeight + 56;
+      const visualHeight = baseLeftHeight;
+      const centerY = (window.innerHeight - visualHeight) / 2 - 116;
+      const leftViewportX = 160 + centerX * (1 - move);
+      const detailClean = smooth((move - 0.12) / 0.38);
+
+      agentTitle.style.opacity = titleIn;
+      agentSticky.style.setProperty('--agent-bg-opacity', titleIn * 0.58 * (1 - bgDrift * 0.58) * (1 - detailClean));
+      agentSticky.style.setProperty('--agent-bg-y', `${bgDrift * 180}px`);
+      agentTitle.style.transform = `translateY(${(1 - titleIn) * 42}px) scale(${titleScale})`;
+      agentLeft.style.transform = `translate(${centerX * (1 - move)}px, ${centerY * (1 - move)}px)`;
+      agentLines.forEach(line => {
+        const lineLocalLeft = line.offsetLeft;
+        const lineCenterX = (window.innerWidth - line.offsetWidth) / 2 - leftViewportX - lineLocalLeft;
+        line.style.opacity = subIn;
+        line.style.transform = `translate(${lineCenterX * (1 - move)}px, ${(1 - subIn) * 22}px)`;
+      });
+      agentPills.style.opacity = pillsIn;
+      agentPills.style.transform = `translate(${Math.max(0, (baseWidth - agentPills.offsetWidth) / 2) * (1 - move)}px, ${(1 - pillsIn) * 32}px)`;
+      agentViews.forEach(view => {
+        view.style.opacity = questionsIn;
+        view.style.transform = `translateY(${(1 - questionsIn) * 56}px)`;
+      });
+    }
+
+    function requestAgentUpdate() {
+      if (agentTicking) return;
+      agentTicking = true;
+      requestAnimationFrame(updateAgent);
+    }
+
+    updateAgent();
+    window.addEventListener('scroll', requestAgentUpdate, { passive: true });
+    window.addEventListener('resize', requestAgentUpdate);
+
+    function setAgentTab(tab) {
+      activeAgentTab = tab;
+      agentTabs.forEach(button => {
+        const active = button.dataset.agentTab === tab;
+        button.classList.toggle('dim', !active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      if (questions) questions.classList.toggle('agent-view-hidden', tab !== 'questions');
+      if (principles) principles.classList.toggle('agent-view-hidden', tab !== 'principles');
+    }
+
+    agentTabs.forEach(button => {
+      button.setAttribute('aria-pressed', button.dataset.agentTab === activeAgentTab ? 'true' : 'false');
+      // prevent the browser's focus-on-click from scrolling the page: this section's
+      // content is positioned with large scroll-driven CSS transforms, so a focus-scroll
+      // computed from the untransformed layout box would jump the whole view
+      button.addEventListener('mousedown', event => event.preventDefault());
+      button.addEventListener('click', () => setAgentTab(button.dataset.agentTab));
+    });
+    setAgentTab(activeAgentTab);
+
+    const principlesScroller = principles?.querySelector('.principles-scroll');
+    if (principlesScroller) {
+      let isDraggingPrinciples = false;
+      let dragStartX = 0;
+      let dragStartScroll = 0;
+
+      principlesScroller.addEventListener('pointerdown', event => {
+        isDraggingPrinciples = true;
+        dragStartX = event.clientX;
+        dragStartScroll = principlesScroller.scrollLeft;
+        principlesScroller.classList.add('dragging');
+        principlesScroller.setPointerCapture(event.pointerId);
+      });
+      principlesScroller.addEventListener('pointermove', event => {
+        if (!isDraggingPrinciples) return;
+        event.preventDefault();
+        principlesScroller.scrollLeft = dragStartScroll - (event.clientX - dragStartX);
+      });
+      function stopPrinciplesDrag(event) {
+        if (!isDraggingPrinciples) return;
+        isDraggingPrinciples = false;
+        principlesScroller.classList.remove('dragging');
+        if (principlesScroller.hasPointerCapture(event.pointerId)) {
+          principlesScroller.releasePointerCapture(event.pointerId);
+        }
+      }
+      principlesScroller.addEventListener('pointerup', stopPrinciplesDrag);
+      principlesScroller.addEventListener('pointercancel', stopPrinciplesDrag);
+      principlesScroller.addEventListener('lostpointercapture', () => {
+        isDraggingPrinciples = false;
+        principlesScroller.classList.remove('dragging');
+      });
+
+      const updatePrinciplesMask = () => {
+        principlesScroller.classList.toggle('scrolled-left', principlesScroller.scrollLeft > 4);
+      };
+      principlesScroller.addEventListener('scroll', updatePrinciplesMask, { passive: true });
+      updatePrinciplesMask();
+    }
+
+    const qCards = [...agentScroll.querySelectorAll('.q-card')];
+    qCards.forEach(card => {
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-expanded', 'false');
+      function toggleCard() {
+        const nextOpen = !card.classList.contains('open');
+        qCards.forEach(other => {
+          other.classList.remove('open');
+          other.setAttribute('aria-expanded', 'false');
+        });
+        if (nextOpen) {
+          card.classList.add('open');
+          card.setAttribute('aria-expanded', 'true');
+        }
+      }
+      card.addEventListener('click', toggleCard);
+      card.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleCard();
+        }
+      });
+    });
+  }
+
+  const orbitScroll = document.querySelector('[data-sd-orbit]');
+  if (orbitScroll) {
+    const radar = orbitScroll.querySelector('.sd-orbit-radar');
+    const mainClock = orbitScroll.querySelector('.sd-orbit-main-clock');
+    const trail = orbitScroll.querySelector('.sd-orbit-trail');
+    const trailClocks = [...orbitScroll.querySelectorAll('.sd-orbit-trail img')];
+    const orbitCopy = orbitScroll.querySelector('.sd-orbit-copy');
+    let orbitTicking = false;
+
+    function orbitClamp(value) {
+      return Math.min(1, Math.max(0, value));
+    }
+    function orbitSmooth(value) {
+      const t = orbitClamp(value);
+      return t * t * (3 - 2 * t);
+    }
+
+    function updateOrbit() {
+      orbitTicking = false;
+      const rect = orbitScroll.getBoundingClientRect();
+      const scrollable = Math.max(1, orbitScroll.offsetHeight - window.innerHeight);
+      const progress = orbitClamp(-rect.top / scrollable);
+      const morph = orbitSmooth(progress / 0.42);
+      const roll = orbitSmooth((progress - 0.44) / 0.46);
+
+      radar.style.opacity = 1 - morph;
+      radar.style.transform = `rotate(${morph * 360}deg) scale(${1 - morph * 0.03})`;
+      mainClock.style.opacity = 1 - roll;
+      mainClock.style.transform = `rotate(${(morph - 1) * 360 + roll * 360}deg) translateX(${roll * 260}px)`;
+      trail.style.opacity = roll;
+      trail.style.transform = `translateX(${roll * 92}px)`;
+      orbitCopy.style.opacity = 1 - roll;
+      orbitCopy.style.transform = `translateY(-50%) translateX(${roll * 40}px)`;
+
+      trailClocks.forEach((clock, index) => {
+        const offset = index * 320 * roll;
+        const fade = Math.max(0.18, 1 - index * 0.22);
+        clock.style.opacity = roll * fade;
+        clock.style.transform = `translateX(${offset}px) rotate(${roll * 360 + index * 58}deg)`;
+      });
+    }
+
+    function requestOrbitUpdate() {
+      if (orbitTicking) return;
+      orbitTicking = true;
+      requestAnimationFrame(updateOrbit);
+    }
+
+    updateOrbit();
+    window.addEventListener('scroll', requestOrbitUpdate, { passive: true });
+    window.addEventListener('resize', requestOrbitUpdate);
+  }
+
+  const sensingTrigger = document.querySelector('[data-open-detail="sensing"]');
+  const sensingDetail = document.getElementById('sensing-detail');
+  const morphingTrigger = document.querySelector('[data-open-detail="morphing"]');
+  const morphingDetail = document.getElementById('morphing-detail');
+  const homeLogos = document.querySelectorAll('[data-home-logo]');
+  function returnHome() {
+    document.body.classList.remove('sensing-detail-mode', 'morphing-detail-mode');
+    if (sensingDetail) sensingDetail.setAttribute('aria-hidden', 'true');
+    if (morphingDetail) morphingDetail.setAttribute('aria-hidden', 'true');
+    window.scrollTo(0, 0);
+  }
+  function openSensingDetail() {
+    window.location.href = 'saegyeodeutda.html';
+  }
+  function openMorphingDetail() {
+    document.body.classList.add('morphing-detail-mode');
+    morphingDetail.setAttribute('aria-hidden', 'false');
+    window.scrollTo(0, 0);
+  }
+  if (sensingTrigger) {
+    sensingTrigger.addEventListener('click', openSensingDetail);
+    sensingTrigger.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openSensingDetail();
+      }
+    });
+  }
+  if (morphingTrigger) {
+    morphingTrigger.addEventListener('click', openMorphingDetail);
+    morphingTrigger.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openMorphingDetail();
+      }
+    });
+  }
+  homeLogos.forEach(logo => {
+    logo.addEventListener('click', returnHome);
+    logo.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        returnHome();
+      }
+    });
+  });
+</script>
+</body>
+</html>
