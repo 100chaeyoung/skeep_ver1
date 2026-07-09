@@ -23,23 +23,6 @@
     .d4{transition-delay:.32s}.d5{transition-delay:.40s}.d6{transition-delay:.48s}
     .dd2{transition-delay:.30s}.dd3{transition-delay:.60s}
 
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 18px 40px; display: flex; align-items: center; justify-content: space-between;
-      background: rgba(255,255,255,0.88); backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-    }
-    .nav-back {
-      font-size: 14px; font-weight: 500; color: rgba(0,0,0,0.45);
-      text-decoration: none; transition: color .2s; letter-spacing: -0.02em;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .nav-back:hover { color: #000; }
-    .nav-title { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.45); letter-spacing: -0.02em; }
-    .nav-logo { display: flex; align-items: center; }
-    .nav-logo img { height: 22px; width: auto; }
-
     /* ── SENSING DETAIL ── */
     .sd-section {
       width: 100%;
@@ -56,12 +39,21 @@
       padding-top: clamp(56px, 8vw, 116px);
       padding-bottom: clamp(56px, 8vw, 116px);
     }
+    /* The summary text section right above already has its own bottom
+       padding, so stacking this section's top padding on top of it left an
+       oversized gap between the description and the cards. Collapse both
+       into a single, smaller controlled gap instead. */
+    .sd-bg-grad + .sd-card-section {
+      padding-top: 0;
+    }
+    .sd-bg-grad:has(+ .sd-card-section) {
+      padding-bottom: clamp(32px, 4vw, 64px);
+    }
     .sd-hero + .sd-section {
       margin-top: 180px;
     }
     .sd-hero {
-      height: 75vh;
-      min-height: 580px;
+      height: 100vh;
       position: relative;
       display: flex;
       align-items: center;
@@ -72,23 +64,28 @@
     .sd-hero-bg {
       position: absolute;
       inset: 0;
-      background: url('assets/sensing-hero-bg.jpg') center center / cover no-repeat;
       z-index: 0;
+      overflow: hidden;
+    }
+    .sd-hero-bg video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 1.1s ease, transform 1.4s ease-out;
+    }
+    .sd-hero-bg video.active {
+      opacity: 1;
+      transform: scale(1);
     }
     .sd-hero-dim {
       position: absolute;
       inset: 0;
       background: rgba(0, 0, 0, 0.80);
       z-index: 1;
-    }
-    .sd-logo {
-      position: absolute;
-      top: 64px;
-      left: 74px;
-      width: 182px;
-      cursor: pointer;
-      z-index: 3;
-      filter: brightness(0) invert(1);
     }
     .sd-hero h1 {
       position: relative;
@@ -126,22 +123,12 @@
       color: #0e1825;
     }
     .sd-pill-row {
-      display: grid;
-      grid-template-columns: 8fr 5fr 3fr;
-      gap: 0;
       width: 100%;
     }
-    .sd-pill {
-      height: 300px;
-      border-radius: 150px;
-      background: linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 50%, #F4F8FC 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(22px,3.6vw,48px);
-      font-weight: 600;
-      line-height: 1.4;
-      letter-spacing: -0.03em;
+    .sd-pill-row video {
+      width: 100%;
+      height: auto;
+      display: block;
     }
     .sd-pink { color: #ff076a; }
     .sd-sensing-scene {
@@ -197,9 +184,10 @@
       min-width: 0;
       transform-origin: center center;
       transition:
-        opacity .66s cubic-bezier(.22, 1, .36, 1),
-        transform .96s cubic-bezier(.16, 1, .3, 1);
-      will-change: opacity, transform;
+        opacity .82s cubic-bezier(.22, 1, .36, 1),
+        transform 1.35s cubic-bezier(.16, 1, .3, 1),
+        scale .72s cubic-bezier(.22, 1, .36, 1);
+      will-change: opacity, transform, scale;
     }
     .sd-sensing-text {
       flex: 1 1 0;
@@ -243,8 +231,11 @@
     }
     .sd-scroll-cards {
       display: flex;
-      gap: clamp(10px, 1.2vw, 14px);
-      margin-top: 58px;
+      align-items: center;
+      align-self: stretch;
+      justify-content: flex-end;
+      gap: clamp(12px, 1.6vw, 28px);
+      margin-top: clamp(28px, 4vw, 58px);
       opacity: 0;
       transform: translateY(28px);
       transition:
@@ -253,21 +244,19 @@
       will-change: opacity, transform;
     }
     .sd-scroll-card {
-      width: clamp(118px, 16vw, 220px);
-      height: clamp(118px, 16vw, 220px);
-      flex-shrink: 0;
-      border-radius: 24px;
-      padding: clamp(16px, 1.8vw, 24px);
-      background:
-        radial-gradient(ellipse at 50% 29%, rgba(255, 13, 134, 0.15) 0%, rgba(255, 63, 74, 0.07) 50%, transparent 100%),
-        linear-gradient(180deg, rgb(255, 203, 223) 0%, rgb(255, 242, 242) 100%);
+      flex: 0 1 296px;
+      min-width: 0;
+      height: clamp(96px, 10.4vw, 142px);
+      border-radius: clamp(14px, 1.5vw, 22.4px);
+      padding: clamp(14px, 1.8vw, 24px);
+      background: #ebf0f5;
     }
     .sd-scroll-card p {
-      font-size: clamp(14px,2vw,28px);
+      font-size: clamp(13px, 1.6vw, 23.333px);
       font-weight: 600;
       line-height: 1.3;
-      letter-spacing: -0.04em;
-      background: linear-gradient(180deg, #3b0018 0%, #95003c 100%);
+      letter-spacing: -1.1667px;
+      background: linear-gradient(180deg, #3b0018 0%, #4b5869 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -291,6 +280,8 @@
       height: var(--sd-sensing-graphic-size);
       flex: 0 1 var(--sd-sensing-graphic-size);
       min-width: 0;
+      transition: transform .9s cubic-bezier(.22, 1, .36, 1);
+      will-change: transform;
     }
     .sd-orbit-visual img {
       width: 100%;
@@ -298,8 +289,8 @@
       object-fit: contain;
       transform-origin: center center;
       transition:
-        opacity .66s cubic-bezier(.22, 1, .36, 1),
-        transform .96s cubic-bezier(.16, 1, .3, 1);
+        opacity .82s cubic-bezier(.22, 1, .36, 1),
+        transform 1.35s cubic-bezier(.16, 1, .3, 1);
       will-change: opacity, transform;
     }
     .sd-orbit-radar,
@@ -314,7 +305,7 @@
       position: absolute;
       inset: 0;
       opacity: 0;
-      transition: opacity .72s cubic-bezier(.22, 1, .36, 1);
+      transition: opacity .95s cubic-bezier(.22, 1, .36, 1);
       will-change: opacity, transform;
     }
     .sd-orbit-trail img {
@@ -322,6 +313,7 @@
       inset: 0;
     }
     .sd-text-right {
+      flex: 1 1 0;
       max-width: 1047px;
       min-width: 0;
       text-align: right;
@@ -339,7 +331,7 @@
         opacity .62s cubic-bezier(.22, 1, .36, 1),
         transform .62s cubic-bezier(.22, 1, .36, 1);
     }
-    .sd-text-right p {
+    .sd-text-right p:not(.sd-scene-eyebrow) {
       font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
@@ -369,6 +361,9 @@
       width: calc(100% - 240px);
       opacity: 0;
       transform: translateY(72px);
+      transition:
+        opacity .72s cubic-bezier(.22, 1, .36, 1),
+        transform .82s cubic-bezier(.22, 1, .36, 1);
       will-change: opacity, transform;
     }
     .sd-tick h2 {
@@ -380,18 +375,34 @@
       color: #0e1825;
     }
     .sd-tick h2 span { color: rgba(14, 24, 37, 0.26); }
-    .sd-tick p {
+    .sd-tick-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sd-tick > p {
       max-width: 760px;
       text-align: right;
       font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
+    .sd-scene-eyebrow {
+      font-size: clamp(32px, 4.5vw, 48px);
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
+      color: rgb(216, 221, 226);
+      transition:
+        opacity .62s cubic-bezier(.22, 1, .36, 1),
+        transform .62s cubic-bezier(.22, 1, .36, 1);
+      will-change: opacity, transform;
+    }
     .sd-sensing-tick {
       position: absolute;
-      left: 120px;
-      right: 120px;
-      bottom: 120px;
+      left: clamp(24px, 8.3vw, 120px);
+      right: clamp(24px, 8.3vw, 120px);
+      bottom: clamp(48px, 6.5vw, 96px);
     }
     .sd-walk-scene {
       height: 500vh;
@@ -416,24 +427,70 @@
       align-items: center;
       gap: 140px;
       width: 100%;
+      position: relative;
+      transition: gap .85s cubic-bezier(.22, 1, .36, 1);
     }
     .sd-walk-row {
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      width: 100%;
+      width: min(calc(100% - 180px), 1800px);
       height: 460px;
       position: relative;
+      gap: clamp(42px, 4vw, 92px);
+      padding-inline: clamp(52px, 7vw, 132px);
+      box-sizing: border-box;
     }
     .sd-walk-person {
-      flex: 1;
+      flex: 1 1 0;
+      width: 0;
+      min-width: 0;
       height: 100%;
       object-fit: contain;
       object-position: bottom center;
       display: block;
       filter: grayscale(1);
-      transition: filter 0.55s ease, transform 0.55s ease;
+      opacity: 1;
+      transition:
+        filter 0.55s ease,
+        transform .85s cubic-bezier(.22, 1, .36, 1),
+        opacity .7s ease,
+        left .85s cubic-bezier(.22, 1, .36, 1),
+        top .85s cubic-bezier(.22, 1, .36, 1),
+        width .85s cubic-bezier(.22, 1, .36, 1),
+        height .85s cubic-bezier(.22, 1, .36, 1);
       transform-origin: bottom center;
+    }
+    .sd-walk-scene.is-final .sd-walk-content {
+      gap: 0;
+    }
+    .sd-walk-scene.is-final .sd-walk-row {
+      width: 100%;
+      height: 100vh;
+      padding-inline: 0;
+      gap: 0;
+      align-items: center;
+    }
+    .sd-walk-scene.is-pre-final .sd-walk-person:not(.is-walk-final-person) {
+      opacity: 0;
+      transform: translateY(10px) scale(.98);
+      transition: opacity .22s ease, transform .22s ease;
+      pointer-events: none;
+    }
+    .sd-walk-scene.is-final .sd-walk-person:not(.is-walk-final-person) {
+      opacity: 0;
+      transform: translateY(12px) scale(.98);
+      pointer-events: none;
+    }
+    .sd-walk-scene.is-final .sd-walk-person.is-walk-final-person {
+      position: absolute;
+      left: calc(50% - clamp(300px, 21vw, 440px));
+      top: 50%;
+      width: clamp(92px, 7.2vw, 148px);
+      height: auto;
+      opacity: 1;
+      filter: grayscale(0);
+      transform: translate(-50%, -50%) scale(1) !important;
     }
     .sd-walk-shadow {
       position: absolute;
@@ -442,12 +499,58 @@
       height: 46px;
       mix-blend-mode: multiply;
       pointer-events: none;
-      transition: left 0.35s ease;
+      transition: left 0.35s ease, opacity .55s ease;
       transform: translateX(-50%);
+    }
+    .sd-walk-scene.is-final .sd-walk-shadow {
+      opacity: 0;
     }
     .sd-walk-caption {
       text-align: center;
       padding-top: 0;
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .sd-walk-scene.is-final .sd-walk-caption {
+      position: absolute;
+      opacity: 0;
+      transform: translateY(18px);
+      pointer-events: none;
+    }
+    .sd-walk-final-title {
+      position: absolute;
+      left: calc(50% - clamp(120px, 12vw, 260px));
+      top: 50%;
+      transform: translateY(-50%) translateX(32px);
+      opacity: 0;
+      font-size: clamp(64px, 7.2vw, 128px);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      color: #000;
+      white-space: nowrap;
+      pointer-events: none;
+      transition: opacity .85s ease, transform .85s cubic-bezier(.22, 1, .36, 1);
+    }
+    .sd-walk-scene.is-final .sd-walk-final-title {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+    @media (max-width: 900px) {
+      .sd-walk-content { gap: 92px; }
+      .sd-walk-row {
+        width: min(calc(100% - 56px), 1200px);
+        height: 360px;
+        gap: 22px;
+        padding-inline: 28px;
+      }
+      .sd-walk-scene.is-final .sd-walk-person.is-walk-final-person {
+        left: calc(50% - clamp(150px, 24vw, 230px));
+        width: clamp(74px, 10vw, 104px);
+      }
+      .sd-walk-final-title {
+        left: calc(50% - clamp(50px, 7vw, 86px));
+        font-size: clamp(44px, 9vw, 78px);
+      }
     }
     .sd-walk-caption h2 {
       font-size: clamp(24px,4vw,54px);
@@ -460,25 +563,6 @@
       font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
-    }
-    .sd-input-word {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 560px;
-      position: relative;
-    }
-    .sd-input-word h2 {
-      font-size: clamp(32px,4.8vw,72px);
-      font-weight: 600;
-      line-height: 1.4;
-      letter-spacing: -0.04em;
-    }
-    .sd-input-word img {
-      position: absolute;
-      right: -280px;
-      width: 765px;
-      opacity: .95;
     }
     .sd-input-summary {
       display: grid;
@@ -503,134 +587,170 @@
       align-items: stretch;
     }
     .sd-info-card {
-      border-radius: 32px;
+      border-radius: 44px;
       overflow: hidden;
-      background: #F4F8FC;
+      position: relative;
+      background: #0E1825;
       height: 100%;
-      display: flex;
-      flex-direction: column;
+      isolation: isolate;
+      transform: translateZ(0);
+      clip-path: inset(0 round 44px);
     }
     .sd-card-img {
-      flex: 0 0 240px;
-      height: 240px;
-      position: relative;
-      overflow: hidden;
-      min-height: 0;
-      background: #F4F8FC;
-    }
-    .sd-card-img::after {
-      content: "";
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(180deg, rgba(255, 7, 106, 0.12) 4.333%, rgba(255, 7, 106, 0.3) 100%);
-      mix-blend-mode: multiply;
+      inset: -2px;
+      overflow: hidden;
+      border-radius: inherit;
+      z-index: 0;
     }
     .sd-card-img img {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: .2;
+      object-position: center center;
+      transform: scale(1.035);
+    }
+    .sd-info-card:nth-child(1) .sd-card-img img { object-position: 66% center; }
+    .sd-info-card:nth-child(3) .sd-card-img img { object-position: 54% center; }
+    .sd-card-img::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(14, 24, 37, .76) 0%, rgba(14, 24, 37, .64) 42%, rgba(14, 24, 37, .88) 100%),
+        radial-gradient(ellipse at 34% 88%, rgba(255, 7, 106, .62) 0%, rgba(255, 7, 106, .30) 35%, rgba(255, 7, 106, 0) 76%);
+    }
+    .sd-card-glow {
+      position: absolute;
+      left: -20%;
+      bottom: -25%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,7,106,.55) 0%, rgba(255,7,106,0) 70%);
+      pointer-events: none;
+      z-index: 1;
+      display: none;
     }
     .sd-card-text {
-      flex: 0 0 400px;
-      height: 400px;
-      padding: 40px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: clamp(20px, 3vw, 40px);
       display: flex;
       flex-direction: column;
-      gap: 40px;
-      color: #0e1825;
+      gap: clamp(16px, 2.5vw, 40px);
+      z-index: 2;
     }
     .sd-card-text h3 {
       margin: 0;
-      font-size: clamp(18px,2.8vw,42px);
+      font-size: clamp(22px,3.2vw,60px);
       line-height: 1.3;
       font-weight: 600;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
+      color: #fff;
     }
     .sd-card-text h3 span {
       display: block;
-      font-size: clamp(13px,1.6vw,26px);
-      color: #A5B0BF;
-      letter-spacing: -0.03em;
+      font-size: clamp(13px,1.6vw,28px);
+      font-weight: 500;
+      color: #D0D7E0;
+      letter-spacing: -0.02em;
+      margin-top: 4px;
     }
     .sd-card-text p {
       margin: 0;
-      font-size: clamp(13px,1.6vw,26px);
+      font-size: clamp(13px,1.4vw,24px);
       line-height: 1.5;
       font-weight: 500;
-      color: #66717F;
-      letter-spacing: -0.03em;
+      color: #C4CCD7;
+      letter-spacing: -0.02em;
     }
-    .sd-active {
-      display: grid;
-      grid-template-columns: minmax(0, 620px) minmax(280px, 720px);
-      justify-content: space-between;
-      gap: clamp(48px, 7vw, 120px);
+    .sd-summary-hero {
+      width: 100%;
+      height: 100vh;
+      padding: 0 var(--edge-padding);
+      background: linear-gradient(180deg, #FF0B6C 0%, #FF61A0 100%);
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: clamp(12px, 1.6vw, 22px);
+      overflow: hidden;
     }
-    .sd-active-label {
-      color: #ff076a;
+    .sd-summary-hero-label {
+      color: rgba(255,255,255,.5);
       font-size: clamp(18px,2.2vw,32px);
       font-weight: 600;
       line-height: 1.3;
       letter-spacing: -0.03em;
-      margin-bottom: 8px;
     }
-    .sd-active h2 {
-      font-size: clamp(24px,4vw,54px);
-      font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
-      margin-bottom: 28px;
+    .sd-summary-hero-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(16px, 2vw, 28px);
+      max-width: 900px;
     }
-    .sd-active p {
-      font-size: clamp(14px,1.8vw,24px);
+    .sd-summary-hero h2 {
+      color: #fff;
+      font-size: clamp(28px,4.5vw,60px);
+      font-weight: 700;
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
-    .sd-main-image {
-      width: 100%;
-      min-width: 0;
-      height: 466px;
-      border-radius: 32px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.88) 100%),
-        linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 50%, #F4F8FC 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(18px,2.8vw,42px);
+    .sd-summary-hero p {
+      color: #fff;
+      font-size: clamp(14px,1.8vw,24px);
+      font-weight: 400;
+      line-height: 1.5;
       letter-spacing: -0.03em;
+      max-width: 620px;
     }
     .sd-flow-scroll {
-      height: 230vh;
+      height: 270vh;
       margin: 160px 0;
       padding: 120px 0;
       position: relative;
       background: #fff;
     }
     .sd-flow-panel {
-      margin: 0 151px;
-      border-radius: 32px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 127.56%),
-        #EBF0F5;
-      min-height: 377px;
-      padding: 42px;
-      display: grid;
-      grid-template-columns: 230px 1fr;
-      gap: 40px;
-      align-items: center;
+      --sd-flow-scale: 1;
       --flow-blur: 0px;
       --flow-opacity: 1;
       --flow-break: 0;
       --flow-overlay: 0;
-      position: relative;
-      overflow: hidden;
+      --flow-pause: 0;
+      --flow-active-opacity: 1;
+      --flow-pause-blur: 0px;
+      --flow-pause-in-blur: 12px;
+      width: min(calc(100% - 80px), 1760px);
+      height: calc(439px * var(--sd-flow-scale));
+      margin: 0 auto;
+      border-radius: 32px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 127.56%),
+        #EBF0F5;
       position: sticky;
-      top: calc(50vh - 188px);
+      top: 50%;
+      transform: translateY(-50%);
+      overflow: hidden;
+    }
+    .sd-flow-canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1760px;
+      height: 439px;
+      transform: scale(var(--sd-flow-scale));
+      transform-origin: top left;
+      opacity: var(--flow-active-opacity);
+      filter: blur(var(--flow-pause-blur));
+      transition: opacity 1s ease, filter 1s ease;
+      z-index: 1;
     }
     .sd-flow-side,
     .sd-flow-cards {
@@ -639,6 +759,7 @@
       filter: grayscale(var(--flow-break)) blur(var(--flow-blur)) contrast(calc(1 + var(--flow-break) * .35));
       opacity: var(--flow-opacity);
       will-change: filter, opacity;
+      transition: filter 1s ease, opacity 1s ease;
     }
     .sd-flow-panel::after {
       content: "";
@@ -652,37 +773,246 @@
         linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.26) 100%),
         rgba(126, 130, 134, .46);
       backdrop-filter: grayscale(1) blur(18px);
+      transition: opacity 1s ease;
+    }
+    .sd-flow-panel.is-flow-blurred {
+      --flow-blur: 26px;
+      --flow-opacity: .82;
+      --flow-break: 1;
+      --flow-overlay: .92;
+    }
+    .sd-flow-panel.is-paused {
+      --flow-pause: 1;
+      --flow-active-opacity: 0;
+      --flow-pause-blur: 16px;
+      --flow-pause-in-blur: 0px;
+    }
+    .sd-flow-pause-state,
+    .sd-flow-time-state {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1760px;
+      height: 439px;
+      z-index: 3;
+      pointer-events: none;
+      transform: scale(var(--sd-flow-scale));
+      transform-origin: top left;
+    }
+    .sd-flow-pause-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 32px;
+      background: #0E1825;
+      opacity: var(--flow-pause);
+      filter: blur(var(--flow-pause-in-blur));
+      transition: opacity .45s ease, filter .45s ease;
+    }
+    .sd-flow-pause-mark {
+      width: 104px;
+      height: 122px;
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      align-items: stretch;
+    }
+    .sd-flow-pause-mark::before,
+    .sd-flow-pause-mark::after {
+      content: "";
+      width: 36px;
+      border-radius: 4px;
+      background: #ff076a;
+    }
+    .sd-flow-time-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 150px;
+      opacity: 0;
+      transition: opacity .5s ease;
+    }
+    .sd-flow-time-inner {
+      display: flex;
+      align-items: center;
+      gap: 78px;
+      transform: translateY(70px) scale(.96);
+      transition: transform .72s cubic-bezier(.22,1,.36,1), gap .72s cubic-bezier(.22,1,.36,1);
+    }
+    .sd-flow-panel.is-time-visible .sd-flow-pause-state {
+      opacity: 0;
+      filter: blur(10px);
+    }
+    .sd-flow-panel.is-time-visible {
+      background: transparent;
+    }
+    .sd-flow-panel.is-time-visible::after {
+      opacity: 0;
+    }
+    .sd-flow-panel.is-time-visible .sd-flow-time-state {
+      opacity: 1;
+      transition-delay: .28s;
+    }
+    .sd-flow-panel.is-time-visible .sd-flow-time-inner {
+      transform: translateY(0) scale(1);
+      transition-delay: .28s;
+    }
+    .sd-flow-time-avatar {
+      width: 240px;
+      height: 240px;
+      flex: 0 0 auto;
+      opacity: 1;
+      transition: width .72s cubic-bezier(.22,1,.36,1), opacity .45s ease;
+    }
+    .sd-flow-time-card {
+      width: 1300px;
+      height: 240px;
+      border-radius: 32px;
+      background: #EBF0F5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      transition: width .72s cubic-bezier(.22,1,.36,1), background .72s ease;
+    }
+    .sd-flow-rest-copy,
+    .sd-flow-card-logic-copy {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+    }
+    .sd-flow-rest-copy {
+      justify-content: center;
+      margin: 0;
+      font-size: 80px;
+      line-height: 1.5;
+      letter-spacing: -3.2px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: #000;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .42s ease, transform .42s ease;
+    }
+    .sd-flow-card-logic-copy {
+      justify-content: center;
+      margin: 0;
+      font-size: 80px;
+      line-height: 1.5;
+      letter-spacing: -3.2px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: #000;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
+    }
+    .sd-flow-logic-copy {
+      position: absolute;
+      left: 0;
+      bottom: 54px;
+      width: 1760px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      box-sizing: border-box;
+      padding-left: 90px;
+      padding-right: 90px;
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
+    }
+    .sd-flow-logic-korean {
+      margin: 0;
+      font-size: 72px;
+      line-height: 1.3;
+      letter-spacing: -2.16px;
+      font-weight: 600;
+      color: #000;
+      text-align: right;
+      white-space: nowrap;
+      transition: opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
+    }
+    .sd-flow-panel.is-logic-visible .sd-flow-time-inner {
+      position: absolute;
+      left: 0;
+      bottom: 54px;
+      width: 1760px;
+      gap: 0;
+      transform: translateY(0) scale(1);
+    }
+    .sd-flow-panel.is-logic-visible .sd-flow-time-avatar {
+      width: 0;
+      opacity: 0;
+    }
+    .sd-flow-panel.is-logic-visible .sd-flow-time-card {
+      width: 1760px;
+      background: transparent;
+    }
+    .sd-flow-panel.is-logic-visible .sd-flow-rest-copy {
+      opacity: 0;
+      transform: translateY(-24px);
+    }
+    .sd-flow-panel.is-logic-visible .sd-flow-card-logic-copy {
+      opacity: 1;
+      transform: translateY(0);
+      justify-content: flex-start;
+      box-sizing: border-box;
+      padding-left: 90px;
+    }
+    .sd-flow-panel.is-logic-visible .sd-flow-logic-copy {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: .18s;
+    }
+    .sd-flow-side {
+      position: absolute;
+      left: 43px;
+      top: 41px;
+      width: 213px;
     }
     .sd-flow-side .label {
       color: #ff076a;
-      font-size: clamp(18px,2.2vw,32px);
-      margin-bottom: 4px; font-weight: 600; letter-spacing: -0.03em;}
-    .sd-flow-side h3 {
-      font-size: clamp(22px,2.6vw,40px);
-      line-height: 1.3;
+      font-size: 18px;
+      line-height: 1.5;
+      margin: 0 0 3px 5px;
+      font-weight: 600;
       letter-spacing: -0.03em;
-      margin-bottom: 12px; font-weight: 600;}
+    }
+    .sd-flow-side h3 {
+      font-size: 40px;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin: 0 0 73px;
+      font-weight: 700;
+    }
     .sd-flow-side p {
-      font-size: clamp(14px,1.8vw,24px);
+      font-size: 20px;
       line-height: 1.5;
       letter-spacing: -0.03em;
+      margin: 0;
+      font-weight: 500;
     }
     .sd-flow-cards {
-      display: flex;
-      gap: 23px;
-      align-items: center;
-      width: 100%;
+      position: absolute;
+      left: 356px;
+      top: 33.75px;
+      width: 1345px;
+      height: 322px;
     }
     .sd-flow-card {
-      flex: 1 1 0;
-      min-width: 0;
-      height: 250px;
-      border-radius: 24px;
+      flex: 0 0 232.316px;
+      width: 232.316px;
+      height: 249.916px;
+      border-radius: 24.64px;
       background: rgba(245,250,254,.72);
-      padding: 36px 28px;
+      padding: 35.825px 28.66px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 17.913px;
       will-change: filter, opacity;
     }
     .sd-flow-card.active {
@@ -698,76 +1028,90 @@
       z-index: 1;
     }
     .sd-flow-card h4 {
-      font-size: clamp(13px,1.15vw,22px);
+      font-size: 36px;
       line-height: 1.2;
       letter-spacing: -0.04em;
-      font-weight: 600;
+      font-weight: 700;
+      margin: 0;
     }
     .sd-flow-card:not(.active) h4 {
       font-weight: 600;
       opacity: .6;
     }
     .sd-flow-card span {
-      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      font-family: 'Bebas Neue', 'Arial Narrow', 'Pretendard', sans-serif;
       font-weight: 400;
-      font-size: clamp(13px,1.4vw,24px);
+      font-size: 36px;
       line-height: .96;
       opacity: .55;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.04em;
     }
     .sd-flow-card:not(.active) span { opacity: .2; }
 
     /* ── flow card grouping (목적 연산/달성 구간) ── */
     .sd-flow-cards.grouped {
-      align-items: flex-start;
-      gap: 32px;
+      display: block;
     }
     .sd-flow-group {
-      flex: 3 1 0;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 760.308px;
+      height: 322px;
     }
     .sd-flow-group.strong {
-      flex: 2 1 0;
+      left: 840.308px;
+      width: 505.112px;
     }
     .sd-flow-group-row {
-      position: relative;
+      position: absolute;
+      left: 8.8px;
+      top: 9.23px;
       display: flex;
-      gap: 23px;
-      width: 100%;
+      gap: 22.884px;
+      width: auto;
     }
     .sd-flow-group-row::before {
       content: '';
       position: absolute;
-      inset: -9px;
-      border: 3.6px dashed #6e6e6e;
-      border-radius: 32px;
+      left: -8.8px;
+      top: -9.23px;
+      width: 760.308px;
+      height: 265.756px;
+      border: 3.583px dashed #6e6e6e;
+      border-radius: 35.199px;
       background: rgba(0,0,0,.05);
       opacity: .5;
       z-index: 0;
       pointer-events: none;
     }
-    .sd-flow-group.strong .sd-flow-group-row::before { opacity: 1; }
+    .sd-flow-group.strong .sd-flow-group-row::before {
+      width: 505.112px;
+      opacity: 1;
+    }
     .sd-flow-caption {
+      position: absolute;
+      left: 19.36px;
+      top: 265.756px;
       display: flex;
-      align-items: flex-end;
-      gap: 8px;
-      padding-left: 22px;
+      align-items: flex-start;
+      gap: 7px;
+      padding-left: 0;
     }
     .sd-flow-caption .bracket {
       width: 17.6px;
-      height: 37px;
-      border-left: 1.5px solid #c2c2c2;
-      border-bottom: 1.5px solid #c2c2c2;
+      height: 36.96px;
+      border-left: 1.2px solid rgba(0,0,0,.18);
+      border-bottom: 1.2px solid rgba(0,0,0,.18);
       flex-shrink: 0;
     }
     .sd-flow-caption-text {
-      font-size: clamp(13px,1.4vw,24px);
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      color: rgba(0,0,0,.55);
+      padding-top: 16px;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: rgba(0,0,0,.5);
     }
     .sd-summary {
       display: flex;
@@ -849,16 +1193,21 @@
     }
 
     @media (max-width: 1100px) {
-      .sd-active,
+      .sd-card-list {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 24px;
+      }
+      .sd-info-card {
+        height: clamp(360px, 70vw, 480px);
+      }
       .sd-summary {
         grid-template-columns: 1fr;
         flex-direction: column;
       }
-      .sd-active,
       .sd-summary {
         align-items: stretch;
       }
-      .sd-main-image,
       .sd-summary-box {
         height: clamp(280px, 52vw, 466px);
       }
@@ -877,7 +1226,7 @@
       .sd-sensing-detail .sd-text-right h2 {
         font-size: clamp(26px, 4.4vw, 48px);
       }
-      .sd-sensing-detail .sd-text-right p {
+      .sd-sensing-detail .sd-text-right p:not(.sd-scene-eyebrow) {
         font-size: clamp(13px, 2.1vw, 20px);
       }
     }
@@ -909,14 +1258,6 @@
       .sd-scroll-cards {
         max-width: 100%;
         justify-content: flex-end;
-        gap: 8px;
-      }
-      .sd-scroll-card {
-        width: clamp(86px, 15.5vw, 112px);
-        height: clamp(86px, 15.5vw, 112px);
-      }
-      .sd-scroll-card p {
-        font-size: clamp(12px, 2.2vw, 16px);
       }
       .sd-sensing-detail .sd-two-col {
         flex-direction: row;
@@ -931,13 +1272,22 @@
       .sd-sensing-detail .sd-text-right h2 {
         font-size: clamp(22px, 4.2vw, 32px);
       }
-      .sd-sensing-detail .sd-text-right p {
+      .sd-sensing-detail .sd-text-right p:not(.sd-scene-eyebrow) {
         font-size: clamp(12px, 2vw, 15px);
         line-height: 1.45;
       }
+      .sd-tick {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 16px;
+      }
+      .sd-tick h2 {
+        white-space: normal;
+        text-align: right;
+        font-size: clamp(24px, 6vw, 32px);
+      }
       .sd-flow-panel {
-        margin: 0 24px;
-        grid-template-columns: 1fr;
+        width: calc(100% - 48px);
       }
     }
 
@@ -945,19 +1295,14 @@
 </head>
 <body>
 
-<nav>
-  <a class="nav-back" href="index.html">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Skeep
-  </a>
-  <span class="nav-logo"><img src="assets/skeep-logo.svg" alt="Skeep"></span>
-  <span class="nav-title">새겨듣다 · Sensing Logic</span>
-</nav>
-
 <section class="sd-hero">
-  <div class="sd-hero-bg"></div>
+  <div class="sd-hero-bg">
+    <video src="assets/hero-scene-1.mp4" autoplay muted playsinline class="active"></video>
+    <video src="assets/hero-scene-2.mp4" muted playsinline></video>
+    <video src="assets/hero-scene-4.mp4" muted playsinline></video>
+    <video src="assets/hero-scene-5.mp4" muted playsinline></video>
+  </div>
   <div class="sd-hero-dim"></div>
-  <img class="sd-logo" src="assets/skeep-logo.svg" alt="Skeep">
   <h1>어떤 형태의 의도든 완벽하게<br>항상 준비되어 있으니까</h1>
 </section>
 
@@ -966,10 +1311,8 @@
     <h2 class="sd-title">24/7, 365<br>Always Awake</h2>
     <p class="sd-body">말하기 전, 스킵은 이미 귀 기울이고 있죠.<br>언제든 주변을 살피며 다음을 준비합니다.</p>
   </div>
-  <div class="sd-pill-row">
-    <div class="sd-pill fi d1">Sensing</div>
-    <div class="sd-pill fi d2">Input</div>
-    <div class="sd-pill fi d3">Pause</div>
+  <div class="sd-pill-row fi">
+    <video src="assets/sensing-input-pause.mp4" autoplay muted playsinline id="pillVideo"></video>
   </div>
 </section>
 
@@ -1000,13 +1343,17 @@
           </div>
         </div>
         <div class="sd-text-right">
+          <p class="sd-scene-eyebrow">Sensing Logic</p>
           <h2>돌다리도 두드려보고 건너는 꼼꼼함<br>스킵이 완성하는 경험의 디딤돌</h2>
-          <p>스킵은 당신이 발을 내딛기도 전에 공간의 돌다리를 먼저 두드려봅니다. 첨단 RIS* 기술과 정밀 무선 통신으로 주변을 탐색하여, 안전하게 디딜 수 있는 주변 환경과 그 기능들을 실시간으로 리스트업하죠.<br>이제 철저하게 확인된 디딤돌 위에서, 그저 물수제비를 뜨듯 가볍게 흐름을 이어가기만 하면 됩니다.</p>
+          <p>스킵은 당신이 발을 내딛기도 전에 공간의 돌다리를 먼저 두드려봅니다. <br>첨단 RIS* 기술과 정밀 무선 통신으로 주변을 탐색하여, <br>안전하게 디딜 수 있는 주변 환경과 그 기능들을 실시간으로 리스트업하죠.<br>이제 철저하게 확인된 디딤돌 위에서, 그저 물수제비를 뜨듯 가볍게 흐름을 이어가기만 하면 됩니다.</p>
         </div>
       </div>
     </div>
     <div class="sd-tick sd-sensing-tick">
-      <h2>째깍째깍 <span>재깍재깍</span></h2>
+      <div class="sd-tick-left">
+        <p class="sd-scene-eyebrow">Sensing Logic</p>
+        <h2>째깍째깍 <span>재깍재깍</span></h2>
+      </div>
       <p>스킵의 패시브 레이어는 배경에서 끊임없이 움직이고 있습니다.<br>당신이 깊이 잠든 새벽이든, 분주하게 움직이는 낮이든, 어디에 있든 말이죠.<br>덕분에 목적이 생기는 그 찰나, 곧바로 완벽한 실행 경로가 완성됩니다.</p>
     </div>
   </div>
@@ -1017,13 +1364,14 @@
     <div class="sd-walk-content">
       <div class="sd-walk-row">
         <img class="sd-walk-shadow" id="walk-shadow" src="assets/walk-shadow.svg" alt="">
-        <img class="sd-walk-person" src="assets/walk-person-1.png" alt="">
+        <img class="sd-walk-person is-walk-final-person" src="assets/walk-person-1.png" alt="">
         <img class="sd-walk-person" src="assets/walk-person-2.png" alt="">
         <img class="sd-walk-person" src="assets/walk-person-3.png" alt="">
         <img class="sd-walk-person" src="assets/walk-person-4.png" alt="">
         <img class="sd-walk-person" src="assets/walk-person-5.png" alt="">
         <img class="sd-walk-person" src="assets/walk-person-6.png" alt="">
         <img class="sd-walk-person" src="assets/walk-person-7.png" alt="">
+        <div class="sd-walk-final-title" aria-hidden="true">Input Logic</div>
       </div>
       <div class="sd-walk-caption">
         <h2>한 발짝 한 발짝 센스있게, 센싱</h2>
@@ -1031,11 +1379,6 @@
       </div>
     </div>
   </div>
-</section>
-
-<section class="sd-section sd-input-word sd-bg-deep fi">
-  <h2>Input</h2>
-  <img src="assets/input-icons.png" alt="Input을 상징하는 핑크 아이콘 그래픽">
 </section>
 
 <section class="sd-section sd-bg-grad fi">
@@ -1049,6 +1392,7 @@
   <div class="sd-card-list">
     <article class="sd-info-card">
       <div class="sd-card-img"><img src="1.png" alt="음성 발화 입력 예시"></div>
+      <div class="sd-card-glow"></div>
       <div class="sd-card-text">
         <h3>음성 발화<span>Voice Input</span></h3>
         <p>사용자가 직접 건네는 발화 신호의 경우 음성 데이터와 함께 목소리의 톤, 높낮이, 속도 등 미세한 운율 모두를 명시적 인풋으로 포착합니다.</p>
@@ -1056,6 +1400,7 @@
     </article>
     <article class="sd-info-card">
       <div class="sd-card-img"><img src="2.png" alt="텍스트 입력 예시"></div>
+      <div class="sd-card-glow"></div>
       <div class="sd-card-text">
         <h3>텍스트 입력<span>Text Input</span></h3>
         <p>타이핑을 통해 입력된 문자 신호의 경우 구두점이나 부사처럼 사용자가 텍스트에 남긴 미세한 흔적들을 명시적 인풋으로 획득합니다.</p>
@@ -1063,6 +1408,7 @@
     </article>
     <article class="sd-info-card">
       <div class="sd-card-img"><img src="3.png" alt="행동 및 맥락 입력 예시"></div>
+      <div class="sd-card-glow"></div>
       <div class="sd-card-text">
         <h3>행동 및 맥락<span>Contextual Input</span></h3>
         <p>사용자가 직접 말하지 않은 암묵적 신호로, 스키퍼블에 있는 외재적 데이터와 사용자 고유의 내재적 루틴을 입체적으로 종합해 받아들입니다.</p>
@@ -1071,42 +1417,56 @@
   </div>
 </section>
 
-<section class="sd-section sd-bg-grad fi">
-  <div class="sd-active">
-    <div>
-      <p class="sd-active-label">Input Logic</p>
-      <h2>액티브 레이어를<br>여는 첫 단추</h2>
-      <p>목적이 시작되는 이 순간은 액티브 레이어라는 거대한 시공간적 바운더리가 열리는 시점입니다. 이제 사용자의 목적은 A2A 연산 형태로 변환되며 본격적인 연산이 시작되죠.</p>
-    </div>
-    <div class="sd-main-image">사용자 인풋 → 액티브 레이어 활성화</div>
+<section class="sd-summary-hero">
+  <p class="sd-summary-hero-label fi d1">Input Logic</p>
+  <div class="sd-summary-hero-body">
+    <h2 class="fi dd2">액티브 레이어를 여는 첫 단추</h2>
+    <p class="fi dd3">목적이 시작되는 이 순간은 액티브 레이어라는 거대한 시공간적 바운더리가 열리는 시점입니다. 이제 사용자의 목적은 A2A 연산 형태로 변환되며 본격적인 연산이 시작되죠.</p>
   </div>
 </section>
 
 <section class="sd-flow-scroll fi">
 <div class="sd-flow-panel">
-  <div class="sd-flow-side">
-    <p class="label">Active Layer</p>
-    <h3>사용자<br>목적 구간</h3>
-    <p>사용자의 목적이 최초로 발생한 시점부터 달성되는 시점까지의 시공간적 바운더리</p>
-  </div>
-  <div class="sd-flow-cards grouped">
-    <div class="sd-flow-group">
-      <div class="sd-flow-group-row">
-        <div class="sd-flow-card active"><h4>사용자<br>목적 전달</h4><span>User Input</span></div>
-        <div class="sd-flow-card step2"><h4>의도<br>구조화</h4><span>Parsing</span></div>
-        <div class="sd-flow-card step3"><h4>실행 블록<br>생성</h4><span>Mapping</span></div>
-      </div>
-      <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 연산 구간</span></div>
+  <div class="sd-flow-canvas">
+    <div class="sd-flow-side">
+      <p class="label">Active Layer</p>
+      <h3>사용자<br>목적 구간</h3>
+      <p>사용자의 목적이 최초로 발생한 시점부터 달성되는 시점까지의 시공간적 바운더리</p>
     </div>
-    <div class="sd-flow-group strong">
-      <div class="sd-flow-group-row">
-        <div class="sd-flow-card step4"><h4>실행 블록<br>처리</h4><span>Execution</span></div>
-        <div class="sd-flow-card step5"><h4>종료 및<br>개인화</h4><span>Feedback</span></div>
+    <div class="sd-flow-cards grouped">
+      <div class="sd-flow-group">
+        <div class="sd-flow-group-row">
+          <div class="sd-flow-card active"><h4>사용자<br>목적 전달</h4><span>User Input</span></div>
+          <div class="sd-flow-card step2"><h4>의도<br>구조화</h4><span>Parsing</span></div>
+          <div class="sd-flow-card step3"><h4>실행 블록<br>생성</h4><span>Mapping</span></div>
+        </div>
+        <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 연산 구간</span></div>
       </div>
-      <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 달성 구간</span></div>
+      <div class="sd-flow-group strong">
+        <div class="sd-flow-group-row">
+          <div class="sd-flow-card step4"><h4>실행 블록<br>처리</h4><span>Execution</span></div>
+          <div class="sd-flow-card step5"><h4>종료 및<br>개인화</h4><span>Feedback</span></div>
+        </div>
+        <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 달성 구간</span></div>
+      </div>
     </div>
   </div>
-</div>
+  <div class="sd-flow-pause-state" aria-hidden="true">
+    <span class="sd-flow-pause-mark" aria-hidden="true"></span>
+  </div>
+  <div class="sd-flow-time-state" aria-hidden="true">
+      <div class="sd-flow-time-inner">
+        <img class="sd-flow-time-avatar" src="assets/pause-avatar.svg" alt="">
+        <div class="sd-flow-time-card">
+          <p class="sd-flow-rest-copy">스킵, 우리 시간 좀 갖자</p>
+          <p class="sd-flow-card-logic-copy" aria-hidden="true">Pause Logic</p>
+        </div>
+      </div>
+      <div class="sd-flow-logic-copy" aria-hidden="true">
+        <p class="sd-flow-logic-korean">2보 전진을 위한<br>1보 후퇴</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="sd-section sd-summary-section fi">
@@ -1136,6 +1496,82 @@
 </section>
 
 <script>
+  // Sensing/Input/Pause pill video: plays forward then backward (boomerang),
+  // so the loop point is seamless instead of jump-cutting back to frame 0.
+  (function () {
+    const v = document.getElementById('pillVideo');
+    if (!v) return;
+    let rafId = null;
+    let reverseStart = null;
+    let reverseFromTime = 0;
+
+    // Target currentTime is computed from wall-clock elapsed time since the
+    // reverse began (not accumulated per-frame deltas), so it stays correctly
+    // paced even if requestAnimationFrame fires unevenly.
+    function stepReverse(ts) {
+      if (reverseStart === null) {
+        reverseStart = ts;
+        reverseFromTime = v.currentTime;
+      }
+      const elapsed = (ts - reverseStart) / 1000;
+      const t = reverseFromTime - elapsed;
+      if (t <= 0) {
+        v.currentTime = 0;
+        reverseStart = null;
+        v.play();
+        return;
+      }
+      v.currentTime = t;
+      rafId = requestAnimationFrame(stepReverse);
+    }
+
+    v.addEventListener('ended', () => {
+      reverseStart = null;
+      rafId = requestAnimationFrame(stepReverse);
+    });
+  })();
+
+  // Hero background: 5 scenes, one plays at a time, crossfading in a loop.
+  (function () {
+    const bg = document.querySelector('.sd-hero-bg');
+    if (!bg) return;
+    const videos = [...bg.querySelectorAll('video')];
+    if (videos.length < 2) return;
+    let current = 0;
+    let switching = false;
+
+    function activate(index) {
+      videos.forEach((v, i) => {
+        if (i === index) {
+          v.currentTime = 0;
+          v.play();
+          v.classList.add('active');
+        } else {
+          v.classList.remove('active');
+        }
+      });
+    }
+
+    function next() {
+      if (switching) return;
+      switching = true;
+      current = (current + 1) % videos.length;
+      activate(current);
+      setTimeout(() => { switching = false; }, 600);
+    }
+
+    videos.forEach(v => {
+      v.addEventListener('timeupdate', () => {
+        if (v === videos[current] && v.duration && v.currentTime >= v.duration - 0.4) next();
+      });
+      v.addEventListener('ended', () => {
+        if (v === videos[current]) next();
+      });
+    });
+
+    activate(0);
+  })();
+
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
   }, { threshold: 0.07 });
@@ -1158,7 +1594,8 @@
     const sTick = sensingScene.querySelector('.sd-sensing-tick');
     const sDetailText = sensingScene.querySelector('.sd-sensing-detail .sd-text-right');
     const sDetailTitle = sensingScene.querySelector('.sd-sensing-detail .sd-text-right h2');
-    const sDetailBody  = sensingScene.querySelector('.sd-sensing-detail .sd-text-right p');
+    const sDetailBody  = sensingScene.querySelector('.sd-sensing-detail .sd-text-right p:not(.sd-scene-eyebrow)');
+    const sDetailEyebrow = sensingScene.querySelector('.sd-sensing-detail .sd-scene-eyebrow');
     function mix(a, b, t) { return Math.round(a + (b - a) * t); }
     function responsiveTitleSize(large) {
       const vw = window.innerWidth;
@@ -1166,23 +1603,93 @@
         ? Math.min(124, Math.max(54, vw * 0.08))
         : Math.min(48, Math.max(32, vw * 0.045));
     }
+    const sOrbitVisual = sensingScene.querySelector('.sd-orbit-visual');
+    // Same left inset the icon already sits at (.sd-sensing-layer's own padding),
+    // reused so the clock trail and the tick text keep symmetric left/right margins.
+    function edgeGap() {
+      const layer = sensingScene.querySelector('.sd-sensing-detail');
+      return parseFloat(getComputedStyle(layer).paddingLeft) || 96;
+    }
+    // The last trail clock is rotated 174deg; a rotated square's bounding box
+    // is wider than the unrotated one, so this growth has to be accounted for
+    // or the right margin ends up smaller than the left.
+    function lastClockExtraHalfWidth(size) {
+      const lastAngle = (3 * 58) * Math.PI / 180;
+      return size * (Math.abs(Math.cos(lastAngle)) + Math.abs(Math.sin(lastAngle)) - 1) / 2;
+    }
     function clockGapValue() {
-      return Math.max(320, (window.innerWidth - 360) / 3);
+      const rect = sTrail.getBoundingClientRect();
+      const margin = edgeGap();
+      const available = window.innerWidth - rect.left - rect.width - margin - lastClockExtraHalfWidth(rect.width);
+      return Math.max(0, available / 3);
+    }
+    // Analytical target position of the last trail clock's right edge. Reading
+    // it live via getBoundingClientRect() can catch it mid CSS transition
+    // (animating out from the stacked start position), which is unreliable.
+    function lastClockTargetRight() {
+      const rect = sTrail.getBoundingClientRect();
+      return rect.right + 3 * clockGapValue() + lastClockExtraHalfWidth(rect.width);
+    }
+    function centerClockBundle(active) {
+      if (!active) {
+        sOrbitVisual.style.transform = '';
+        return;
+      }
+      sOrbitVisual.style.transform = '';
+      const orbitRect = sOrbitVisual.getBoundingClientRect();
+      const gapY = Math.max(44, Math.min(80, window.innerHeight * 0.07));
+      const tickHeight = sTick.offsetHeight || 160;
+      const bundleHeight = orbitRect.height + gapY + tickHeight;
+      const idealTop = (window.innerHeight - bundleHeight) / 2;
+      const offset = idealTop - orbitRect.top;
+      sOrbitVisual.style.transform = `translateY(${offset}px)`;
     }
     function setClockTrail(visible) {
       const clockGap = clockGapValue();
       sTrail.style.opacity = visible ? 1 : 0;
       sTrail.style.transform = 'translateX(0)';
       sTrailClocks.forEach((clock, index) => {
-        const offset = index * clockGap;
+        // Stay stacked at the main clock's starting spot while hidden, and only
+        // animate out to the spread position once visible, so each afterimage
+        // actually travels (in sync with the main clock's own slide) instead
+        // of just fading in already sitting at its final spot.
+        const offset = visible ? index * clockGap : 0;
+        const angle = visible ? index * 58 : 0;
         clock.style.opacity = visible ? 1 : 0;
-        clock.style.transform = `translateX(${offset}px) rotate(${index * 58}deg) scale(1)`;
+        clock.style.transform = `translateX(${offset}px) rotate(${angle}deg) scale(1)`;
       });
+      positionTick();
+    }
+    function positionTick() {
+      const clockRect = sTrail.getBoundingClientRect();
+      const stickyRect = sTick.parentElement.getBoundingClientRect();
+      const gapY = Math.max(44, Math.min(80, window.innerHeight * 0.07));
+      const tickHeight = sTick.offsetHeight || 160;
+      const wantedTop = clockRect.bottom - stickyRect.top + gapY;
+      const maxTop = window.innerHeight - stickyRect.top - tickHeight - 72;
+      const top = Math.max(clockRect.bottom - stickyRect.top + 28, Math.min(wantedTop, maxTop));
+      const margin = edgeGap();
+      sTick.style.top = `${top}px`;
+      sTick.style.left = `${margin}px`;
+      sTick.style.right = `${stickyRect.right - lastClockTargetRight()}px`;
+      sTick.style.bottom = 'auto';
+      sTick.style.width = 'auto';
     }
     let sensingVisualStage = -1;
+    let rollDoneTimer = null;
+    let autoSettled = false;
+    const ROLL_DURATION_MS = 1350;
 
     function setSensingVisualStage(stage) {
+      const enteringRoll = stage === 3 && sensingVisualStage !== 3;
       sensingVisualStage = stage;
+      if (stage < 3) {
+        autoSettled = false;
+      }
+      if (rollDoneTimer && stage !== 3) {
+        clearTimeout(rollDoneTimer);
+        rollDoneTimer = null;
+      }
       const clockGap = clockGapValue();
       const clockTravel = clockGap * 3;
 
@@ -1202,8 +1709,11 @@
         sDetailTitle.style.transform = 'translateY(34px)';
         sDetailBody.style.opacity = 0;
         sDetailBody.style.transform = 'translateY(34px)';
+        sDetailEyebrow.style.opacity = 0;
+        sDetailEyebrow.style.transform = 'translateY(34px)';
         sDetailText.style.transform = 'translateY(72px)';
         setClockTrail(false);
+        centerClockBundle(false);
         sTick.style.opacity = 0;
         sTick.style.transform = 'translateY(72px)';
         return;
@@ -1225,8 +1735,11 @@
         sDetailTitle.style.transform = 'translateY(0)';
         sDetailBody.style.opacity = 1;
         sDetailBody.style.transform = 'translateY(0)';
-        sDetailText.style.transform = 'translateY(0)';
+        sDetailEyebrow.style.opacity = 1;
+        sDetailEyebrow.style.transform = 'translateY(0)';
+        sDetailText.style.transform = 'translateY(-42px)';
         setClockTrail(false);
+        centerClockBundle(false);
         sTick.style.opacity = 0;
         sTick.style.transform = 'translateY(72px)';
         return;
@@ -1249,14 +1762,34 @@
       sDetailTitle.style.transform = 'translateY(-24px)';
       sDetailBody.style.opacity = 0;
       sDetailBody.style.transform = 'translateY(-24px)';
-      sDetailText.style.transform = 'translateY(0)';
+      sDetailEyebrow.style.opacity = 0;
+      sDetailEyebrow.style.transform = 'translateY(-24px)';
+      sDetailText.style.transform = 'translateY(-42px)';
       setClockTrail(stage >= 3);
+      // Only recenter the clock (shifting it up to make room for the tick
+      // text) once the roll has actually finished, so it doesn't move
+      // vertically while it's still traveling horizontally.
+      centerClockBundle(stage >= 4);
+      positionTick();
       if (stage >= 4) {
         sTick.style.opacity = 1;
         sTick.style.transform = 'translateY(0)';
       } else {
         sTick.style.opacity = 0;
         sTick.style.transform = 'translateY(72px)';
+      }
+
+      // Once the clocks finish rolling, settle into the centered/text-visible
+      // state automatically after the roll's own transition duration, rather
+      // than waiting for the user to keep scrolling to reach it.
+      if (enteringRoll) {
+        rollDoneTimer = setTimeout(() => {
+          rollDoneTimer = null;
+          if (sensingVisualStage === 3) {
+            autoSettled = true;
+            setSensingVisualStage(4);
+          }
+        }, ROLL_DURATION_MS);
       }
     }
 
@@ -1275,8 +1808,27 @@
       const gray = firstGroupOn;
       sTitle.style.color = `rgb(${mix(14, 216, gray)}, ${mix(24, 221, gray)}, ${mix(37, 226, gray)})`;
 
+      // Compass starts smaller while only the title is showing, and grows
+      // back to its full size once the heading + cards reveal.
+      const compassSmallScale = 0.72;
+      sCompass.style.scale = (compassSmallScale + p1 * (1 - compassSmallScale)).toFixed(3);
+
       const groupIn = firstGroupOn;
-      const textY = groupIn ? -42 : 220;
+      // In the closed (title-only) state, .sd-sensing-text auto-centers as a
+      // block that still includes the hidden caption+cards' height, which
+      // pushes the visible title below the compass's true center. Compute
+      // the offset needed to bring the title's own optical center back in
+      // line with the compass, instead of a hardcoded pixel value that only
+      // happened to work at one viewport size.
+      let closedTextY = 220;
+      if (!groupIn) {
+        const wrapHeight = sText.getBoundingClientRect().height;
+        const titleHeight = sTitle.getBoundingClientRect().height;
+        const naturalTop = (window.innerHeight - wrapHeight) / 2;
+        const naturalTitleCenter = naturalTop + titleHeight / 2;
+        closedTextY = (window.innerHeight / 2) - naturalTitleCenter;
+      }
+      const textY = groupIn ? -42 : closedTextY;
       sCaption.style.opacity   = groupIn;
       sCaption.style.transform = `translateY(${groupIn ? 0 : 34}px)`;
       sCards.style.opacity     = groupIn;
@@ -1284,7 +1836,15 @@
       sText.style.transform = `translateY(${textY}px)`;
 
       // Phase 4: visual changes are triggered by scroll thresholds, then animated by CSS.
-      const nextStage = progress >= 0.95 ? 4 : progress >= 0.84 ? 3 : progress >= 0.78 ? 2 : progress >= 0.21 ? 1 : 0;
+      let nextStage = progress >= 0.95 ? 4 : progress >= 0.84 ? 3 : progress >= 0.78 ? 2 : progress >= 0.21 ? 1 : 0;
+      // Once the roll has auto-settled into stage 4 on its own timer, keep it
+      // there while the user is still within the roll/settle scroll range,
+      // instead of snapping back down to stage 3 because progress hasn't
+      // caught up to the 0.95 threshold yet.
+      if (autoSettled) {
+        if (progress >= 0.84) nextStage = Math.max(nextStage, 4);
+        else autoSettled = false;
+      }
       if (nextStage !== sensingVisualStage) setSensingVisualStage(nextStage);
     }
 
@@ -1296,15 +1856,21 @@
     updateSensing();
   }
 
-  // Walk scene: right→left color spotlight
+  // Walk scene: right→left color spotlight, gated so fast scrolling can't skip past it
+  // before every person has been stepped through.
   (function () {
     const scene  = document.getElementById('walk-scene');
     if (!scene) return;
     const persons = Array.from(scene.querySelectorAll('.sd-walk-person'));
     const shadow  = document.getElementById('walk-shadow');
     const n = persons.length;
-    let current  = n - 1;
-    let lastStep = 0;
+    const totalSteps = n - 1;
+    const stepDuration = 350;
+    let current  = totalSteps;
+    let walkComplete = false;
+    let stepping = false;
+    let finalTimer = null;
+    let finalMoveStarted = false;
 
     function applyActive(idx) {
       persons.forEach((p, i) => {
@@ -1315,62 +1881,227 @@
       // 그림자를 활성 인물 중앙 발밑으로 이동
       if (shadow) {
         const row = scene.querySelector('.sd-walk-row');
-        const colW = row.offsetWidth / n;
-        shadow.style.left = ((idx + 0.5) * colW) + 'px';
+        const rowRect = row.getBoundingClientRect();
+        const personRect = persons[idx].getBoundingClientRect();
+        shadow.style.left = (personRect.left - rowRect.left + personRect.width / 2) + 'px';
       }
     }
-
-    function getTarget() {
-      const rect  = scene.getBoundingClientRect();
-      const total = scene.offsetHeight - window.innerHeight;
-      if (total <= 0) return current;
-      const sc   = Math.max(0, -rect.top);
-      const prog = Math.min(1, sc / total);
-      return Math.round((1 - prog) * (n - 1));
-    }
-
     applyActive(current);
 
-    function loop(ts) {
-      requestAnimationFrame(loop);
-      const target = getTarget();
-      if (current !== target && ts - lastStep >= 350) {
-        current  += target < current ? -1 : 1;
-        lastStep  = ts;
-        applyActive(current);
-      }
+    function isPinned() {
+      const rect = scene.getBoundingClientRect();
+      return rect.top <= 0.5 && rect.bottom > window.innerHeight + 0.5;
     }
-    requestAnimationFrame(loop);
+
+    // Advance one person per gated scroll gesture, and nudge real scroll
+    // position forward in lockstep so the pinned range is consumed evenly.
+    function startFinalMove() {
+      if (stepping || finalMoveStarted || current !== 0) return;
+      stepping = true;
+      finalMoveStarted = true;
+      if (finalTimer) window.clearTimeout(finalTimer);
+      finalTimer = window.setTimeout(() => {
+        scene.classList.add('is-pre-final');
+        if (shadow) shadow.style.opacity = '0';
+
+        window.setTimeout(() => {
+          const finalPerson = scene.querySelector('.sd-walk-person.is-walk-final-person');
+          const row = scene.querySelector('.sd-walk-row');
+          if (finalPerson && row) {
+            const rowRect = row.getBoundingClientRect();
+            const personRect = finalPerson.getBoundingClientRect();
+            finalPerson.style.position = 'absolute';
+            finalPerson.style.left = (personRect.left - rowRect.left + personRect.width / 2) + 'px';
+            finalPerson.style.top = (personRect.top - rowRect.top + personRect.height / 2) + 'px';
+            finalPerson.style.width = personRect.width + 'px';
+            finalPerson.style.height = personRect.height + 'px';
+            finalPerson.style.transform = 'translate(-50%, -50%) scale(1.04)';
+            finalPerson.style.transformOrigin = 'center center';
+            finalPerson.getBoundingClientRect();
+          }
+          requestAnimationFrame(() => {
+            scene.classList.add('is-final');
+            if (finalPerson) {
+              finalPerson.style.position = '';
+              finalPerson.style.left = '';
+              finalPerson.style.top = '';
+              finalPerson.style.width = '';
+              finalPerson.style.height = '';
+              finalPerson.style.transform = '';
+              finalPerson.style.transformOrigin = '';
+            }
+          });
+        }, 240);
+      }, 80);
+      window.setTimeout(() => {
+        walkComplete = true;
+        stepping = false;
+      }, 1180);
+    }
+
+    function advanceStep() {
+      if (stepping || current <= 0) return;
+      stepping = true;
+      current -= 1;
+      applyActive(current);
+      const rect  = scene.getBoundingClientRect();
+      const sceneTop = rect.top + window.scrollY;
+      const total = scene.offsetHeight - window.innerHeight;
+      if (total > 0) {
+        window.scrollTo(0, sceneTop + ((totalSteps - current) / (totalSteps + 1)) * total);
+      }
+      setTimeout(() => { stepping = false; }, stepDuration);
+    }
+
+    function gateForward(e) {
+      if (walkComplete || !isPinned()) return;
+      e.preventDefault();
+      if (current === 0) {
+        startFinalMove();
+        return;
+      }
+      advanceStep();
+    }
+
+    window.addEventListener('wheel', e => {
+      if (e.deltaY > 0) gateForward(e);
+    }, { passive: false });
+
+    let touchStartY = null;
+    window.addEventListener('touchstart', e => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchmove', e => {
+      if (touchStartY === null) return;
+      const dy = touchStartY - e.touches[0].clientY;
+      if (dy > 8) {
+        gateForward(e);
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'PageDown' || e.key === 'ArrowDown' || e.key === ' ') {
+        gateForward(e);
+      }
+    });
   })();
 
-  // Active layer flow: scroll blur / color split
+  // Active layer flow: timed sticky transition
   (function () {
     const panels = Array.from(document.querySelectorAll('.sd-flow-panel'));
     if (!panels.length) return;
+    const flowDesignWidth = 1760;
+    const sequenceTimers = new WeakMap();
+    const flowLock = { active: false, y: 0 };
 
-    function clamp(v) {
-      return Math.min(1, Math.max(0, v));
+    function resizeFlowPanels() {
+      panels.forEach(panel => {
+        const width = panel.getBoundingClientRect().width || flowDesignWidth;
+        const scale = Math.min(1, width / flowDesignWidth);
+        panel.style.setProperty('--sd-flow-scale', scale.toFixed(4));
+      });
     }
 
-    function updateFlowBlur() {
+    function clearSequence(panel) {
+      const timers = sequenceTimers.get(panel);
+      if (timers) {
+        timers.forEach(timer => window.clearTimeout(timer));
+        sequenceTimers.delete(panel);
+      }
+      panel.dataset.flowState = 'idle';
+      panel.classList.remove('is-flow-blurred', 'is-paused', 'is-time-visible', 'is-logic-visible');
+      if (flowLock.active) flowLock.active = false;
+    }
+
+    function startSequence(panel, host) {
+      if (panel.dataset.flowState && panel.dataset.flowState !== 'idle') return;
+      const lockOffset = Math.min(300, Math.max(0, host.offsetHeight - window.innerHeight - 1));
+      panel.dataset.flowState = 'ready';
+      flowLock.active = true;
+      flowLock.y = host.offsetTop + lockOffset;
+      window.scrollTo(0, flowLock.y);
+    }
+
+    function runSequence(panel) {
+      if (panel.dataset.flowState !== 'ready') return;
+      panel.dataset.flowState = 'running';
+
+      const timers = [
+        window.setTimeout(() => {
+          panel.classList.add('is-flow-blurred');
+        }, 0),
+        window.setTimeout(() => {
+          panel.classList.add('is-paused');
+        }, 1000),
+        window.setTimeout(() => {
+          panel.classList.add('is-time-visible');
+        }, 2400),
+        window.setTimeout(() => {
+          panel.dataset.flowState = 'time';
+          sequenceTimers.delete(panel);
+        }, 3300),
+      ];
+      sequenceTimers.set(panel, timers);
+    }
+
+    function releaseFlow(panel) {
+      if (panel.dataset.flowState !== 'time') return false;
+      panel.dataset.flowState = 'done';
+      panel.classList.add('is-logic-visible');
+      flowLock.active = false;
+      return true;
+    }
+
+    function updateFlowState() {
       const vh = window.innerHeight || 1;
       panels.forEach(panel => {
         const host = panel.closest('.sd-flow-scroll') || panel;
         const rect = host.getBoundingClientRect();
-        const total = Math.max(1, host.offsetHeight - vh);
-        const raw = clamp(-rect.top / total);
-        const progress = clamp((raw - 0.18) / 0.68);
-        const ease = progress * progress * (3 - 2 * progress);
-        panel.style.setProperty('--flow-blur', `${ease * 26}px`);
-        panel.style.setProperty('--flow-opacity', `${1 - ease * 0.18}`);
-        panel.style.setProperty('--flow-break', `${ease}`);
-        panel.style.setProperty('--flow-overlay', `${ease * 0.92}`);
+        if (rect.top > vh * 0.45) {
+          clearSequence(panel);
+          return;
+        }
+        if (rect.top <= vh * 0.08 && rect.bottom > 0) startSequence(panel, host);
       });
     }
 
-    window.addEventListener('scroll', updateFlowBlur, { passive: true });
-    window.addEventListener('resize', updateFlowBlur);
-    updateFlowBlur();
+    function keepFlowLocked() {
+      if (!flowLock.active) return;
+      if (Math.abs(window.scrollY - flowLock.y) > 1) window.scrollTo(0, flowLock.y);
+    }
+
+    function preventLockedScroll(event) {
+      if (!flowLock.active) return;
+      const isForward = event.deltaY === undefined || event.deltaY > 0;
+      if (isForward) {
+        const timePanel = panels.find(item => item.dataset.flowState === 'time');
+        if (timePanel && releaseFlow(timePanel)) return;
+      }
+      event.preventDefault();
+      window.scrollTo(0, flowLock.y);
+      if (!isForward) return;
+      const panel = panels.find(item => item.dataset.flowState === 'ready');
+      if (panel) runSequence(panel);
+    }
+
+    window.addEventListener('wheel', preventLockedScroll, { passive: false });
+    window.addEventListener('touchmove', preventLockedScroll, { passive: false });
+    window.addEventListener('keydown', event => {
+      if (!flowLock.active) return;
+      if (!['PageDown', 'ArrowDown', ' '].includes(event.key)) return;
+      preventLockedScroll(event);
+    });
+    window.addEventListener('scroll', () => {
+      keepFlowLocked();
+      updateFlowState();
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+      resizeFlowPanels();
+      updateFlowState();
+    });
+    resizeFlowPanels();
+    updateFlowState();
   })();
 </script>
 </body>

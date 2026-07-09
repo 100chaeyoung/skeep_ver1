@@ -115,12 +115,13 @@
     .sec-hero {
       background: #F4F8FC;
       width: 100%;
-      min-height: 100vh;
-      padding: 140px var(--edge-padding) 240px;
+      height: 100vh;
+      padding: clamp(64px, 10vw, 140px) var(--edge-padding) clamp(56px, 17vw, 240px);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       position: relative;
+      overflow: hidden;
     }
     .hero-brand {
       position: absolute;
@@ -1855,7 +1856,7 @@
       letter-spacing: -0.03em;
     }
     .md-gems {
-      min-height: 700px;
+      min-height: clamp(220px, 43.75vw, 700px);
       position: relative;
     }
     .md-gem {
@@ -1863,9 +1864,11 @@
       object-fit: contain;
       filter: saturate(1.05);
     }
-    .md-gem.g1 { left: 42%; top: 180px; width: 394px; }
-    .md-gem.g2 { right: 12%; top: 80px; width: 609px; }
-    .md-gem.g3 { left: 18%; top: 150px; width: 441px; }
+    /* left/right/top/width all scale from the same 1600px design reference,
+       so the three gems move and resize together instead of drifting apart. */
+    .md-gem.g1 { left: 42%; top: clamp(50px, 11.25vw, 180px); width: clamp(140px, 24.6vw, 394px); }
+    .md-gem.g2 { right: 12%; top: clamp(24px, 5vw, 80px); width: clamp(160px, 38.1vw, 609px); }
+    .md-gem.g3 { left: 18%; top: clamp(42px, 9.4vw, 150px); width: clamp(150px, 27.6vw, 441px); }
     .md-morph-title {
       display: flex;
       justify-content: space-between;
@@ -2008,6 +2011,20 @@
         padding-left: 24px; padding-right: 24px;
       }
       .phil-sticky { padding: 80px 24px; }
+      .ux-overview-row { flex-wrap: wrap; }
+      .hero-gnb.hero-gnb-expanded .hero-gnb-shape {
+        width: min(738px, calc(100vw - 48px));
+      }
+      .hero-gnb-card {
+        width: auto;
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 10px 0 0 8px;
+        font-size: clamp(11px, 2.6vw, 16px);
+      }
+      .diagram-tab { min-width: 0; flex: 1 1 0; padding: 10px 12px; }
+      .diagram-tab .tab-n { font-size: clamp(12px, 1.8vw, 20px); }
+      .diagram-tab .tab-l { font-size: clamp(16px, 2.2vw, 30px); }
       .hero-h1 { font-size: clamp(32px,4.8vw,72px); }
       .skeeeep-t1 { font-size: clamp(22px,3.6vw,48px); }
       .skeeeep-t2 { font-size: clamp(14px,1.8vw,24px); }
