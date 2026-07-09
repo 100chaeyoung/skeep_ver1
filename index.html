@@ -10,8 +10,9 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
+      --edge-padding: clamp(24px, 8.3vw, 160px);
       background: #fff;
-      color: #111;
+      color: #0e1825;
       font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -81,7 +82,7 @@
     .hero-gnb.hero-gnb-expanded .hero-gnb-shape {
       width: 738px;
       height: 138px;
-      border-radius: 28px;
+      border-radius: 32px;
       background-color: #ffffff;
       box-shadow: 0 20px 50px rgba(14,24,37,.10);
     }
@@ -115,7 +116,7 @@
       background: #F4F8FC;
       width: 100%;
       min-height: 100vh;
-      padding: 140px 160px 240px;
+      padding: 140px var(--edge-padding) 240px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -128,17 +129,17 @@
       cursor: pointer;
     }
     .hero-eyebrow {
-      font-size: 20px; font-weight: 700; line-height: 1.5;
-      letter-spacing: 0.08em; text-transform: uppercase;
+      font-size: clamp(18px,2.2vw,32px); font-weight: 600; line-height: 1.5;
+      letter-spacing: -0.03em; text-transform: uppercase;
       color: #ff0b6c; margin-bottom: 32px;
     }
     .hero-h1 {
-      font-size: 76px; font-weight: 700; line-height: 1.25;
+      font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4;
       letter-spacing: -0.04em; margin-bottom: 32px;
     }
     .hero-body {
-      font-size: 22px; font-weight: 400; line-height: 1.7;
-      letter-spacing: -0.02em; color: rgba(0,0,0,0.6); max-width: 880px;
+      font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; color: rgba(0,0,0,.55); max-width: 880px;
     }
 
     /* ── 2. LET'S SKEEP IN ───────────────────────── */
@@ -146,13 +147,13 @@
       background: #F4F8FC;
       width: 100%;
       display: flex; align-items: center; justify-content: center;
-      padding: 60px 160px;
+      padding: clamp(56px, 8vw, 84px) var(--edge-padding);
     }
     .pill-gray {
       background: #111; border-radius: 100px;
       padding: 16px 50px;
-      font-size: 42px; font-weight: 600; line-height: 1.1;
-      letter-spacing: -0.04em; color: #fff;
+      font-size: clamp(22px,3.6vw,48px); font-weight: 600; line-height: 1.4;
+      letter-spacing: -0.03em; color: #fff;
     }
 
     /* ── 3. SKEEEEP ──────────────────────────────── */
@@ -161,14 +162,14 @@
       width: 100%;
       min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: 84px 160px;
+      text-align: center; padding: clamp(56px, 8vw, 84px) var(--edge-padding);
     }
     .skeeeep-t1 {
-      font-size: 72px; font-weight: 700; line-height: 1.3;
+      font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4;
       letter-spacing: -0.04em;
     }
     .skeeeep-t2 {
-      font-size: 44px; font-weight: 500; line-height: 1.5;
+      font-size: clamp(22px,2.6vw,40px); font-weight: 600; line-height: 1.3;
       letter-spacing: -0.03em; color: rgba(0,0,0,0.55);
     }
 
@@ -176,36 +177,37 @@
     .sec-skip-intro {
       background: #fff;
       width: 100%;
-      padding: 116px 160px;
+      padding: clamp(56px, 10vw, 119px) var(--edge-padding);
+      margin-top: 180px;
       text-align: center;
     }
     .skip-title {
-      font-size: 72px; font-weight: 700; line-height: 1.25;
+      font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4;
       letter-spacing: -0.04em; margin-bottom: 28px;
     }
     .skip-sub {
-      font-size: 22px; font-weight: 500; line-height: 1.7;
-      letter-spacing: -0.02em; color: rgba(0,0,0,0.55);
+      font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; color: rgba(0,0,0,0.55);
     }
 
     /* ── SUMMARY ROW (label + desc) ──────────────── */
     .sec-summary {
       background: #fff;
-      width: 100%; padding: 88px 160px;
+      width: 100%; padding: clamp(56px, 8vw, 116px) var(--edge-padding);
       border-top: 1px solid rgba(0,0,0,0.07);
     }
     .summary-row {
       display: flex; gap: 72px; align-items: flex-start;
     }
     .summary-label {
-      font-size: 40px; font-weight: 700; line-height: 1.5;
-      letter-spacing: 0.08em; text-transform: uppercase;
+      font-size: clamp(18px,2.2vw,32px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; text-transform: uppercase;
       color: #ff0b6c; flex-shrink: 0; white-space: nowrap;
       padding-top: 4px;
     }
     .summary-desc {
-      font-size: 24px; font-weight: 600; line-height: 1.5;
-      letter-spacing: -0.03em; max-width: 1008px; color: #111;
+      font-size: clamp(15px,1.7vw,32px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.02em; max-width: 1008px; color: #0e1825;
     }
 
     /* ── 5. PHILOSOPHY SLIDES ────────────────────── */
@@ -214,15 +216,16 @@
       width: 100%;
       min-height: 300vh;
       position: relative;
+      margin-top: 180px;
       border-top: 1px solid rgba(0,0,0,0.05);
     }
     .phil-sticky {
       min-height: 100vh;
-      padding: 96px 160px;
+      padding: 96px var(--edge-padding);
       position: sticky;
       top: 0;
       display: flex; align-items: center;
-      justify-content: space-between; gap: 48px;
+      justify-content: space-between; gap: clamp(48px, 7vw, 120px);
       background: #fff;
     }
     .phil-left {
@@ -230,14 +233,14 @@
       flex-direction: column; gap: 32px;
     }
     .phil-label-sm {
-      font-size: 16px; font-weight: 700; line-height: 1.3;
-      letter-spacing: 0.1em; text-transform: uppercase;
+      font-size: clamp(12px,1.3vw,19px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; text-transform: uppercase;
       color: #ff0b6c; white-space: nowrap;
     }
     .phil-tagline {
-      font-size: calc(68px * var(--phil-zoom-ratio, 1));
-      font-weight: 700;
-      line-height: calc(116px * var(--phil-zoom-ratio, 1));
+      font-size: clamp(32px,4.8vw,72px);
+      font-weight: 600;
+      line-height: 1.4;
       letter-spacing: -0.04em;
     }
     .phil-tagline .dim  { color: rgba(0,0,0,0.13); }
@@ -259,7 +262,7 @@
       position: absolute;
       inset: 0;
       height: 466px;
-      border-radius: 28px; overflow: hidden;
+      border-radius: 32px; overflow: hidden;
       background: linear-gradient(160deg, #F4F8FC 0%, #F4F8FC 100%);
       opacity: 0;
       pointer-events: none;
@@ -279,12 +282,12 @@
       position: absolute; bottom: 48px; left: 48px; right: 48px;
     }
     .phil-card .card-name {
-      font-size: 44px; font-weight: 700; line-height: 1.2;
-      letter-spacing: -0.03em; color: #111; margin-bottom: 8px;
+      font-size: clamp(18px,2.8vw,42px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.04em; color: #0e1825; margin-bottom: 8px;
     }
     .phil-card .card-sub {
-      font-size: 22px; font-weight: 500; line-height: 1.6;
-      letter-spacing: -0.02em; color: rgba(0,0,0,0.55);
+      font-size: clamp(13px,1.6vw,26px); font-weight: 500; line-height: 1.5;
+      letter-spacing: -0.03em; color: rgba(0,0,0,0.55);
     }
 
     /* ── 6. MIGRATABLE AGENT HERO ────────────────── */
@@ -292,8 +295,8 @@
       display: none;
     }
     .agent-hero-inner { display: flex; flex-direction: column; gap: 24px; }
-    .agent-hero-h { font-size: 76px; font-weight: 700; line-height: 1.25; letter-spacing: -0.04em; }
-    .agent-hero-sub { font-size: 22px; font-weight: 400; line-height: 1.7; letter-spacing: -0.02em; color: rgba(0,0,0,0.55); }
+    .agent-hero-h { font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4; letter-spacing: -0.04em; }
+    .agent-hero-sub { font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; color: rgba(0,0,0,0.55); }
 
     /* ── 7. MIGRATABLE AGENT DETAIL ──────────────── */
     .sec-agent-detail {
@@ -301,6 +304,8 @@
       height: 360vh;
       padding: 0;
       position: relative;
+      margin-top: 160px;
+      margin-bottom: 160px;
       border-top: 1px solid rgba(0,0,0,0.07);
     }
     .agent-sticky {
@@ -309,7 +314,7 @@
       height: 100vh;
       display: flex;
       align-items: center;
-      padding: 116px 160px;
+      padding: 116px var(--edge-padding);
       overflow: hidden;
       --agent-bg-opacity: 0;
       --agent-bg-y: 0px;
@@ -351,19 +356,19 @@
     }
     .agent-row {
       display: flex; align-items: flex-start;
-      justify-content: space-between; gap: 48px;
+      justify-content: space-between; gap: clamp(48px, 7vw, 120px);
       width: 100%;
       will-change: transform;
     }
     .agent-left {
-      display: flex; flex-direction: column; gap: 28px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: clamp(12px, 1.6vw, 28px); flex-shrink: 0;
       align-items: flex-start;
       text-align: left;
       position: relative;
       will-change: transform;
     }
     .agent-title {
-      font-size: 96px; font-weight: 700; line-height: 1.18; letter-spacing: -0.04em;
+      font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4; letter-spacing: -0.04em;
       color: #ff1f78;
       background: radial-gradient(circle at 50% 72%, rgba(255,31,120,.44) 0%, #ff1f78 42%, #ff3784 49%, #ff508f 56%, #ff80a6 71%, #ffb1bd 85%, #ffe1d4 100%);
       -webkit-background-clip: text;
@@ -377,11 +382,11 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      font-size: 22px;
+      font-size: clamp(14px,1.8vw,24px);
       font-weight: 400;
-      line-height: 1.7;
-      letter-spacing: -0.02em;
-      color: rgba(0,0,0,0.6);
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+      color: rgba(0,0,0,.55);
       width: max-content;
     }
     .agent-sub-line {
@@ -464,7 +469,7 @@
       width: 360px;
       height: 360px;
       flex: 0 0 360px;
-      border-radius: 36px;
+      border-radius: 32px;
       padding: 44px;
       display: flex;
       flex-direction: column;
@@ -489,11 +494,11 @@
     }
     .principle-mini-title {
       margin: 0;
-      font-family: 'SUIT', 'Pretendard', sans-serif;
-      font-size: 36px;
-      font-weight: 700;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      font-size: clamp(18px,2.8vw,42px);
+      font-weight: 600;
       line-height: 1.3;
-      letter-spacing: -1.8px;
+      letter-spacing: -0.04em;
       white-space: nowrap;
       color: transparent;
       background: linear-gradient(180deg, #3b0018 0%, #95003c 100%);
@@ -509,11 +514,11 @@
       font-weight: 400;
     }
     .principle-mini-note {
-      font-family: 'SUIT', 'Pretendard', sans-serif;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 1.3;
-      letter-spacing: -0.8px;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      font-size: clamp(13px,1.6vw,26px);
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
       color: #413037;
     }
     .q-card {
@@ -529,8 +534,8 @@
       box-shadow: 0 18px 45px rgba(0,0,0,0.05);
     }
     .q-card .q-num {
-      font-size: 48px; font-weight: 700; line-height: 1.2;
-      letter-spacing: -0.04em; margin-bottom: 12px;
+      font-size: clamp(13px,1.4vw,24px); font-weight: 400; line-height: 1.2;
+      letter-spacing: -0.02em; margin-bottom: 12px;
       color: #ff0b6c;
     }
     .q-head {
@@ -576,18 +581,18 @@
       opacity: .85;
     }
     .q-card .q-text {
-      font-size: 26px; font-weight: 600; line-height: 1.5;
-      letter-spacing: -0.03em; color: #111;
+      font-size: clamp(15px,1.7vw,32px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.02em; color: #0e1825;
     }
     .q-answer {
       max-height: 0;
       opacity: 0;
       overflow: hidden;
       margin-top: 0;
-      font-size: 19px;
+      font-size: clamp(14px,1.6vw,28px);
       font-weight: 500;
-      line-height: 1.65;
-      letter-spacing: -0.03em;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
       color: rgba(0,0,0,0.62);
       transition: max-height .35s ease, opacity .25s ease, margin-top .25s ease;
     }
@@ -600,29 +605,29 @@
     /* ── 8. SYSTEM INTRO ─────────────────────────── */
     .sec-system-intro {
       background: #fff; width: 100%;
-      padding: 120px 160px;
+      padding: clamp(56px, 10vw, 119px) var(--edge-padding);
       display: flex; align-items: flex-end;
       justify-content: space-between; gap: 64px;
     }
     .sys-left { display: flex; flex-direction: column; gap: 20px; }
-    .sys-label { font-size: 40px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ff0b6c; }
-    .sys-title { font-size: 64px; font-weight: 700; line-height: 1.25; letter-spacing: -0.04em; color: #111; }
+    .sys-label { font-size: clamp(18px,2.2vw,32px); font-weight: 600; letter-spacing: -0.03em; text-transform: uppercase; color: #ff0b6c; }
+    .sys-title { font-size: clamp(24px,4vw,54px); font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; color: #0e1825; }
     .sys-right  {
-      font-size: 24px; font-weight: 400; line-height: 1.7;
-      letter-spacing: -0.02em; max-width: 672px; flex-shrink: 0;
-      color: rgba(0,0,0,0.6);
+      font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; max-width: 672px; flex-shrink: 0;
+      color: rgba(0,0,0,.55);
     }
 
     /* ── 9. SYSTEM DIAGRAM ───────────────────────── */
     .sec-system-diagram {
       background: #fff; width: 100%;
-      padding: 84px 160px;
+      padding: clamp(56px, 8vw, 84px) var(--edge-padding);
       display: flex; flex-direction: column;
       align-items: center; gap: 20px;
     }
     .diagram-card {
       width: 100%;
-      background: #F4F8FC; border-radius: 28px;
+      background: #F4F8FC; border-radius: 32px;
       min-height: 600px;
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
@@ -658,52 +663,53 @@
     .sec-layers {
       background: linear-gradient(180deg, #F4F8FC 0%, rgba(244,248,252,0) 100%);
       width: 100%;
-      padding: 84px 160px;
-      min-height: 800px;
+      padding: clamp(56px, 8vw, 96px) var(--edge-padding);
+      min-height: 520px;
       display: flex; flex-direction: column;
       justify-content: flex-end;
     }
     .layers-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 1.8vw, 28px);
     }
     .layer-card {
-      background: #F4F8FC; border-radius: 28px;
-      padding: 40px; min-height: 360px;
-      display: flex; flex-direction: column; gap: 36px;
+      background: #F4F8FC; border-radius: 24px;
+      padding: clamp(24px, 2.6vw, 40px) clamp(20px, 2.2vw, 36px) clamp(20px, 2vw, 34px);
+      min-height: clamp(140px, 13vw, 224px);
+      display: flex; flex-direction: column; gap: clamp(16px, 2vw, 28px);
       border: 1px solid rgba(0,0,0,0.05);
     }
     .layer-card.faded { opacity: 0.4; }
-    .layer-name { font-size: 48px; font-weight: 700; line-height: 1.3; letter-spacing: -0.04em; color: #111; }
-    .layer-en   { font-size: 28px; font-weight: 600; line-height: 1.5; letter-spacing: -0.01em; color: rgba(0,0,0,0.5); }
-    .layer-desc { font-size: 24px; font-weight: 400; line-height: 1.6; letter-spacing: -0.02em; color: rgba(0,0,0,0.4); }
+    .layer-name { font-size: clamp(15px,1.25vw,18px); font-weight: 600; line-height: 1.3; letter-spacing: -0.02em; color: #0e1825; }
+    .layer-en   { font-size: 13px; font-weight: 400; line-height: 1.4; letter-spacing: -0.02em; color: rgba(0,0,0,.55); }
+    .layer-desc { font-size: clamp(13px,1.05vw,15px); font-weight: 400; line-height: 1.4; letter-spacing: -0.03em; color: rgba(0,0,0,.55); }
 
     /* ── 11. PACKET INTRO ────────────────────────── */
     .sec-packet-intro {
-      background: #fff; width: 100%; padding: 104px 160px;
+      background: #fff; width: 100%; padding: clamp(56px, 8vw, 116px) var(--edge-padding);
       border-top: 1px solid rgba(0,0,0,0.07);
     }
     .packet-tag {
       display: inline-block;
       border: 1.5px solid #ff0b6c;
       border-radius: 100px; padding: 8px 28px;
-      font-size: 22px; font-weight: 700; line-height: 1.3;
-      letter-spacing: 0.06em; text-transform: uppercase;
+      font-size: clamp(12px,1.3vw,19px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; text-transform: uppercase;
       color: #ff0b6c; margin-bottom: 36px;
     }
     .packet-title {
-      font-size: 64px; font-weight: 700; line-height: 1.25;
-      letter-spacing: -0.04em; margin-bottom: 28px; color: #111;
+      font-size: clamp(24px,4vw,54px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 28px; color: #0e1825;
     }
     .packet-desc {
-      font-size: 24px; font-weight: 400; line-height: 1.7;
-      letter-spacing: -0.02em; max-width: 1100px;
-      color: rgba(0,0,0,0.6);
+      font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; max-width: 1100px;
+      color: rgba(0,0,0,.55);
     }
 
     /* ── 12. PACKET Q&A ──────────────────────────── */
     .sec-packet-qa {
       background: #fff; width: 100%;
-      padding: 84px 160px;
+      padding: clamp(56px, 8vw, 84px) var(--edge-padding);
     }
     .qa-grid {
       display: grid;
@@ -712,50 +718,54 @@
       gap: 24px;
     }
     .qa-card {
-      background: #F4F8FC; border-radius: 20px;
+      background: #F4F8FC; border-radius: 24px;
       padding: 40px 36px; min-height: 220px;
       border: 1px solid rgba(0,0,0,0.04);
     }
     .qa-card .qn {
-      font-size: 32px; font-weight: 700; line-height: 1.3;
+      font-size: clamp(13px,1.4vw,24px); font-weight: 400; line-height: 1.3;
       letter-spacing: -0.02em; display: block; margin-bottom: 8px;
       color: #ff0b6c;
     }
     .qa-card .qt {
-      font-size: 32px; font-weight: 600; line-height: 1.45;
-      letter-spacing: -0.03em; color: #111;
+      font-size: clamp(15px,1.7vw,32px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.02em; color: #0e1825;
     }
 
     /* ── 13. SKEEPABLES ──────────────────────────── */
     .sec-skeepables-intro {
-      background: #fff; width: 100%; padding: 104px 160px;
+      background: #fff; width: 100%; padding: clamp(56px, 8vw, 116px) var(--edge-padding);
       border-top: 1px solid rgba(0,0,0,0.07);
     }
     .sk-title {
-      font-size: 64px; font-weight: 700; line-height: 1.25;
-      letter-spacing: -0.04em; margin-bottom: 24px; color: #111;
+      font-size: clamp(24px,4vw,54px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 24px; color: #0e1825;
     }
     .sk-desc {
-      font-size: 24px; font-weight: 400; line-height: 1.7;
-      letter-spacing: -0.02em; max-width: 1100px;
-      color: rgba(0,0,0,0.6);
+      font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5;
+      letter-spacing: -0.03em; max-width: 1100px;
+      color: rgba(0,0,0,.55);
     }
 
     /* ── 14. UX LOGIC INTRO ──────────────────────── */
     .sec-ux-intro {
       background: #fff; width: 100%;
-      padding: 120px 160px;
+      padding: clamp(56px, 10vw, 119px) var(--edge-padding);
       display: flex; align-items: flex-end;
       justify-content: space-between; gap: 64px;
       border-top: 1px solid rgba(0,0,0,0.07);
     }
-    .ux-left { display: flex; flex-direction: column; gap: 20px; }
-    .ux-label { font-size: 40px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ff0b6c; white-space: nowrap; }
-    .ux-title { font-size: 64px; font-weight: 700; line-height: 1.25; letter-spacing: -0.04em; color: #111; }
-    .ux-right  { font-size: 24px; font-weight: 400; line-height: 1.7; letter-spacing: -0.02em; max-width: 680px; flex-shrink: 0; color: rgba(0,0,0,0.6); }
+    .ux-left {
+      display: flex; flex-direction: column; gap: 20px;
+      flex: 0 0 min(34vw, 420px);
+      min-width: 280px;
+    }
+    .ux-label { font-size: clamp(16px,1.8vw,24px); font-weight: 600; letter-spacing: -0.03em; text-transform: uppercase; color: #ff0b6c; white-space: nowrap; }
+    .ux-title { font-size: clamp(22px,3.2vw,42px); font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; color: #0e1825; word-break: keep-all; }
+    .ux-right  { font-size: clamp(14px,1.5vw,20px); font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; max-width: 680px; flex: 1 1 0; min-width: 0; color: rgba(0,0,0,.55); }
 
     /* ── UX LOGIC STAGE OVERVIEW ─────────────────── */
-    .sec-ux-overview { background: #fff; width: 100%; padding: 0 160px 84px; }
+    .sec-ux-overview { background: #fff; width: 100%; padding: 0 var(--edge-padding) clamp(56px, 8vw, 84px); }
     .ux-overview-row { display: flex; gap: 31px; }
     .ux-overview-card {
       width: 240px; height: 240px; flex-shrink: 0;
@@ -765,17 +775,16 @@
     }
     .ux-overview-card:hover { transform: translateY(-4px); }
     .ux-overview-title {
-      font-size: 36px; font-weight: 700; letter-spacing: -0.04em;
-      color: #111; margin-bottom: 18px;
-    }
+      font-size: clamp(18px,2.2vw,32px); font-weight: 600; letter-spacing: -0.04em;
+      color: #0e1825; margin-bottom: 18px; line-height: 1.3;}
     .ux-overview-sub {
-      font-size: 24px; font-weight: 400; line-height: 1.3;
-      letter-spacing: -0.04em; color: #111; opacity: 0.2;
+      font-size: clamp(13px,1.35vw,20px); font-weight: 500; line-height: 1.5;
+      letter-spacing: -0.03em; color: #0e1825; opacity: 0.2;
     }
 
     /* ── 15. UX LOGIC STAGES ─────────────────────── */
     .sec-ux-stage {
-      background: #fff; width: 100%; padding: 80px 160px;
+      background: #fff; width: 100%; padding: clamp(56px, 8vw, 84px) var(--edge-padding);
       border-top: 1px solid rgba(0,0,0,0.06);
     }
     .stage-row {
@@ -784,15 +793,15 @@
     }
     .stage-left { flex-shrink: 0; width: 460px; }
     .stage-kr-label {
-      font-size: 16px; font-weight: 700; color: #ff0b6c;
-      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;
+      font-size: clamp(12px,1.3vw,19px); font-weight: 600; color: #ff0b6c;
+      letter-spacing: -0.03em; text-transform: uppercase; margin-bottom: 16px;
     }
     .stage-kr {
-      font-size: 60px; font-weight: 700; line-height: 1.2;
-      letter-spacing: -0.04em; margin-bottom: 24px; color: #111;
+      font-size: clamp(24px,4vw,54px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.03em; margin-bottom: 24px; color: #0e1825;
     }
     .stage-desc {
-      font-size: 36px; font-weight: 400; line-height: 1.5;
+      font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5;
       letter-spacing: -0.03em; color: rgba(0,0,0,0.55);
       margin: 0 0 24px; white-space: nowrap;
     }
@@ -801,8 +810,8 @@
       background: #fff3f7; border-radius: 100px;
       border: 1.5px solid #ff0b6c;
       padding: 6px 20px;
-      font-size: 32px; font-weight: 700; color: #ff0b6c;
-      letter-spacing: 0.02em;
+      font-size: clamp(18px,2.2vw,32px); font-weight: 600; color: #ff0b6c;
+      letter-spacing: -0.03em;
     }
     .stage-right { flex: 1; display: flex; flex-direction: column; gap: 20px; }
     .sec-ux-stage[data-open-detail] {
@@ -820,18 +829,18 @@
       border-color: rgba(0,0,0,0.07);
     }
     .stage-logic-title {
-      font-size: 52px; font-weight: 700; line-height: 1.2;
-      letter-spacing: -0.04em; color: #222;
+      font-size: clamp(18px,2.8vw,42px); font-weight: 600; line-height: 1.3;
+      letter-spacing: -0.04em; color: #0e1825;
     }
     .stage-logic-tags { display: flex; gap: 8px; flex-wrap: wrap; }
     .stage-logic-tag {
       background: #494949; color: #fff;
       font-size: 20px; font-weight: 700; letter-spacing: -0.04em;
-      padding: 10px 20px; border-radius: 22px; white-space: nowrap;
+      padding: 10px 20px; border-radius: 24px; white-space: nowrap;
     }
     .stage-logic-desc {
-      font-size: 28px; font-weight: 600; line-height: 1.5;
-      letter-spacing: -0.04em; color: #222; opacity: 0.4;
+      font-size: clamp(13px,1.6vw,26px); font-weight: 500; line-height: 1.5;
+      letter-spacing: -0.03em; color: #0e1825; opacity: 0.4;
     }
 
     /* ── SENSING DETAIL FROM FIGMA ─────────────────── */
@@ -859,8 +868,11 @@
     }
     .sd-section {
       width: 100%;
-      padding: 116px 160px;
+      padding: clamp(56px, 8vw, 116px) var(--edge-padding);
       background: #fff;
+    }
+    .sd-hero + .sd-section {
+      margin-top: 180px;
     }
     .sd-section.sd-bg-grad {
       background: linear-gradient(160deg, #fff 0%, #F4F8FC 55%, #F4F8FC 100%);
@@ -902,7 +914,7 @@
     .sd-hero h1 {
       position: relative;
       z-index: 2;
-      font-size: 72px;
+      font-size: clamp(32px,4.8vw,72px);
       font-weight: 600;
       line-height: 1.4;
       letter-spacing: -0.04em;
@@ -918,21 +930,21 @@
     .sd-copy-block {
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: clamp(12px, 1.6vw, 28px);
       max-width: 760px;
     }
     .sd-title {
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1.5;
+      font-size: clamp(24px,4vw,54px);
+      font-weight: 600;
+      line-height: 1.3;
       letter-spacing: -0.03em;
     }
     .sd-body {
-      font-size: 28px;
+      font-size: clamp(14px,1.8vw,24px);
       font-weight: 400;
       line-height: 1.4;
       letter-spacing: -0.03em;
-      color: #000;
+      color: #0e1825;
     }
     .sd-pill-row {
       display: grid;
@@ -947,10 +959,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 50px;
+      font-size: clamp(22px,3.6vw,48px);
       font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: -0.04em;
+      line-height: 1.4;
+      letter-spacing: -0.03em;
     }
     .sd-pink { color: #ff076a; }
     .sd-sensing-scene {
@@ -967,9 +979,9 @@
       position: absolute;
       left: 54.1%;
       top: 330px;
-      font-size: 120px;
-      line-height: 1.3;
-      font-weight: 700;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
+      font-weight: 600;
       letter-spacing: -0.04em;
       white-space: nowrap;
       color: #0e1825;
@@ -979,10 +991,10 @@
       right: 160px;
       bottom: 82px;
       text-align: right;
-      font-size: 40px;
+      font-size: clamp(22px,3.6vw,48px);
       line-height: 1.4;
       font-weight: 600;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
     }
     .sd-vline {
       width: 2px;
@@ -995,7 +1007,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 72px;
+      gap: clamp(48px, 7vw, 120px);
     }
     .sd-visual-round {
       width: 370px;
@@ -1011,13 +1023,13 @@
       gap: 28px;
     }
     .sd-text-right h2 {
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1.5;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px,4vw,54px);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
     }
     .sd-text-right p {
-      font-size: 28px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1039,6 +1051,8 @@
       height: 360vh;
       padding: 0;
       position: relative;
+      margin-top: 180px;
+      margin-bottom: 160px;
       overflow: visible;
     }
     .sd-orbit-sticky {
@@ -1091,7 +1105,7 @@
       text-align: right;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: clamp(12px, 1.6vw, 28px);
       will-change: opacity, transform;
     }
     .sd-tick {
@@ -1101,10 +1115,10 @@
       gap: 64px;
     }
     .sd-tick h2 {
-      font-size: 110px;
-      font-weight: 700;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
+      font-size: clamp(32px,4.8vw,72px);
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
       white-space: nowrap;
       color: #0e1825;
     }
@@ -1112,7 +1126,7 @@
     .sd-tick p {
       max-width: 760px;
       text-align: right;
-      font-size: 24px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1134,14 +1148,14 @@
       padding-top: 0;
     }
     .sd-walk-caption h2 {
-      font-size: 60px;
-      line-height: 1.5;
-      font-weight: 700;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px,4vw,54px);
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: -0.03em;
     }
     .sd-walk-caption p {
       margin-top: 28px;
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1153,9 +1167,9 @@
       position: relative;
     }
     .sd-input-word h2 {
-      font-size: 200px;
+      font-size: clamp(32px,4.8vw,72px);
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.4;
       letter-spacing: -0.04em;
     }
     .sd-input-word img {
@@ -1171,12 +1185,11 @@
       align-items: start;
     }
     .sd-input-summary h2 {
-      font-size: 60px;
-      line-height: 1.5;
-      letter-spacing: -0.03em;
-    }
+      font-size: clamp(24px,4vw,54px);
+      line-height: 1.3;
+      letter-spacing: -0.03em; font-weight: 600;}
     .sd-input-summary p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1216,21 +1229,21 @@
       display: flex;
       flex-direction: column;
       gap: 40px;
-      color: #222;
+      color: #0e1825;
     }
     .sd-card-text h3 {
-      font-size: 60px;
-      line-height: 1.5;
+      font-size: clamp(18px,2.8vw,42px);
+      line-height: 1.3;
       font-weight: 600;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
     }
     .sd-card-text h3 span {
       display: block;
-      font-size: 28px;
-      letter-spacing: -0.02em;
+      font-size: clamp(13px,1.6vw,26px);
+      letter-spacing: -0.03em;
     }
     .sd-card-text p {
-      font-size: 24px;
+      font-size: clamp(13px,1.6vw,26px);
       line-height: 1.5;
       font-weight: 500;
       opacity: .4;
@@ -1240,26 +1253,26 @@
       display: grid;
       grid-template-columns: 620px 720px;
       justify-content: space-between;
-      gap: 80px;
+      gap: clamp(48px, 7vw, 120px);
       align-items: center;
     }
     .sd-active-label {
       color: #ff076a;
-      font-size: 32px;
+      font-size: clamp(18px,2.2vw,32px);
       font-weight: 600;
       line-height: 1.3;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       margin-bottom: 8px;
     }
     .sd-active h2 {
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1.5;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px,4vw,54px);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
       margin-bottom: 28px;
     }
     .sd-active p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1272,7 +1285,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       letter-spacing: -0.03em;
     }
     .sd-flow-panel {
@@ -1290,19 +1303,17 @@
     }
     .sd-flow-side .label {
       color: #ff076a;
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
+      font-size: clamp(18px,2.2vw,32px);
+      margin-bottom: 4px; font-weight: 600; letter-spacing: -0.03em;}
     .sd-flow-side h3 {
-      font-size: 40px;
-      line-height: 1.2;
-      letter-spacing: -0.04em;
-      margin-bottom: 12px;
-    }
+      font-size: clamp(22px,2.6vw,40px);
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px; font-weight: 600;}
     .sd-flow-side p {
-      font-size: 20px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
     }
     .sd-flow-cards {
       display: flex;
@@ -1335,7 +1346,7 @@
       position: absolute;
       inset: -9px;
       border: 3.6px dashed #6e6e6e;
-      border-radius: 35.2px;
+      border-radius: 32px;
       background: rgba(0,0,0,.05);
       opacity: .5;
       z-index: 0;
@@ -1356,10 +1367,10 @@
       flex-shrink: 0;
     }
     .sd-flow-caption-text {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      color: rgba(0,0,0,.5);
+      font-size: clamp(13px,1.4vw,24px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: rgba(0,0,0,.55);
     }
     .sd-flow-card {
       position: relative;
@@ -1367,7 +1378,7 @@
       flex: 1 1 0;
       min-width: 0;
       height: 250px;
-      border-radius: 25px;
+      border-radius: 24px;
       background: rgba(245,250,254,.72);
       padding: 36px 28px;
       display: flex;
@@ -1383,22 +1394,22 @@
     .sd-flow-card.step4 { background: #d0d7e0; }
     .sd-flow-card.step5 { background: #c4ccd7; }
     .sd-flow-card h4 {
-      font-size: 36px;
-      line-height: 1.2;
+      font-size: clamp(18px,2.8vw,42px);
+      line-height: 1.3;
       letter-spacing: -0.04em;
-      font-weight: 700;
+      font-weight: 600;
     }
     .sd-flow-card:not(.active) h4 {
       font-weight: 600;
       opacity: .6;
     }
     .sd-flow-card span {
-      font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
       font-weight: 400;
-      font-size: 36px;
+      font-size: clamp(13px,1.4vw,24px);
       line-height: .96;
       opacity: .55;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.02em;
     }
     .sd-flow-card:not(.active) span { opacity: .2; }
     .sd-pause-phrase {
@@ -1425,8 +1436,9 @@
       align-items: center;
       justify-content: center;
       padding: 60px 164px;
-      font-size: 80px;
+      font-size: clamp(32px,4.8vw,72px);
       font-weight: 700;
+      line-height: 1.4;
       white-space: nowrap;
       letter-spacing: -0.04em;
     }
@@ -1439,7 +1451,7 @@
       gap: 80px;
     }
     .sd-pause-title h2 {
-      font-size: 72px;
+      font-size: clamp(24px,4vw,54px);
       line-height: 1.3;
       letter-spacing: -0.03em;
       font-weight: 600;
@@ -1452,22 +1464,22 @@
       width: 600px;
     }
     .sd-principle .kicker {
-      font-size: 32px;
+      font-size: clamp(18px,2.2vw,32px);
       color: #ff076a;
       line-height: 1.3;
       font-weight: 600;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       margin-bottom: 17px;
     }
     .sd-principle h3 {
-      font-size: 48px;
-      line-height: 1.3;
+      font-size: clamp(22px,3.6vw,48px);
+      line-height: 1.4;
       font-weight: 600;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       margin-bottom: 17px;
     }
     .sd-principle p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1475,8 +1487,11 @@
     /* ── MORPHING DETAIL FROM FIGMA ───────────────── */
     .md-section {
       width: 100%;
-      padding: 116px 160px;
+      padding: clamp(56px, 8vw, 116px) var(--edge-padding);
       background: #fff;
+    }
+    .md-hero + .md-section {
+      margin-top: 180px;
     }
     .md-hero {
       height: 100vh;
@@ -1512,7 +1527,7 @@
     .md-hero h1 {
       position: relative;
       z-index: 2;
-      font-size: 72px;
+      font-size: clamp(32px,4.8vw,72px);
       font-weight: 600;
       line-height: 1.4;
       letter-spacing: -0.04em;
@@ -1531,23 +1546,22 @@
       position: absolute;
       left: 90px;
       bottom: 102px;
-      color: #000;
+      color: #0e1825;
     }
     .md-big-copy .eyebrow {
-      font-size: 32px;
+      font-size: clamp(18px,2.2vw,32px);
       line-height: 1.4;
       letter-spacing: -0.03em;
-      margin-bottom: 20px;
-    }
+      margin-bottom: 20px; font-weight: 600;}
     .md-big-copy h2 {
-      font-size: 64px;
+      font-size: clamp(24px,4vw,54px);
       font-weight: 600;
-      line-height: 1.24;
+      line-height: 1.3;
       letter-spacing: -0.03em;
       margin-bottom: 20px;
     }
     .md-big-copy p {
-      font-size: 32px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.4;
       letter-spacing: -0.03em;
       max-width: 726px;
@@ -1600,19 +1614,19 @@
       height: 200px;
       padding: 40px;
       background: linear-gradient(180deg, rgba(244,248,252,0) 0%, #F4F8FC 100%);
-      color: #222;
+      color: #0e1825;
     }
     .md-ai-card-text h3 {
-      font-size: 48px;
-      line-height: 1.5;
-      letter-spacing: -0.03em;
+      font-size: clamp(18px,2.8vw,42px);
+      line-height: 1.3;
+      letter-spacing: -0.04em;
       font-weight: 600;
     }
     .md-ai-card-text p {
-      font-size: 28px;
+      font-size: clamp(13px,1.6vw,26px);
       line-height: 1.5;
-      letter-spacing: -0.04em;
-      font-weight: 600;
+      letter-spacing: -0.03em;
+      font-weight: 500;
     }
     .md-parsing-word {
       height: 588px;
@@ -1624,8 +1638,8 @@
       background: #fff;
     }
     .md-parsing-word h2 {
-      font-size: 160px;
-      line-height: 1.3;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
       letter-spacing: -0.04em;
       font-weight: 600;
       position: relative;
@@ -1654,21 +1668,21 @@
       gap: 80px;
     }
     .md-number {
-      font-size: 40px;
+      font-size: clamp(13px,1.4vw,24px);
       line-height: 1.4;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.02em;
       margin-bottom: 8px;
     }
     .md-label-xl {
-      font-size: 120px;
+      font-size: clamp(32px,4.8vw,72px);
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.4;
       letter-spacing: -0.04em;
     }
     .md-summary-text {
-      font-size: 40px;
-      line-height: 1.4;
-      letter-spacing: -0.04em;
+      font-size: clamp(22px,2.6vw,40px);
+      line-height: 1.3;
+      letter-spacing: -0.03em;
       font-weight: 600;
       text-align: right;
     }
@@ -1678,21 +1692,21 @@
       gap: 12px;
     }
     .md-kicker {
-      font-size: 32px;
+      font-size: clamp(18px,2.2vw,32px);
       color: #ff076a;
       line-height: 1.3;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       font-weight: 600;
     }
     .md-principle-title {
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1.5;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px,4vw,54px);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
       max-width: 748px;
     }
     .md-principle-body {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
       max-width: 748px;
@@ -1710,25 +1724,24 @@
       padding: 48px 40px 40px;
     }
     .md-principle-card .mini {
-      font-size: 20px;
-      font-weight: 600;
+      font-size: clamp(13px,1.4vw,24px);
+      font-weight: 400;
       line-height: 1.3;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.02em;
       opacity: .5;
       margin-bottom: 17px;
     }
     .md-principle-card h3 {
-      font-size: 36px;
+      font-size: clamp(18px,2.8vw,42px);
       line-height: 1.3;
       letter-spacing: -0.04em;
       font-weight: 600;
       margin-bottom: 17px;
     }
     .md-principle-card p {
-      font-size: 24px;
+      font-size: clamp(13px,1.6vw,26px);
       line-height: 1.5;
-      letter-spacing: -0.03em;
-    }
+      letter-spacing: -0.03em; font-weight: 500;}
     .md-ability {
       display: grid;
       grid-template-columns: 355px 1fr;
@@ -1736,13 +1749,13 @@
       align-items: start;
     }
     .md-ability h2 {
-      font-size: 80px;
-      line-height: 1.5;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
       letter-spacing: -0.04em;
       font-weight: 600;
     }
     .md-ability p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1756,14 +1769,14 @@
       background: #fff;
     }
     .md-map-word span {
-      font-size: 102px;
-      line-height: 1.3;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
       letter-spacing: -0.04em;
       font-weight: 600;
       white-space: nowrap;
     }
     .md-map-word .center {
-      font-size: 160px;
+      font-size: clamp(32px,4.8vw,72px);
     }
     .md-mapping {
       display: grid;
@@ -1772,14 +1785,14 @@
       align-items: center;
     }
     .md-mapping-left .num {
-      font-size: 40px;
+      font-size: clamp(13px,1.4vw,24px);
       line-height: 1.4;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.02em;
       margin-bottom: 8px;
     }
     .md-mapping-left h2 {
-      font-size: 120px;
-      line-height: 1.3;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
       letter-spacing: -0.04em;
       font-weight: 600;
       text-align: right;
@@ -1794,9 +1807,9 @@
       gap: 112px;
     }
     .md-triple-box span {
-      font-size: 60px;
+      font-size: clamp(24px,4vw,54px);
       line-height: 1.3;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       font-weight: 600;
     }
     .md-exec-card {
@@ -1809,14 +1822,13 @@
       overflow: hidden;
     }
     .md-exec-card .md-big-copy .eyebrow {
-      font-size: 19px;
-    }
+      font-size: clamp(12px,1.3vw,19px); font-weight: 600;}
     .md-exec-card .md-big-copy h2 {
-      font-size: 50px;
+      font-size: clamp(24px,4vw,54px);
       line-height: 1.3;
     }
     .md-exec-card .md-big-copy p {
-      font-size: 19px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       max-width: 707px;
     }
@@ -1829,16 +1841,16 @@
       padding-bottom: 40px;
     }
     .md-morph-word h2 {
-      font-size: 110px;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
+      letter-spacing: -0.04em;
       font-weight: 600;
     }
     .md-morph-word h2 span { color: #cacaca; }
     .md-morph-word p {
       max-width: 757px;
       text-align: right;
-      font-size: 24px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1867,15 +1879,15 @@
       display: inline-flex;
       align-items: center;
       padding: 60px 164px;
-      font-size: 80px;
+      font-size: clamp(22px,3.6vw,48px);
       font-weight: 600;
-      letter-spacing: -0.04em;
-      line-height: 1.5;
+      letter-spacing: -0.03em;
+      line-height: 1.4;
     }
     .md-morph-title h2 {
-      font-size: 72px;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
+      letter-spacing: -0.04em;
       font-weight: 600;
       text-align: right;
     }
@@ -1887,14 +1899,14 @@
       min-height: 1200px;
     }
     .md-last h2 {
-      font-size: 72px;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
+      letter-spacing: -0.04em;
       font-weight: 600;
       margin-bottom: 28px;
     }
     .md-last p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -1905,34 +1917,33 @@
       padding-top: 143px;
     }
     .md-last-item .kicker {
-      font-size: 32px;
+      font-size: clamp(18px,2.2vw,32px);
       color: #ff076a;
       line-height: 1.3;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       font-weight: 600;
       margin-bottom: 17px;
     }
     .md-last-item h3 {
-      font-size: 48px;
-      line-height: 1.3;
-      letter-spacing: -0.04em;
+      font-size: clamp(22px,3.6vw,48px);
+      line-height: 1.4;
+      letter-spacing: -0.03em;
       font-weight: 600;
       margin-bottom: 17px;
     }
     .md-last-item p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
-    }
     }
 
     /* ── FOOTER ──────────────────────────────────── */
     footer {
       background: #F4F8FC; width: 100%;
-      padding: 100px 160px; text-align: center;
+      padding: clamp(56px, 8vw, 116px) var(--edge-padding); text-align: center;
     }
     .ft-logo { width: 188px; margin: 0 auto 18px; }
-    .ft-tag  { font-size: 18px; font-weight: 500; color: rgba(0,0,0,0.45); margin-bottom: 48px; letter-spacing: -0.01em; }
+    .ft-tag  { font-size: clamp(13px,1.4vw,24px); font-weight: 400; color: rgba(0,0,0,.55); margin-bottom: 48px; letter-spacing: -0.02em; }
     .ft-meta { font-size: 13px; color: rgba(0,0,0,0.3); line-height: 2; letter-spacing: 0.01em; }
 
     /* ── RESPONSIVE ──────────────────────────────── */
@@ -1997,11 +2008,11 @@
         padding-left: 24px; padding-right: 24px;
       }
       .phil-sticky { padding: 80px 24px; }
-      .hero-h1 { font-size: 48px; }
-      .skeeeep-t1 { font-size: 40px; }
-      .skeeeep-t2 { font-size: 28px; }
-      .skip-title, .agent-title, .packet-title, .sk-title { font-size: 40px; }
-      .sys-title, .ux-title { font-size: 40px; }
+      .hero-h1 { font-size: clamp(32px,4.8vw,72px); }
+      .skeeeep-t1 { font-size: clamp(22px,3.6vw,48px); }
+      .skeeeep-t2 { font-size: clamp(14px,1.8vw,24px); }
+      .skip-title, .agent-title, .packet-title, .sk-title { font-size: clamp(24px,4vw,54px); }
+      .sys-title, .ux-title { font-size: clamp(24px,4vw,54px); }
       .hero-brand {
         top: 36px;
         left: 24px;
@@ -2016,10 +2027,10 @@
       .phil-card-stack, .phil-card { height: 340px; }
       .phil-card .blob-wrap { inset-bottom: 112px; }
       .phil-card .card-footer { left: 28px; right: 28px; bottom: 30px; }
-      .phil-card .card-name { font-size: 32px; }
+      .phil-card .card-name { font-size: clamp(18px,2.8vw,42px); }
       .phil-card .card-sub { font-size: 16px; }
       .phil-card svg { width: 380px; height: auto; }
-      .pill-gray { font-size: 28px; padding: 12px 32px; }
+      .pill-gray { font-size: clamp(18px,2.2vw,32px); padding: 12px 32px; }
       .sd-section { padding-left: 24px; padding-right: 24px; }
       .md-section { padding-left: 24px; padding-right: 24px; }
       .sd-hero,
@@ -2027,20 +2038,20 @@
         padding-left: 24px;
         padding-right: 24px;
       }
-      .sd-hero h1, .sd-title, .sd-text-right h2, .sd-walk-caption h2, .sd-active h2 { font-size: 40px; }
-      .md-hero h1, .md-big-copy h2, .md-principle-title, .md-active h2 { font-size: 40px; }
-      .md-parsing-word h2, .md-map-word .center, .md-label-xl, .md-mapping-left h2 { font-size: 64px; }
-      .md-morph-pill { font-size: 36px; padding: 40px; height: auto; }
-      .sd-input-word h2 { font-size: 88px; }
-      .sd-body, .sd-text-right p, .sd-walk-caption p, .sd-active p { font-size: 22px; }
-      .md-big-copy p, .md-principle-body, .md-ability p, .md-last p, .md-last-item p { font-size: 22px; }
-      .sd-pill { height: 140px; font-size: 32px; }
+      .sd-hero h1, .sd-title, .sd-text-right h2, .sd-walk-caption h2, .sd-active h2 { font-size: clamp(24px,4vw,54px); }
+      .md-hero h1, .md-big-copy h2, .md-principle-title, .md-active h2 { font-size: clamp(24px,4vw,54px); }
+      .md-parsing-word h2, .md-map-word .center, .md-label-xl, .md-mapping-left h2 { font-size: clamp(32px,4.8vw,72px); }
+      .md-morph-pill { font-size: clamp(18px,2.2vw,32px); padding: 40px; height: auto; }
+      .sd-input-word h2 { font-size: clamp(32px,4.8vw,72px); }
+      .sd-body, .sd-text-right p, .sd-walk-caption p, .sd-active p { font-size: clamp(14px,1.8vw,24px); }
+      .md-big-copy p, .md-principle-body, .md-ability p, .md-last p, .md-last-item p { font-size: clamp(14px,1.8vw,24px); }
+      .sd-pill { height: 140px; font-size: clamp(18px,2.2vw,32px); }
       .sd-compass { width: 100%; height: auto; }
-      .sd-sensing-title { font-size: 54px; }
-      .sd-tick h2 { font-size: 52px; white-space: normal; }
+      .sd-sensing-title { font-size: clamp(24px,4vw,54px); }
+      .sd-tick h2 { font-size: clamp(22px,3.6vw,48px); white-space: normal; }
       .sd-flow-cards { flex-wrap: wrap; }
-      .sd-phrase { font-size: 36px; padding: 40px; }
-      .md-ai-card-text h3, .md-last-item h3 { font-size: 34px; }
+      .sd-phrase { font-size: clamp(18px,2.8vw,42px); padding: 40px; }
+      .md-ai-card-text h3, .md-last-item h3 { font-size: clamp(18px,2.8vw,42px); }
     }
   </style>
 </head>

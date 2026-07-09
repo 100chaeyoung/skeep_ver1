@@ -10,7 +10,8 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      background: #fff; color: #000;
+      --edge-padding: clamp(24px, 8.3vw, 160px);
+      background: #fff; color: #0e1825;
       font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
       -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
@@ -42,7 +43,7 @@
     /* ── SENSING DETAIL ── */
     .sd-section {
       width: 100%;
-      padding: 116px 160px;
+      padding: clamp(56px, 8vw, 116px) var(--edge-padding);
       background: #fff;
     }
     .sd-section.sd-bg-grad {
@@ -52,8 +53,11 @@
       background: #fff;
     }
     .sd-card-section {
-      padding-top: 112px;
-      padding-bottom: 112px;
+      padding-top: clamp(56px, 8vw, 116px);
+      padding-bottom: clamp(56px, 8vw, 116px);
+    }
+    .sd-hero + .sd-section {
+      margin-top: 180px;
     }
     .sd-hero {
       height: 75vh;
@@ -89,7 +93,7 @@
     .sd-hero h1 {
       position: relative;
       z-index: 2;
-      font-size: 72px;
+      font-size: clamp(32px,4.8vw,72px);
       font-weight: 600;
       line-height: 1.4;
       letter-spacing: -0.04em;
@@ -105,21 +109,21 @@
     .sd-copy-block {
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: clamp(12px, 1.6vw, 28px);
       max-width: 760px;
     }
     .sd-title {
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1.5;
+      font-size: clamp(24px,4vw,54px);
+      font-weight: 600;
+      line-height: 1.3;
       letter-spacing: -0.03em;
     }
     .sd-body {
-      font-size: 28px;
+      font-size: clamp(14px,1.8vw,24px);
       font-weight: 400;
       line-height: 1.4;
       letter-spacing: -0.03em;
-      color: #000;
+      color: #0e1825;
     }
     .sd-pill-row {
       display: grid;
@@ -134,10 +138,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 50px;
+      font-size: clamp(22px,3.6vw,48px);
       font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: -0.04em;
+      line-height: 1.4;
+      letter-spacing: -0.03em;
     }
     .sd-pink { color: #ff076a; }
     .sd-sensing-scene {
@@ -145,12 +149,14 @@
       position: relative;
       background: #fff;
       padding: 0;
+      margin-top: 180px;
     }
     .sd-sensing-sticky {
       position: sticky;
       top: 0;
       height: 100vh;
       overflow: hidden;
+      --sd-sensing-graphic-size: clamp(220px, 32vw, 370px);
     }
     .sd-sensing-layer {
       position: absolute;
@@ -158,8 +164,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 96px 0 96px;
-      gap: 72px;
+      padding: 0 clamp(24px, 5.4vw, 96px);
+      gap: clamp(24px, 4vw, 72px);
+      transition:
+        opacity .76s cubic-bezier(.22, 1, .36, 1),
+        transform .86s cubic-bezier(.22, 1, .36, 1);
       will-change: opacity, transform;
     }
     .sd-sensing-detail {
@@ -170,6 +179,8 @@
     .sd-sensing-detail .sd-two-col {
       width: 100%;
       align-items: center;
+      flex-direction: row;
+      min-width: 0;
     }
     .sd-sensing-detail .sd-visual-round,
     .sd-sensing-detail .sd-text-right h2,
@@ -178,16 +189,22 @@
       will-change: opacity, transform;
     }
     .sd-compass {
-      height: 60vh;
-      width: auto;
-      max-width: 440px;
+      width: var(--sd-sensing-graphic-size);
+      height: var(--sd-sensing-graphic-size);
+      max-height: min(60vh, var(--sd-sensing-graphic-size));
       object-fit: contain;
-      flex: 0 0 auto;
+      flex: 0 1 var(--sd-sensing-graphic-size);
+      min-width: 0;
+      transform-origin: center center;
+      transition:
+        opacity .66s cubic-bezier(.22, 1, .36, 1),
+        transform .96s cubic-bezier(.16, 1, .3, 1);
       will-change: opacity, transform;
     }
     .sd-sensing-text {
-      flex: 0 1 1047px;
+      flex: 1 1 0;
       max-width: 1047px;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -197,11 +214,12 @@
       will-change: transform;
     }
     .sd-sensing-title {
-      font-size: 124px;
-      line-height: 1.2;
-      font-weight: 700;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
+      font-weight: 600;
       letter-spacing: -0.04em;
       white-space: nowrap;
+      max-width: 100%;
       color: #0e1825;
       transition:
         font-size .72s cubic-bezier(.22, 1, .36, 1),
@@ -209,10 +227,10 @@
       will-change: font-size;
     }
     .sd-caption-scroll {
-      font-size: 60px;
-      line-height: 1.5;
-      font-weight: 700;
-      letter-spacing: -0.04em;
+      font-size: clamp(22px,3.6vw,48px);
+      line-height: 1.4;
+      font-weight: 600;
+      letter-spacing: -0.03em;
       color: #0e1825;
       opacity: 0;
       transform: translateY(16px);
@@ -225,7 +243,7 @@
     }
     .sd-scroll-cards {
       display: flex;
-      gap: 14px;
+      gap: clamp(10px, 1.2vw, 14px);
       margin-top: 58px;
       opacity: 0;
       transform: translateY(28px);
@@ -235,20 +253,20 @@
       will-change: opacity, transform;
     }
     .sd-scroll-card {
-      width: 220px;
-      height: 220px;
+      width: clamp(118px, 16vw, 220px);
+      height: clamp(118px, 16vw, 220px);
       flex-shrink: 0;
-      border-radius: 22px;
-      padding: 24px;
+      border-radius: 24px;
+      padding: clamp(16px, 1.8vw, 24px);
       background:
         radial-gradient(ellipse at 50% 29%, rgba(255, 13, 134, 0.15) 0%, rgba(255, 63, 74, 0.07) 50%, transparent 100%),
         linear-gradient(180deg, rgb(255, 203, 223) 0%, rgb(255, 242, 242) 100%);
     }
     .sd-scroll-card p {
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1.35;
-      letter-spacing: -0.05em;
+      font-size: clamp(14px,2vw,28px);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.04em;
       background: linear-gradient(180deg, #3b0018 0%, #95003c 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -259,25 +277,29 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 72px;
+      gap: clamp(48px, 7vw, 120px);
     }
     .sd-visual-round {
-      width: 370px;
-      height: 370px;
+      width: var(--sd-sensing-graphic-size);
+      height: var(--sd-sensing-graphic-size);
       object-fit: contain;
       flex-shrink: 0;
     }
     .sd-orbit-visual {
       position: relative;
-      width: 370px;
-      height: 370px;
-      flex-shrink: 0;
+      width: var(--sd-sensing-graphic-size);
+      height: var(--sd-sensing-graphic-size);
+      flex: 0 1 var(--sd-sensing-graphic-size);
+      min-width: 0;
     }
     .sd-orbit-visual img {
-      width: 370px;
-      height: 370px;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
       transform-origin: center center;
+      transition:
+        opacity .66s cubic-bezier(.22, 1, .36, 1),
+        transform .96s cubic-bezier(.16, 1, .3, 1);
       will-change: opacity, transform;
     }
     .sd-orbit-radar,
@@ -292,6 +314,7 @@
       position: absolute;
       inset: 0;
       opacity: 0;
+      transition: opacity .72s cubic-bezier(.22, 1, .36, 1);
       will-change: opacity, transform;
     }
     .sd-orbit-trail img {
@@ -300,22 +323,29 @@
     }
     .sd-text-right {
       max-width: 1047px;
+      min-width: 0;
       text-align: right;
       display: flex;
       flex-direction: column;
-      gap: 28px;
+      gap: clamp(12px, 1.6vw, 28px);
       will-change: transform;
     }
     .sd-text-right h2 {
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1.5;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px,4vw,54px);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      transition:
+        opacity .62s cubic-bezier(.22, 1, .36, 1),
+        transform .62s cubic-bezier(.22, 1, .36, 1);
     }
     .sd-text-right p {
-      font-size: 28px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
+      transition:
+        opacity .62s cubic-bezier(.22, 1, .36, 1),
+        transform .62s cubic-bezier(.22, 1, .36, 1);
     }
     .sd-clock-row {
       display: flex;
@@ -324,8 +354,8 @@
       gap: 40px;
     }
     .sd-clock-row img {
-      width: 370px;
-      height: 370px;
+      width: var(--sd-sensing-graphic-size);
+      height: var(--sd-sensing-graphic-size);
       object-fit: contain;
     }
     .sd-clock-row img:nth-child(2) { opacity: .8; }
@@ -342,10 +372,10 @@
       will-change: opacity, transform;
     }
     .sd-tick h2 {
-      font-size: 110px;
-      font-weight: 700;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
+      font-size: clamp(32px,4.8vw,72px);
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.04em;
       white-space: nowrap;
       color: #0e1825;
     }
@@ -353,7 +383,7 @@
     .sd-tick p {
       max-width: 760px;
       text-align: right;
-      font-size: 24px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -367,6 +397,8 @@
       height: 500vh;
       position: relative;
       background: #fff;
+      margin-top: 160px;
+      margin-bottom: 160px;
     }
     .sd-walk-sticky {
       position: sticky;
@@ -418,14 +450,14 @@
       padding-top: 0;
     }
     .sd-walk-caption h2 {
-      font-size: 60px;
-      line-height: 1.5;
-      font-weight: 700;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px,4vw,54px);
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: -0.03em;
     }
     .sd-walk-caption p {
       margin-top: 28px;
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -437,9 +469,9 @@
       position: relative;
     }
     .sd-input-word h2 {
-      font-size: 200px;
+      font-size: clamp(32px,4.8vw,72px);
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.4;
       letter-spacing: -0.04em;
     }
     .sd-input-word img {
@@ -455,12 +487,11 @@
       align-items: start;
     }
     .sd-input-summary h2 {
-      font-size: 60px;
-      line-height: 1.5;
-      letter-spacing: -0.03em;
-    }
+      font-size: clamp(24px,4vw,54px);
+      line-height: 1.3;
+      letter-spacing: -0.03em; font-weight: 600;}
     .sd-input-summary p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
@@ -509,24 +540,24 @@
       display: flex;
       flex-direction: column;
       gap: 40px;
-      color: #222;
+      color: #0e1825;
     }
     .sd-card-text h3 {
       margin: 0;
-      font-size: 60px;
-      line-height: 1.5;
+      font-size: clamp(18px,2.8vw,42px);
+      line-height: 1.3;
       font-weight: 600;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
     }
     .sd-card-text h3 span {
       display: block;
-      font-size: 28px;
+      font-size: clamp(13px,1.6vw,26px);
       color: #A5B0BF;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
     }
     .sd-card-text p {
       margin: 0;
-      font-size: 24px;
+      font-size: clamp(13px,1.6vw,26px);
       line-height: 1.5;
       font-weight: 500;
       color: #66717F;
@@ -534,32 +565,34 @@
     }
     .sd-active {
       display: grid;
-      grid-template-columns: 620px 720px;
+      grid-template-columns: minmax(0, 620px) minmax(280px, 720px);
       justify-content: space-between;
-      gap: 80px;
+      gap: clamp(48px, 7vw, 120px);
       align-items: center;
     }
     .sd-active-label {
       color: #ff076a;
-      font-size: 32px;
+      font-size: clamp(18px,2.2vw,32px);
       font-weight: 600;
       line-height: 1.3;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       margin-bottom: 8px;
     }
     .sd-active h2 {
-      font-size: 60px;
-      font-weight: 700;
-      line-height: 1.5;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px,4vw,54px);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.03em;
       margin-bottom: 28px;
     }
     .sd-active p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
     .sd-main-image {
+      width: 100%;
+      min-width: 0;
       height: 466px;
       border-radius: 32px;
       background:
@@ -568,12 +601,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
+      font-size: clamp(18px,2.8vw,42px);
       letter-spacing: -0.03em;
     }
     .sd-flow-scroll {
       height: 230vh;
-      margin: 280px 0 340px;
+      margin: 160px 0;
       padding: 120px 0;
       position: relative;
       background: #fff;
@@ -622,19 +655,17 @@
     }
     .sd-flow-side .label {
       color: #ff076a;
-      font-size: 22px;
-      margin-bottom: 4px;
-    }
+      font-size: clamp(18px,2.2vw,32px);
+      margin-bottom: 4px; font-weight: 600; letter-spacing: -0.03em;}
     .sd-flow-side h3 {
-      font-size: 40px;
-      line-height: 1.2;
-      letter-spacing: -0.04em;
-      margin-bottom: 12px;
-    }
+      font-size: clamp(22px,2.6vw,40px);
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px; font-weight: 600;}
     .sd-flow-side p {
-      font-size: 20px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
     }
     .sd-flow-cards {
       display: flex;
@@ -646,7 +677,7 @@
       flex: 1 1 0;
       min-width: 0;
       height: 250px;
-      border-radius: 25px;
+      border-radius: 24px;
       background: rgba(245,250,254,.72);
       padding: 36px 28px;
       display: flex;
@@ -667,22 +698,22 @@
       z-index: 1;
     }
     .sd-flow-card h4 {
-      font-size: 36px;
+      font-size: clamp(13px,1.15vw,22px);
       line-height: 1.2;
       letter-spacing: -0.04em;
-      font-weight: 700;
+      font-weight: 600;
     }
     .sd-flow-card:not(.active) h4 {
       font-weight: 600;
       opacity: .6;
     }
     .sd-flow-card span {
-      font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
       font-weight: 400;
-      font-size: 36px;
+      font-size: clamp(13px,1.4vw,24px);
       line-height: .96;
       opacity: .55;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.02em;
     }
     .sd-flow-card:not(.active) span { opacity: .2; }
 
@@ -712,7 +743,7 @@
       position: absolute;
       inset: -9px;
       border: 3.6px dashed #6e6e6e;
-      border-radius: 35.2px;
+      border-radius: 32px;
       background: rgba(0,0,0,.05);
       opacity: .5;
       z-index: 0;
@@ -733,16 +764,16 @@
       flex-shrink: 0;
     }
     .sd-flow-caption-text {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      color: rgba(0,0,0,.5);
+      font-size: clamp(13px,1.4vw,24px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: rgba(0,0,0,.55);
     }
     .sd-summary {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 120px;
+      gap: clamp(48px, 7vw, 120px);
     }
     .sd-summary-copy {
       width: auto;
@@ -751,19 +782,19 @@
       color: #000;
     }
     .sd-summary-copy h2 {
-      font-size: 72px;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
+      font-size: clamp(32px,4.8vw,72px);
+      line-height: 1.4;
+      letter-spacing: -0.04em;
       font-weight: 600;
       margin: 0 0 28px;
     }
     .sd-summary-copy h2 span {
       color: #ff076a;
-      font-weight: 900;
-      letter-spacing: -0.011em;
+      font-weight: 700;
+      letter-spacing: -0.04em;
     }
     .sd-summary-copy p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
       margin: 0;
@@ -777,12 +808,13 @@
       flex-direction: column;
       gap: 20px;
       margin-left: auto;
-      width: 720px;
-      flex: 0 0 720px;
+      width: min(100%, 720px);
+      flex: 0 1 720px;
+      min-width: 0;
     }
     .sd-summary-box {
       position: relative;
-      width: 720px;
+      width: 100%;
       height: 466px;
       border-radius: 32px;
       background:
@@ -794,26 +826,119 @@
       gap: 17px;
     }
     .sd-summary-box .kicker {
-      font-size: 32px;
+      font-size: clamp(18px,2.2vw,32px);
       font-weight: 600;
       line-height: 1.3;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       color: #ff076a;
     }
     .sd-summary-box h3 {
-      font-size: 48px;
+      font-size: clamp(22px,3.6vw,48px);
       font-weight: 600;
-      line-height: 1.3;
-      letter-spacing: -0.04em;
-      color: #000;
+      line-height: 1.4;
+      letter-spacing: -0.03em;
+      color: #0e1825;
     }
     .sd-summary-box p {
-      font-size: 36px;
+      font-size: clamp(14px,1.8vw,24px);
       font-weight: 400;
       line-height: 1.5;
       letter-spacing: -0.03em;
-      color: #000;
+      color: #0e1825;
       max-width: 600px;
+    }
+
+    @media (max-width: 1100px) {
+      .sd-active,
+      .sd-summary {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+      }
+      .sd-active,
+      .sd-summary {
+        align-items: stretch;
+      }
+      .sd-main-image,
+      .sd-summary-box {
+        height: clamp(280px, 52vw, 466px);
+      }
+      .sd-summary-visuals {
+        width: 100%;
+        flex-basis: auto;
+      }
+      .sd-sensing-detail .sd-two-col {
+        flex-direction: row;
+        align-items: center;
+        gap: clamp(28px, 6vw, 64px);
+      }
+      .sd-sensing-detail .sd-text-right {
+        flex: 1 1 0;
+      }
+      .sd-sensing-detail .sd-text-right h2 {
+        font-size: clamp(26px, 4.4vw, 48px);
+      }
+      .sd-sensing-detail .sd-text-right p {
+        font-size: clamp(13px, 2.1vw, 20px);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .sd-sensing-sticky {
+        --sd-sensing-graphic-size: clamp(150px, 30vw, 190px);
+      }
+      .sd-sensing-layer {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: clamp(18px, 4vw, 28px);
+      }
+      .sd-compass {
+        width: var(--sd-sensing-graphic-size);
+        height: var(--sd-sensing-graphic-size);
+        flex: 0 1 var(--sd-sensing-graphic-size);
+      }
+      .sd-sensing-text {
+        align-items: flex-end;
+        text-align: right;
+        width: auto;
+        max-width: 100%;
+      }
+      .sd-caption-scroll {
+        white-space: nowrap;
+        font-size: clamp(18px, 3.4vw, 28px);
+      }
+      .sd-scroll-cards {
+        max-width: 100%;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .sd-scroll-card {
+        width: clamp(86px, 15.5vw, 112px);
+        height: clamp(86px, 15.5vw, 112px);
+      }
+      .sd-scroll-card p {
+        font-size: clamp(12px, 2.2vw, 16px);
+      }
+      .sd-sensing-detail .sd-two-col {
+        flex-direction: row;
+        gap: clamp(18px, 4vw, 28px);
+      }
+      .sd-orbit-visual,
+      .sd-visual-round {
+        width: var(--sd-sensing-graphic-size);
+        height: var(--sd-sensing-graphic-size);
+        flex-basis: var(--sd-sensing-graphic-size);
+      }
+      .sd-sensing-detail .sd-text-right h2 {
+        font-size: clamp(22px, 4.2vw, 32px);
+      }
+      .sd-sensing-detail .sd-text-right p {
+        font-size: clamp(12px, 2vw, 15px);
+        line-height: 1.45;
+      }
+      .sd-flow-panel {
+        margin: 0 24px;
+        grid-template-columns: 1fr;
+      }
     }
 
   </style>
@@ -851,7 +976,7 @@
 <section class="sd-sensing-scene" id="sensing-scene-scroll">
   <div class="sd-sensing-sticky">
     <div class="sd-sensing-layer sd-sensing-primary">
-      <img class="sd-compass" src="assets/sensing-compass.png" alt="탐지를 상징하는 나침반 모티프">
+      <img class="sd-compass" src="assets/sensing-compass-new.png" alt="탐지를 상징하는 나침반 모티프">
       <div class="sd-sensing-text">
         <h2 class="sd-sensing-title">Sensing Logic</h2>
         <p class="sd-caption-scroll">24시간 조용히 찰나를 준비하는 일<br>당신이 경험하는 모든 시간이 곧 스킵의 시간</p>
@@ -865,13 +990,13 @@
     <div class="sd-sensing-layer sd-sensing-detail">
       <div class="sd-two-col">
         <div class="sd-orbit-visual">
-          <img class="sd-orbit-radar" src="assets/sensing-radar.png" alt="발견을 상징하는 레이더 모티프">
-          <img class="sd-orbit-main-clock" src="assets/sensing-clock-1.png" alt="24시간 센싱을 상징하는 시계 모티프">
+          <img class="sd-orbit-radar" src="assets/sensing-radar-new.png" alt="발견을 상징하는 레이더 모티프">
+          <img class="sd-orbit-main-clock" src="assets/sensing-clock-new.png" alt="24시간 센싱을 상징하는 시계 모티프">
           <div class="sd-orbit-trail" aria-hidden="true">
-            <img src="assets/sensing-clock-1.png" alt="">
-            <img src="assets/sensing-clock-2.png" alt="">
-            <img src="assets/sensing-clock-3.png" alt="">
-            <img src="assets/sensing-clock-4.png" alt="">
+            <img src="assets/sensing-clock-new.png" alt="">
+            <img src="assets/sensing-clock-new.png" alt="">
+            <img src="assets/sensing-clock-new.png" alt="">
+            <img src="assets/sensing-clock-new.png" alt="">
           </div>
         </div>
         <div class="sd-text-right">
@@ -1034,20 +1159,119 @@
     const sDetailText = sensingScene.querySelector('.sd-sensing-detail .sd-text-right');
     const sDetailTitle = sensingScene.querySelector('.sd-sensing-detail .sd-text-right h2');
     const sDetailBody  = sensingScene.querySelector('.sd-sensing-detail .sd-text-right p');
-    function phase(scrolled, total, s, e) {
-      return Math.min(1, Math.max(0, (scrolled / total - s) / (e - s)));
-    }
     function mix(a, b, t) { return Math.round(a + (b - a) * t); }
+    function responsiveTitleSize(large) {
+      const vw = window.innerWidth;
+      return large
+        ? Math.min(124, Math.max(54, vw * 0.08))
+        : Math.min(48, Math.max(32, vw * 0.045));
+    }
+    function clockGapValue() {
+      return Math.max(320, (window.innerWidth - 360) / 3);
+    }
+    function setClockTrail(visible) {
+      const clockGap = clockGapValue();
+      sTrail.style.opacity = visible ? 1 : 0;
+      sTrail.style.transform = 'translateX(0)';
+      sTrailClocks.forEach((clock, index) => {
+        const offset = index * clockGap;
+        clock.style.opacity = visible ? 1 : 0;
+        clock.style.transform = `translateX(${offset}px) rotate(${index * 58}deg) scale(1)`;
+      });
+    }
+    let sensingVisualStage = -1;
+
+    function setSensingVisualStage(stage) {
+      sensingVisualStage = stage;
+      const clockGap = clockGapValue();
+      const clockTravel = clockGap * 3;
+
+      if (stage === 0) {
+        sPrimary.style.opacity = 1;
+        sPrimary.style.transform = 'translateY(0)';
+        sCompass.style.opacity = 1;
+        sCompass.style.transform = 'rotate(0deg) scale(1)';
+
+        sDetail.style.opacity = 0;
+        sDetail.style.transform = 'translateY(0)';
+        sRadar.style.opacity = 0;
+        sRadar.style.transform = 'rotate(-360deg) scale(1)';
+        sMainClock.style.opacity = 0;
+        sMainClock.style.transform = 'translateX(0) rotate(-360deg) scale(1)';
+        sDetailTitle.style.opacity = 0;
+        sDetailTitle.style.transform = 'translateY(34px)';
+        sDetailBody.style.opacity = 0;
+        sDetailBody.style.transform = 'translateY(34px)';
+        sDetailText.style.transform = 'translateY(72px)';
+        setClockTrail(false);
+        sTick.style.opacity = 0;
+        sTick.style.transform = 'translateY(72px)';
+        return;
+      }
+
+      if (stage === 1) {
+        sPrimary.style.opacity = 0;
+        sPrimary.style.transform = 'translateY(0)';
+        sCompass.style.opacity = 0;
+        sCompass.style.transform = 'rotate(360deg) scale(1)';
+
+        sDetail.style.opacity = 1;
+        sDetail.style.transform = 'translateY(0)';
+        sRadar.style.opacity = 1;
+        sRadar.style.transform = 'rotate(0deg) scale(1)';
+        sMainClock.style.opacity = 0;
+        sMainClock.style.transform = 'translateX(0) rotate(-360deg) scale(1)';
+        sDetailTitle.style.opacity = 1;
+        sDetailTitle.style.transform = 'translateY(0)';
+        sDetailBody.style.opacity = 1;
+        sDetailBody.style.transform = 'translateY(0)';
+        sDetailText.style.transform = 'translateY(0)';
+        setClockTrail(false);
+        sTick.style.opacity = 0;
+        sTick.style.transform = 'translateY(72px)';
+        return;
+      }
+
+      sPrimary.style.opacity = 0;
+      sPrimary.style.transform = 'translateY(0)';
+      sCompass.style.opacity = 0;
+      sCompass.style.transform = 'rotate(360deg) scale(1)';
+
+      sDetail.style.opacity = 1;
+      sDetail.style.transform = 'translateY(0)';
+      sRadar.style.opacity = 0;
+      sRadar.style.transform = 'rotate(360deg) scale(1)';
+      sMainClock.style.opacity = 1;
+      sMainClock.style.transform = stage >= 3
+        ? `translateX(${clockTravel}px) rotate(1440deg) scale(1)`
+        : 'translateX(0) rotate(360deg) scale(1)';
+      sDetailTitle.style.opacity = 0;
+      sDetailTitle.style.transform = 'translateY(-24px)';
+      sDetailBody.style.opacity = 0;
+      sDetailBody.style.transform = 'translateY(-24px)';
+      sDetailText.style.transform = 'translateY(0)';
+      setClockTrail(stage >= 3);
+      if (stage >= 4) {
+        sTick.style.opacity = 1;
+        sTick.style.transform = 'translateY(0)';
+      } else {
+        sTick.style.opacity = 0;
+        sTick.style.transform = 'translateY(72px)';
+      }
+    }
 
     function updateSensing() {
       const rect  = sensingScene.getBoundingClientRect();
       const total = sensingScene.offsetHeight - window.innerHeight;
       const sc    = Math.max(0, -rect.top);
+      const progress = total > 0 ? sc / total : 0;
 
       // Phase 1-2: reveal the Korean caption and cards as one smooth group.
-      const firstGroupOn = sc / total > 0.012 ? 1 : 0;
+      const firstGroupOn = progress > 0.012 ? 1 : 0;
       const p1 = firstGroupOn;
-      sTitle.style.fontSize = (124 - p1 * 76) + 'px';
+      const titleLarge = responsiveTitleSize(true);
+      const titleSmall = responsiveTitleSize(false);
+      sTitle.style.fontSize = (titleLarge - p1 * (titleLarge - titleSmall)) + 'px';
       const gray = firstGroupOn;
       sTitle.style.color = `rgb(${mix(14, 216, gray)}, ${mix(24, 221, gray)}, ${mix(37, 226, gray)})`;
 
@@ -1059,45 +1283,16 @@
       sCards.style.transform   = `translateY(${groupIn ? 0 : 34}px)`;
       sText.style.transform = `translateY(${textY}px)`;
 
-      // Phase 4: first scene leaves slowly, second scene replaces it at center
-      const out = phase(sc, total, 0.17, 0.30);
-      const p4  = phase(sc, total, 0.21, 0.36);
-      const titleIn = phase(sc, total, 0.30, 0.42);
-      const bodyIn  = phase(sc, total, 0.38, 0.50);
-      const clockMorph = phase(sc, total, 0.78, 0.84);
-      const clockRoll  = phase(sc, total, 0.84, 0.94);
-      const tickIn = phase(sc, total, 0.95, 0.965);
-      sPrimary.style.opacity   = 1 - out;
-      sPrimary.style.transform = `translateY(${-out * 18}px)`;
-      sCompass.style.opacity   = 1 - out;
-      sCompass.style.transform = `rotate(${out * 360}deg) scale(${1 - out * 0.06})`;
-      sDetail.style.opacity    = p4;
-      sDetail.style.transform  = `translateY(${(1 - p4) * 18}px)`;
-      sRadar.style.opacity     = p4 * (1 - clockMorph);
-      sRadar.style.transform   = `rotate(${(1 - p4) * -360 + clockMorph * 360}deg) scale(${0.92 + p4 * 0.08})`;
-      const clockGap = Math.max(320, (window.innerWidth - 360) / 3);
-      const clockTravel = clockRoll * clockGap * 3;
-      sMainClock.style.opacity = clockMorph;
-      sMainClock.style.transform = `translateX(${clockTravel}px) rotate(${(clockMorph - 1) * 360 + clockRoll * 1080}deg)`;
-      sTrail.style.opacity = clockRoll;
-      sTrail.style.transform = 'translateX(0)';
-      sTrailClocks.forEach((clock, index) => {
-        const offset = index * clockGap;
-        const step = Math.min(1, Math.max(0, (clockTravel - offset) / (clockGap * 0.28)));
-        clock.style.opacity = step;
-        clock.style.transform = `translateX(${offset}px) rotate(${index * 58}deg)`;
-      });
-      const copyOut = phase(sc, total, 0.78, 0.84);
-      sDetailTitle.style.opacity   = titleIn * (1 - copyOut);
-      sDetailTitle.style.transform = `translateY(${(1 - titleIn) * 34}px)`;
-      sDetailBody.style.opacity    = bodyIn * (1 - copyOut);
-      sDetailBody.style.transform  = `translateY(${(1 - bodyIn) * 34}px)`;
-      sDetailText.style.transform  = `translateY(${(1 - bodyIn) * 72}px)`;
-      sTick.style.opacity = tickIn;
-      sTick.style.transform = `translateY(${(1 - tickIn) * 72}px)`;
+      // Phase 4: visual changes are triggered by scroll thresholds, then animated by CSS.
+      const nextStage = progress >= 0.95 ? 4 : progress >= 0.84 ? 3 : progress >= 0.78 ? 2 : progress >= 0.21 ? 1 : 0;
+      if (nextStage !== sensingVisualStage) setSensingVisualStage(nextStage);
     }
 
     window.addEventListener('scroll', updateSensing, { passive: true });
+    window.addEventListener('resize', () => {
+      if (sensingVisualStage >= 0) setSensingVisualStage(sensingVisualStage);
+      updateSensing();
+    }, { passive: true });
     updateSensing();
   }
 
