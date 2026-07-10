@@ -510,6 +510,7 @@
       padding-top: 0;
       transition: opacity .55s ease, transform .55s ease;
     }
+    .sd-walk-scene.is-pre-final .sd-walk-caption,
     .sd-walk-scene.is-final .sd-walk-caption {
       position: absolute;
       opacity: 0;
@@ -530,6 +531,29 @@
       white-space: nowrap;
       pointer-events: none;
       transition: opacity .85s ease, transform .85s cubic-bezier(.22, 1, .36, 1);
+    }
+    .sd-walk-scene.is-final-moving .sd-walk-content,
+    .sd-walk-scene.is-final .sd-walk-content {
+      gap: 0;
+    }
+    .sd-walk-scene.is-final-moving .sd-walk-row,
+    .sd-walk-scene.is-final .sd-walk-row {
+      width: 100%;
+      height: 100vh;
+      padding-inline: 0;
+      gap: 0;
+      align-items: center;
+    }
+    .sd-walk-scene.is-final-moving .sd-walk-person:not(.is-walk-final-person) {
+      opacity: 0;
+      transform: translateY(12px) scale(.98);
+      pointer-events: none;
+      transition: opacity .24s ease, transform .24s ease;
+    }
+    .sd-walk-scene.is-final-moving .sd-walk-final-title {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+      transition-delay: .16s;
     }
     .sd-walk-scene.is-final .sd-walk-final-title {
       opacity: 1;
@@ -863,7 +887,7 @@
       height: 240px;
       flex: 0 0 auto;
       opacity: 1;
-      transition: width .72s cubic-bezier(.22,1,.36,1), opacity .45s ease;
+      transition: opacity .35s ease;
     }
     .sd-flow-time-card {
       width: 1300px;
@@ -943,13 +967,15 @@
       width: 1760px;
       gap: 0;
       transform: translateY(0) scale(1);
+      display: flex;
     }
     .sd-flow-panel.is-logic-visible .sd-flow-time-avatar {
-      width: 0;
+      width: 240px;
       opacity: 0;
     }
     .sd-flow-panel.is-logic-visible .sd-flow-time-card {
       width: 1760px;
+      margin-left: -240px;
       background: transparent;
     }
     .sd-flow-panel.is-logic-visible .sd-flow-rest-copy {
@@ -1054,7 +1080,7 @@
     }
     .sd-flow-group {
       position: absolute;
-      left: 0;
+      left: 65.308px;
       top: 0;
       width: 760.308px;
       height: 322px;
@@ -1900,43 +1926,77 @@
       stepping = true;
       finalMoveStarted = true;
       if (finalTimer) window.clearTimeout(finalTimer);
+      const finalPerson = scene.querySelector('.sd-walk-person.is-walk-final-person');
+      if (!finalPerson) {
+        stepping = false;
+        finalMoveStarted = false;
+        return;
+      }
+      const startRect = finalPerson.getBoundingClientRect();
+      // Use the image's own intrinsic aspect ratio, not the rendered flex
+      // box's ratio (which is letterboxed by object-fit:contain inside the
+      // fixed-height row and has nothing to do with the actual artwork's
+      // proportions). Using the box ratio made the walk-in shrink to roughly
+      // 2x the correct height, so the CSS height:auto handoff at the end had
+      // to visibly snap back down to the right size.
+      const aspect = (finalPerson.naturalHeight && finalPerson.naturalWidth)
+        ? finalPerson.naturalHeight / finalPerson.naturalWidth
+        : startRect.height / startRect.width;
+      const vw = window.innerWidth;
+      const targetWidth = vw <= 900
+        ? Math.min(104, Math.max(74, vw * 0.10))
+        : Math.min(148, Math.max(92, vw * 0.072));
+      const targetOffset = vw <= 900
+        ? Math.min(230, Math.max(150, vw * 0.24))
+        : Math.min(440, Math.max(300, vw * 0.21));
+      const targetHeight = targetWidth * aspect;
+      const targetCenterX = window.innerWidth / 2 - targetOffset;
+      const targetCenterY = window.innerHeight / 2;
+
+      finalPerson.style.position = 'fixed';
+      finalPerson.style.left = startRect.left + 'px';
+      finalPerson.style.top = startRect.top + 'px';
+      finalPerson.style.width = startRect.width + 'px';
+      finalPerson.style.height = startRect.height + 'px';
+      finalPerson.style.zIndex = '20';
+      finalPerson.style.transform = 'none';
+      finalPerson.style.transformOrigin = 'center center';
+      finalPerson.style.transition = 'left 1.05s cubic-bezier(.22, 1, .36, 1), top 1.05s cubic-bezier(.22, 1, .36, 1), width 1.05s cubic-bezier(.22, 1, .36, 1), height 1.05s cubic-bezier(.22, 1, .36, 1), filter .45s ease';
+      finalPerson.getBoundingClientRect();
+
       finalTimer = window.setTimeout(() => {
         scene.classList.add('is-pre-final');
         if (shadow) shadow.style.opacity = '0';
 
         window.setTimeout(() => {
-          const finalPerson = scene.querySelector('.sd-walk-person.is-walk-final-person');
-          const row = scene.querySelector('.sd-walk-row');
-          if (finalPerson && row) {
-            const rowRect = row.getBoundingClientRect();
-            const personRect = finalPerson.getBoundingClientRect();
-            finalPerson.style.position = 'absolute';
-            finalPerson.style.left = (personRect.left - rowRect.left + personRect.width / 2) + 'px';
-            finalPerson.style.top = (personRect.top - rowRect.top + personRect.height / 2) + 'px';
-            finalPerson.style.width = personRect.width + 'px';
-            finalPerson.style.height = personRect.height + 'px';
-            finalPerson.style.transform = 'translate(-50%, -50%) scale(1.04)';
-            finalPerson.style.transformOrigin = 'center center';
-            finalPerson.getBoundingClientRect();
-          }
+          scene.classList.add('is-final-moving');
           requestAnimationFrame(() => {
-            scene.classList.add('is-final');
-            if (finalPerson) {
-              finalPerson.style.position = '';
-              finalPerson.style.left = '';
-              finalPerson.style.top = '';
-              finalPerson.style.width = '';
-              finalPerson.style.height = '';
-              finalPerson.style.transform = '';
-              finalPerson.style.transformOrigin = '';
-            }
+            finalPerson.style.left = (targetCenterX - targetWidth / 2) + 'px';
+            finalPerson.style.top = (targetCenterY - targetHeight / 2) + 'px';
+            finalPerson.style.width = targetWidth + 'px';
+            finalPerson.style.height = targetHeight + 'px';
           });
-        }, 240);
-      }, 80);
+        }, 140);
+
+        window.setTimeout(() => {
+          scene.classList.add('is-final');
+          requestAnimationFrame(() => {
+            finalPerson.style.position = '';
+            finalPerson.style.left = '';
+            finalPerson.style.top = '';
+            finalPerson.style.width = '';
+            finalPerson.style.height = '';
+            finalPerson.style.zIndex = '';
+            finalPerson.style.transform = '';
+            finalPerson.style.transformOrigin = '';
+            finalPerson.style.transition = '';
+          });
+        }, 1300);
+      }, 90);
       window.setTimeout(() => {
         walkComplete = true;
         stepping = false;
-      }, 1180);
+      }, 1500);
     }
 
     function advanceStep() {
