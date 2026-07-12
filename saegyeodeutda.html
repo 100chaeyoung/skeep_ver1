@@ -453,7 +453,7 @@
       display: block;
       position: relative;
       z-index: 2;
-      filter: grayscale(1) sepia(.14) hue-rotate(164deg) saturate(.72) brightness(.93) contrast(.94);
+      filter: grayscale(1) saturate(.12) brightness(.94) contrast(.96);
       opacity: 1;
       transition:
         filter 0.55s ease,
@@ -477,7 +477,7 @@
     }
     .sd-walk-scene.is-pre-final .sd-walk-person:not(.is-walk-final-person) {
       opacity: 0;
-      transform: translateY(10px) scale(.98);
+      transform: scale(.98);
       transition: opacity .22s ease, transform .22s ease;
       pointer-events: none;
     }
@@ -498,7 +498,7 @@
     }
     .sd-walk-shadow {
       position: absolute;
-      bottom: -20px;
+      bottom: -12px;
       width: 218px;
       height: 34px;
       z-index: 1;
@@ -518,21 +518,25 @@
       padding-top: 0;
       transition: opacity .55s ease, transform .55s ease;
     }
-    .sd-walk-scene.is-pre-final .sd-walk-caption,
+    .sd-walk-scene.is-pre-final .sd-walk-caption {
+      opacity: 0;
+      transform: none;
+      pointer-events: none;
+    }
     .sd-walk-scene.is-final .sd-walk-caption {
       position: absolute;
       opacity: 0;
-      transform: translateY(18px);
+      transform: none;
       pointer-events: none;
     }
     .sd-walk-final-title {
       position: absolute;
-      left: calc(50% - clamp(120px, 12vw, 260px));
-      top: 50%;
+      left: calc(50% - clamp(460px, 23vw, 640px));
+      top: calc(50% + 64px);
       transform: translateY(-50%) translateX(32px);
-      display: none;
+      display: block;
       opacity: 0;
-      font-size: clamp(64px, 7.2vw, 128px);
+      font-size: 90pt;
       line-height: 1.05;
       font-weight: 700;
       letter-spacing: -0.05em;
@@ -555,18 +559,14 @@
     }
     .sd-walk-scene.is-final-moving .sd-walk-person:not(.is-walk-final-person) {
       opacity: 0;
-      transform: translateY(12px) scale(.98);
+      transform: scale(.98);
       pointer-events: none;
       transition: opacity .24s ease, transform .24s ease;
     }
-    .sd-walk-scene.is-final-moving .sd-walk-final-title {
+    .sd-walk-scene.is-pre-final .sd-walk-final-title {
       opacity: 1;
       transform: translateY(-50%) translateX(0);
       transition-delay: .16s;
-    }
-    .sd-walk-scene.is-final .sd-walk-final-title {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
     }
     @media (max-width: 900px) {
       .sd-walk-content { gap: 92px; }
@@ -607,6 +607,18 @@
       gap: 355px;
       align-items: start;
     }
+    .sd-input-title-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .sd-input-kicker {
+      font-size: clamp(18px,2.2vw,32px);
+      line-height: 1.3;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: rgba(14, 24, 37, .42);
+    }
     .sd-input-summary h2 {
       font-size: clamp(24px,4vw,54px);
       line-height: 1.3;
@@ -615,6 +627,7 @@
       font-size: clamp(14px,1.8vw,24px);
       line-height: 1.5;
       letter-spacing: -0.03em;
+      margin-top: clamp(42px, 4.8vw, 86px);
     }
     .sd-card-list {
       display: grid;
@@ -709,7 +722,7 @@
       width: 100%;
       height: 100vh;
       padding: 0 var(--edge-padding);
-      background: linear-gradient(180deg, #FF0B6C 0%, #FF61A0 100%);
+      background: url('assets/active-layer-bg.png') center center / cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -973,6 +986,46 @@
       white-space: nowrap;
       transition: opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
     }
+    .sd-flow-time-card .sd-flow-card-logic-copy,
+    .sd-flow-logic-copy {
+      display: none;
+    }
+    .sd-pause-logic-standalone {
+      background: #fff;
+    }
+    .sd-pause-logic-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(48px, 8vw, 160px);
+      min-height: clamp(240px, 26vw, 380px);
+    }
+    .sd-pause-logic-en {
+      font-size: clamp(48px, 5.6vw, 60pt);
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+      font-weight: 700;
+      color: #000;
+      white-space: nowrap;
+    }
+    .sd-pause-logic-ko {
+      font-size: clamp(36px, 4.2vw, 48pt);
+      line-height: 1.28;
+      letter-spacing: -0.045em;
+      font-weight: 600;
+      color: #000;
+      text-align: right;
+      white-space: nowrap;
+    }
+    @media (max-width: 900px) {
+      .sd-pause-logic-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .sd-pause-logic-ko {
+        text-align: left;
+      }
+    }
     .sd-flow-panel.is-logic-visible .sd-flow-time-inner {
       position: absolute;
       left: 0;
@@ -1152,24 +1205,39 @@
       letter-spacing: -0.03em;
       color: rgba(0,0,0,.5);
     }
-    .sd-summary {
+    .sd-summary-video-band {
+      width: 100%;
+      height: clamp(300px, 34vw, 440px);
+      background: #FFE8F5;
+      border-radius: clamp(24px, 2.4vw, 40px);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: clamp(32px, 4vw, 64px);
+    }
+    .sd-summary-video {
+      flex: 0 0 auto;
+      height: 100%;
+      aspect-ratio: 1 / 1;
+      background: #FFE8F5;
+    }
+    .sd-summary-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .sd-summary-copy {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: clamp(48px, 7vw, 120px);
-    }
-    .sd-summary-copy {
-      width: auto;
-      flex: 0 1 auto;
-      min-width: 0;
+      gap: clamp(40px, 6vw, 110px);
       color: #000;
     }
+    .sd-summary-copy h2 { flex: 0 0 auto; }
+    .sd-summary-copy p { flex: 0 1 auto; }
     .sd-summary-copy h2 {
-      font-size: clamp(32px,4.8vw,72px);
-      line-height: 1.4;
+      font-size: clamp(30px,3.6vw,58px);
+      line-height: 1.35;
       letter-spacing: -0.04em;
       font-weight: 600;
-      margin: 0 0 28px;
+      margin: 0;
     }
     .sd-summary-copy h2 span {
       color: #ff076a;
@@ -1177,58 +1245,52 @@
       letter-spacing: -0.04em;
     }
     .sd-summary-copy p {
-      font-size: clamp(14px,1.8vw,24px);
-      line-height: 1.5;
+      font-size: clamp(15px,1.5vw,22px);
+      line-height: 1.55;
       letter-spacing: -0.03em;
       margin: 0;
-      white-space: nowrap;
-    }
-    .sd-summary-copy h2 {
-      white-space: nowrap;
     }
     .sd-summary-visuals {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
-      margin-left: auto;
-      width: min(100%, 720px);
-      flex: 0 1 720px;
-      min-width: 0;
+      flex-direction: row;
+      gap: clamp(16px, 1.5vw, 24px);
+      width: 100%;
+      margin: clamp(36px, 4.5vw, 72px) 0 0;
     }
     .sd-summary-box {
       position: relative;
-      width: 100%;
-      height: 466px;
-      border-radius: 32px;
+      flex: 1 1 0;
+      min-width: 0;
+      height: clamp(180px, 16vw, 250px);
+      border-radius: 28px;
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 127.56%),
         #EBF0F5;
-      padding: 130px 64px 64px;
+      padding: clamp(30px, 3.2vw, 48px) clamp(28px, 3vw, 48px) clamp(26px, 2.6vw, 40px);
       display: flex;
       flex-direction: column;
-      gap: 17px;
+      gap: 14px;
     }
     .sd-summary-box .kicker {
-      font-size: clamp(18px,2.2vw,32px);
+      font-size: clamp(15px,1.4vw,22px);
       font-weight: 600;
       line-height: 1.3;
       letter-spacing: -0.03em;
       color: #ff076a;
     }
     .sd-summary-box h3 {
-      font-size: clamp(22px,3.6vw,48px);
+      font-size: clamp(20px,1.9vw,30px);
       font-weight: 600;
       line-height: 1.4;
       letter-spacing: -0.03em;
       color: #0e1825;
     }
     .sd-summary-box p {
-      font-size: clamp(14px,1.8vw,24px);
+      font-size: clamp(13px,1.15vw,18px);
       font-weight: 400;
       line-height: 1.5;
       letter-spacing: -0.03em;
       color: #0e1825;
-      max-width: 600px;
     }
 
     @media (max-width: 1100px) {
@@ -1253,6 +1315,14 @@
       .sd-summary-visuals {
         width: 100%;
         flex-basis: auto;
+        flex-direction: column;
+      }
+      .sd-summary-video-band {
+        height: clamp(220px, 54vw, 340px);
+      }
+      .sd-summary-copy {
+        flex-direction: column;
+        gap: clamp(14px, 3vw, 22px);
       }
       .sd-sensing-detail .sd-two-col {
         flex-direction: row;
@@ -1422,7 +1492,10 @@
 
 <section class="sd-section sd-bg-grad fi">
   <div class="sd-input-summary">
-    <h2>말은 새겨듣고,<br>마음은 헤아리는</h2>
+    <div class="sd-input-title-stack">
+      <p class="sd-input-kicker">Input Logic</p>
+      <h2>말은 새겨듣고,<br>마음은 헤아리는</h2>
+    </div>
     <p>완벽하게 다듬어진 지시나 명령은 필요 없습니다. 스킵은 발화의 운율과 문장 속 섬세한 단서에서 맥락을 완벽하게 파악하니까요. 때로는 말하지 않더라도, 당신의 마음을 찰떡같이 알아줍니다.</p>
   </div>
 </section>
@@ -1508,28 +1581,38 @@
   </div>
 </section>
 
+<section class="sd-section sd-pause-logic-standalone fi">
+  <div class="sd-pause-logic-row">
+    <p class="sd-pause-logic-en">Pause Logic</p>
+    <p class="sd-pause-logic-ko">2보 전진을 위한<br>1보 후퇴</p>
+  </div>
+</section>
+
 <section class="sd-section sd-summary-section fi">
-  <div class="sd-summary">
-    <div class="sd-summary-copy">
-      <h2>Skip the noise<br>Skeep the <span>pause</span></h2>
-      <p>완벽한 스킵에게도 때로는 쉴 틈이 필요합니다.<br>명시적인 명령이 있거나 스킵 불가 영역을 마주할 때<br>작동하는 일시중단 로직은 시스템을 완전히 종료하는<br>대신에 목적 단위로 잠시 숨을 고르게 만들죠.</p>
+  <div class="sd-summary-video-band">
+    <div class="sd-summary-video">
+      <video src="assets/pause-motion.mp4" autoplay loop muted playsinline></video>
     </div>
-    <div class="sd-summary-visuals">
-      <div class="sd-summary-box">
-        <p class="kicker">Principle 01</p>
-        <h3>인풋은 스킵, 센싱은 킵</h3>
-        <p>스킵과의 직접 상호작용은 잠시 멈추지만,<br>여전히 센싱을 통해 준비 상태를 유지합니다.</p>
-      </div>
-      <div class="sd-summary-box">
-        <p class="kicker">Principle 02</p>
-        <h3>맥락적 예측 대기</h3>
-        <p>스킵은 사용자의 발화 단서를 미리 추론하여<br>예측되는 다음 시공간 속에서 기다립니다.</p>
-      </div>
-      <div class="sd-summary-box">
-        <p class="kicker">Principle 03</p>
-        <h3>심리스한 온앤 오프</h3>
-        <p>새로운 목적 구간이 시작되는 순간 별도의<br>조작 없이 깨어나며, 흐름을 복구합니다.</p>
-      </div>
+  </div>
+  <div class="sd-summary-copy">
+    <h2>Skip the noise<br>Skeep the <span>pause</span></h2>
+    <p>완벽한 스킵에게도 때로는 쉴 틈이 필요합니다.<br>명시적인 명령이 있거나 스킵 불가 영역을 마주할 때<br>작동하는 일시중단 로직은 시스템을 완전히 종료하는<br>대신에 목적 단위로 잠시 숨을 고르게 만들죠.</p>
+  </div>
+  <div class="sd-summary-visuals">
+    <div class="sd-summary-box">
+      <p class="kicker">Principle 01</p>
+      <h3>인풋은 스킵, 센싱은 킵</h3>
+      <p>스킵과의 직접 상호작용은 잠시 멈추지만,<br>여전히 센싱을 통해 준비 상태를 유지합니다.</p>
+    </div>
+    <div class="sd-summary-box">
+      <p class="kicker">Principle 02</p>
+      <h3>맥락적 예측 대기</h3>
+      <p>스킵은 사용자의 발화 단서를 미리 추론하여<br>예측되는 다음 시공간 속에서 기다립니다.</p>
+    </div>
+    <div class="sd-summary-box">
+      <p class="kicker">Principle 03</p>
+      <h3>심리스한 온앤 오프</h3>
+      <p>새로운 목적 구간이 시작되는 순간 별도의<br>조작 없이 깨어나며, 흐름을 복구합니다.</p>
     </div>
   </div>
 </section>
@@ -1916,7 +1999,7 @@
         const on = (i === idx);
         p.style.filter    = on
           ? 'grayscale(0)'
-          : 'grayscale(1) sepia(.14) hue-rotate(164deg) saturate(.72) brightness(.93) contrast(.94)';
+          : 'grayscale(1) saturate(.12) brightness(.94) contrast(.96)';
         p.style.transform = on ? 'scale(1.04)'  : 'scale(1)';
       });
       // PNG 캔버스 중앙이 아니라 실제 인물의 발 중심으로 그림자를 이동한다.
@@ -2066,7 +2149,8 @@
     function releaseFlow(panel) {
       if (panel.dataset.flowState !== 'time') return false;
       panel.dataset.flowState = 'done';
-      panel.classList.add('is-logic-visible');
+      panel.classList.remove('is-flow-blurred', 'is-logic-visible');
+      panel.classList.add('is-paused', 'is-time-visible');
       flowLock.active = false;
       return true;
     }
