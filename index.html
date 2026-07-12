@@ -239,7 +239,7 @@
       color: #ff0b6c; white-space: nowrap;
     }
     .phil-tagline {
-      font-size: clamp(32px,4.8vw,72px);
+      font-size: clamp(26px,3.6vw,52px);
       font-weight: 600;
       line-height: 1.4;
       letter-spacing: -0.04em;
@@ -2572,6 +2572,87 @@
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════
+  UX LOGIC — BALL TRAIL MOTION
+═══════════════════════ -->
+<section class="bt-band fi" aria-hidden="true">
+  <canvas class="bt-canvas" id="btCanvas"></canvas>
+</section>
+<style>
+  .bt-band { width: 100%; background: #fff; padding: clamp(12px, 3vh, 48px) 0; overflow: hidden; }
+  .bt-canvas { display: block; width: 100%; height: clamp(220px, 32vh, 400px); }
+</style>
+<script>
+(() => {
+  const cv = document.getElementById('btCanvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  let W = 0, H = 0, DPR = 1;
+  function resize(){
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    const r = cv.getBoundingClientRect();
+    W = Math.max(1, r.width); H = Math.max(1, r.height);
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  const ro = new ResizeObserver(resize); ro.observe(cv); resize();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // downward-opening arc (∩): low ends, peak in the middle
+  function P0(){ return [-0.04 * W, 0.86 * H]; }
+  function P1(){ return [ 0.50 * W, 0.06 * H]; }
+  function P2(){ return [ 1.04 * W, 0.86 * H]; }
+  function bez(s){ const [a0,b0]=P0(),[a1,b1]=P1(),[a2,b2]=P2(),u=1-s;
+    return [u*u*a0+2*u*s*a1+s*s*a2, u*u*b0+2*u*s*b1+s*s*b2]; }
+  function tan(s){ const [a0,b0]=P0(),[a1,b1]=P1(),[a2,b2]=P2(),u=1-s;
+    return Math.atan2(2*u*(b1-b0)+2*s*(b2-b1), 2*u*(a1-a0)+2*s*(a2-a1)); }
+
+  const COLORS=[[255,18,113],[255,218,71],[195,231,121],[112,219,240]];
+  function gcol(u){
+    u=Math.max(0,Math.min(1,u))*(COLORS.length-1);
+    const i=Math.min(COLORS.length-2,Math.floor(u)),f=u-i,a=COLORS[i],b=COLORS[i+1];
+    return [a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f];
+  }
+  const rgba=(c,a)=>`rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+
+  const TRAIL=9, GAP=0.082, PASS=2.7, CYCLE=3.9, FLIPS=3.4;
+
+  function frame(t){
+    ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H);
+    const headS=((t%CYCLE)/PASS)*1.30;
+    const R=Math.min(W,H)*0.10;
+    for(let k=TRAIL-1;k>=0;k--){
+      const s=headS-k*GAP;
+      if(s<0||s>1.02) continue;
+      const [x,y]=bez(s), ang=tan(s);
+      const flip=Math.abs(Math.cos(s*Math.PI*FLIPS));
+      const ry=R*Math.max(0.10,flip), rx=R;
+      const fade=1-k/TRAIL;
+      const alpha=0.55+0.45*fade;
+      const scale=0.62+0.38*fade;
+      const col=gcol(k/(TRAIL-1));
+      ctx.save();
+      ctx.translate(x,y); ctx.rotate(ang); ctx.scale(scale,scale);
+      ctx.beginPath(); ctx.ellipse(0,0,rx,ry,0,0,Math.PI*2);
+      ctx.fillStyle=rgba(col,alpha); ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  let running=false, raf=0;
+  function loop(now){ if(!running) return; frame(now/1000); raf=requestAnimationFrame(loop); }
+  if(reduce){ frame(1.2); }
+  else {
+    const io=new IntersectionObserver((es)=>{
+      const vis=es[0].isIntersecting;
+      if(vis && !running){ running=true; raf=requestAnimationFrame(loop); }
+      else if(!vis && running){ running=false; cancelAnimationFrame(raf); }
+    }, {threshold:0});
+    io.observe(cv);
+  }
+})();
+</script>
 
 <!-- ═══════════════════════
   18. UX LOGIC INTRO

@@ -132,7 +132,7 @@
     }
     .sd-pink { color: #ff076a; }
     .sd-sensing-scene {
-      height: 1800vh;
+      height: 800vh;
       position: relative;
       background: #fff;
       padding: 0;
@@ -157,6 +157,18 @@
         opacity .76s cubic-bezier(.22, 1, .36, 1),
         transform .86s cubic-bezier(.22, 1, .36, 1);
       will-change: opacity, transform;
+    }
+    .sd-sensing-primary {
+      transition:
+        opacity 1s ease,
+        transform .86s cubic-bezier(.22, 1, .36, 1);
+    }
+    @keyframes sdSensingIntroDissolve {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .sd-sensing-primary {
+      animation: sdSensingIntroDissolve 1s ease both;
     }
     .sd-sensing-detail {
       opacity: 0;
@@ -536,7 +548,7 @@
       transform: translateY(-50%) translateX(32px);
       display: block;
       opacity: 0;
-      font-size: 90pt;
+      font-size: clamp(56px, 6.1vw, 120px);
       line-height: 1.05;
       font-weight: 700;
       letter-spacing: -0.05em;
@@ -568,6 +580,11 @@
       transform: translateY(-50%) translateX(0);
       transition-delay: .16s;
     }
+    /* final: slide the whole person + "Input Logic" group to screen center */
+    .sd-walk-scene.is-pre-final .sd-walk-row {
+      transform: translateX(clamp(200px, 17vw, 340px));
+    }
+    .sd-walk-row { transition: transform .9s cubic-bezier(.22, 1, .36, 1); }
     @media (max-width: 900px) {
       .sd-walk-content { gap: 92px; }
       .sd-walk-row {
@@ -628,6 +645,9 @@
       line-height: 1.5;
       letter-spacing: -0.03em;
       margin-top: clamp(42px, 4.8vw, 86px);
+    }
+    .sd-input-summary > p {
+      margin-top: clamp(112px, 7vw, 150px);
     }
     .sd-card-list {
       display: grid;
@@ -718,6 +738,11 @@
       color: #C4CCD7;
       letter-spacing: -0.02em;
     }
+    .input-hero-scroll {
+      position: relative;
+      height: 150vh;
+      margin-top: clamp(640px, 75vh, 1120px);
+    }
     .sd-summary-hero {
       width: 100%;
       height: 100vh;
@@ -730,6 +755,17 @@
       text-align: center;
       gap: clamp(12px, 1.6vw, 22px);
       overflow: hidden;
+      position: sticky;
+      top: 0;
+    }
+    .sd-summary-hero.sd-summary-dissolve {
+      opacity: 0;
+      transform: none;
+      transition: opacity 1s ease;
+    }
+    .sd-summary-hero.sd-summary-dissolve.vis {
+      opacity: 1;
+      transform: none;
     }
     .sd-summary-hero-label {
       color: rgba(255,255,255,.5);
@@ -767,6 +803,9 @@
       position: relative;
       background: #fff;
     }
+    .sd-flow-fadein { opacity: 0; transform: translateY(28px); transition: opacity .85s ease, transform .85s ease; }
+    .sd-flow-fadein.vis { opacity: 1; transform: none; }
+    .sd-flow-reveal-mark { position: absolute; top: 35vh; left: 0; width: 1px; height: 1px; pointer-events: none; }
     .sd-flow-panel {
       --sd-flow-scale: 1;
       --flow-blur: 0px;
@@ -1529,15 +1568,18 @@
   </div>
 </section>
 
-<section class="sd-summary-hero">
+<div class="input-hero-scroll">
+<section class="sd-summary-hero sd-summary-dissolve" id="inputHeroSec">
   <p class="sd-summary-hero-label fi d1">Input Logic</p>
   <div class="sd-summary-hero-body">
     <h2 class="fi dd2">액티브 레이어를 여는 첫 단추</h2>
     <p class="fi dd3">목적이 시작되는 이 순간은 액티브 레이어라는 거대한 시공간적 바운더리가 열리는 시점입니다. 이제 사용자의 목적은 A2A 연산 형태로 변환되며 본격적인 연산이 시작되죠.</p>
   </div>
 </section>
+</div>
 
-<section class="sd-flow-scroll fi">
+<section class="sd-flow-scroll sd-flow-fadein" id="flowScrollSec">
+<div class="sd-flow-reveal-mark" aria-hidden="true"></div>
 <div class="sd-flow-panel">
   <div class="sd-flow-canvas">
     <div class="sd-flow-side">
@@ -1580,6 +1622,29 @@
     </div>
   </div>
 </section>
+
+<script>
+(() => {
+  const sec = document.getElementById('flowScrollSec');
+  if (!sec) return;
+  const mark = sec.querySelector('.sd-flow-reveal-mark');
+  const io = new IntersectionObserver((es) => {
+    if (es[0].isIntersecting) { sec.classList.add('vis'); io.disconnect(); }
+  }, { rootMargin: '-42% 0px -42% 0px', threshold: 0 });
+  io.observe(mark);
+})();
+</script>
+
+<script>
+(() => {
+  const hero = document.getElementById('inputHeroSec');
+  if (!hero) return;
+  const io = new IntersectionObserver((es) => {
+    if (es[0].isIntersecting) { hero.classList.add('vis'); io.disconnect(); }
+  }, { rootMargin: '0px 0px -90% 0px', threshold: 0 });
+  io.observe(hero);
+})();
+</script>
 
 <section class="sd-section sd-pause-logic-standalone fi">
   <div class="sd-pause-logic-row">

@@ -410,7 +410,7 @@
       display: flex;
       gap: clamp(24px, 2.4vw, 44px);
       align-items: stretch;
-      margin-top: clamp(56px, 6vw, 108px);
+      margin-top: clamp(132px, 11vw, 220px);
     }
     .sec-detail.mapping-photo .principle-card {
       min-height: clamp(210px, 17vw, 300px);
@@ -476,11 +476,21 @@
       white-space: nowrap;
     }
 
+    .ai-sphere-scroll {
+      position: relative;
+      height: 108vh;
+      margin-top: clamp(360px, 62vh, 820px);
+    }
     .sec-ai-figma-summary {
       background: #0E1825;
       width: 100%;
       padding: clamp(56px, 8vw, 116px) var(--edge-padding);
+      position: sticky;
+      top: 0;
+      min-height: 100vh;
     }
+    .sec-ai-figma-summary.sec-dissolve { opacity: 0; transition: opacity 1s ease; }
+    .sec-ai-figma-summary.sec-dissolve.vis { opacity: 1; }
     .ai-sphere { width: 100%; height: clamp(300px, 38vw, 520px); margin-bottom: clamp(36px, 4.5vw, 64px); }
     .ai-sphere canvas { display: block; width: 100%; height: 100%; }
     .sec-ai-figma-summary .ai-figma-label,
@@ -492,7 +502,12 @@
     .ai-figma-p { width: min(839px, 48vw); font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; }
 
     /* ── 9. FEATURE CARDS (text-only) ── */
-    .sec-3cards { background: #fff; width: 100%; padding: clamp(56px, 8vw, 116px) var(--edge-padding); }
+    .sec-3cards {
+      background: #fff;
+      width: 100%;
+      margin-top: 0;
+      padding: clamp(28px, 3.6vw, 60px) var(--edge-padding) clamp(56px, 8vw, 116px);
+    }
     .cards-row { display: flex; gap: clamp(16px, 1.8vw, 32px); min-height: 0; }
     .feat-card {
       flex: 1; background: #F4F8FC; border-radius: 32px;
@@ -975,7 +990,8 @@
 </section>
 
 <!-- ══ 8-1. SKEEP AI™ SUMMARY ══ -->
-<section class="sec-ai-figma-summary fi">
+<div class="ai-sphere-scroll">
+<section class="sec-ai-figma-summary sec-dissolve" id="aiSphereSec">
   <div class="ai-sphere"><canvas id="aiSphereCanvas"></canvas></div>
   <p class="ai-figma-label">Skeep AI™</p>
   <div class="ai-figma-row">
@@ -988,6 +1004,7 @@
     </p>
   </div>
 </section>
+</div>
 
 <script>
 /* Skeep AI™ dot-sphere: gather → rotate → zoom into red core */
@@ -1356,6 +1373,15 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
   }, { threshold: 0.07 });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // delayed dissolve for the dot-sphere section (reveal when centered)
+  const aiSphereSec = document.getElementById('aiSphereSec');
+  if (aiSphereSec) {
+    const io2 = new IntersectionObserver((es) => {
+      if (es[0].isIntersecting) { aiSphereSec.classList.add('vis'); io2.disconnect(); }
+    }, { rootMargin: '0px 0px -90% 0px', threshold: 0 });
+    io2.observe(aiSphereSec);
+  }
 
   const keeponTitle = document.getElementById('keeponTitle');
   if (keeponTitle) {
