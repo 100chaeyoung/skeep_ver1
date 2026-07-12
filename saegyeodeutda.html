@@ -437,19 +437,23 @@
       width: min(calc(100% - 180px), 1800px);
       height: 460px;
       position: relative;
-      gap: clamp(42px, 4vw, 92px);
-      padding-inline: clamp(52px, 7vw, 132px);
+      gap: clamp(24px, 2.7vw, 56px);
+      padding-inline: clamp(24px, 3vw, 56px);
       box-sizing: border-box;
+      isolation: isolate;
     }
     .sd-walk-person {
-      flex: 1 1 0;
-      width: 0;
+      flex: 0 1 clamp(145px, 9.5vw, 195px);
+      width: clamp(145px, 9.5vw, 195px);
       min-width: 0;
       height: 100%;
       object-fit: contain;
       object-position: bottom center;
+      overflow: visible;
       display: block;
-      filter: grayscale(1);
+      position: relative;
+      z-index: 2;
+      filter: grayscale(1) sepia(.14) hue-rotate(164deg) saturate(.72) brightness(.93) contrast(.94);
       opacity: 1;
       transition:
         filter 0.55s ease,
@@ -494,15 +498,19 @@
     }
     .sd-walk-shadow {
       position: absolute;
-      bottom: 0;
-      width: 284px;
-      height: 46px;
+      bottom: -20px;
+      width: 218px;
+      height: 34px;
+      z-index: 1;
       mix-blend-mode: multiply;
       pointer-events: none;
       transition: left 0.35s ease, opacity .55s ease;
       transform: translateX(-50%);
     }
     .sd-walk-scene.is-final .sd-walk-shadow {
+      opacity: 0;
+    }
+    .sd-walk-scene.is-pre-final .sd-walk-shadow {
       opacity: 0;
     }
     .sd-walk-caption {
@@ -522,6 +530,7 @@
       left: calc(50% - clamp(120px, 12vw, 260px));
       top: 50%;
       transform: translateY(-50%) translateX(32px);
+      display: none;
       opacity: 0;
       font-size: clamp(64px, 7.2vw, 128px);
       line-height: 1.05;
@@ -564,8 +573,12 @@
       .sd-walk-row {
         width: min(calc(100% - 56px), 1200px);
         height: 360px;
-        gap: 22px;
-        padding-inline: 28px;
+        gap: 12px;
+        padding-inline: 14px;
+      }
+      .sd-walk-person {
+        flex-basis: clamp(72px, 11.5vw, 104px);
+        width: clamp(72px, 11.5vw, 104px);
       }
       .sd-walk-scene.is-final .sd-walk-person.is-walk-final-person {
         left: calc(50% - clamp(150px, 24vw, 230px));
@@ -1390,13 +1403,13 @@
     <div class="sd-walk-content">
       <div class="sd-walk-row">
         <img class="sd-walk-shadow" id="walk-shadow" src="assets/walk-shadow.svg" alt="">
-        <img class="sd-walk-person is-walk-final-person" src="assets/walk-person-1.png" alt="">
-        <img class="sd-walk-person" src="assets/walk-person-2.png" alt="">
-        <img class="sd-walk-person" src="assets/walk-person-3.png" alt="">
-        <img class="sd-walk-person" src="assets/walk-person-4.png" alt="">
-        <img class="sd-walk-person" src="assets/walk-person-5.png" alt="">
-        <img class="sd-walk-person" src="assets/walk-person-6.png" alt="">
-        <img class="sd-walk-person" src="assets/walk-person-7.png" alt="">
+        <img class="sd-walk-person is-walk-final-person" data-foot-x="0.554" src="assets/walk-person-1.png" alt="">
+        <img class="sd-walk-person" data-foot-x="0.489" src="assets/walk-person-2.png" alt="">
+        <img class="sd-walk-person" data-foot-x="0.474" src="assets/walk-person-3.png" alt="">
+        <img class="sd-walk-person" data-foot-x="0.494" src="assets/walk-person-4.png" alt="">
+        <img class="sd-walk-person" data-foot-x="0.407" src="assets/walk-person-5.png" alt="">
+        <img class="sd-walk-person" data-foot-x="0.506" src="assets/walk-person-6-heel-fixed.png" alt="">
+        <img class="sd-walk-person" data-foot-x="0.507" src="assets/walk-person-7.png" alt="">
         <div class="sd-walk-final-title" aria-hidden="true">Input Logic</div>
       </div>
       <div class="sd-walk-caption">
@@ -1901,15 +1914,18 @@
     function applyActive(idx) {
       persons.forEach((p, i) => {
         const on = (i === idx);
-        p.style.filter    = on ? 'grayscale(0)' : 'grayscale(1)';
+        p.style.filter    = on
+          ? 'grayscale(0)'
+          : 'grayscale(1) sepia(.14) hue-rotate(164deg) saturate(.72) brightness(.93) contrast(.94)';
         p.style.transform = on ? 'scale(1.04)'  : 'scale(1)';
       });
-      // 그림자를 활성 인물 중앙 발밑으로 이동
+      // PNG 캔버스 중앙이 아니라 실제 인물의 발 중심으로 그림자를 이동한다.
       if (shadow) {
         const row = scene.querySelector('.sd-walk-row');
         const rowRect = row.getBoundingClientRect();
         const personRect = persons[idx].getBoundingClientRect();
-        shadow.style.left = (personRect.left - rowRect.left + personRect.width / 2) + 'px';
+        const footX = Number(persons[idx].dataset.footX || .5);
+        shadow.style.left = (personRect.left - rowRect.left + personRect.width * footX) + 'px';
       }
     }
     applyActive(current);
@@ -1932,71 +1948,13 @@
         finalMoveStarted = false;
         return;
       }
-      const startRect = finalPerson.getBoundingClientRect();
-      // Use the image's own intrinsic aspect ratio, not the rendered flex
-      // box's ratio (which is letterboxed by object-fit:contain inside the
-      // fixed-height row and has nothing to do with the actual artwork's
-      // proportions). Using the box ratio made the walk-in shrink to roughly
-      // 2x the correct height, so the CSS height:auto handoff at the end had
-      // to visibly snap back down to the right size.
-      const aspect = (finalPerson.naturalHeight && finalPerson.naturalWidth)
-        ? finalPerson.naturalHeight / finalPerson.naturalWidth
-        : startRect.height / startRect.width;
-      const vw = window.innerWidth;
-      const targetWidth = vw <= 900
-        ? Math.min(104, Math.max(74, vw * 0.10))
-        : Math.min(148, Math.max(92, vw * 0.072));
-      const targetOffset = vw <= 900
-        ? Math.min(230, Math.max(150, vw * 0.24))
-        : Math.min(440, Math.max(300, vw * 0.21));
-      const targetHeight = targetWidth * aspect;
-      const targetCenterX = window.innerWidth / 2 - targetOffset;
-      const targetCenterY = window.innerHeight / 2;
-
-      finalPerson.style.position = 'fixed';
-      finalPerson.style.left = startRect.left + 'px';
-      finalPerson.style.top = startRect.top + 'px';
-      finalPerson.style.width = startRect.width + 'px';
-      finalPerson.style.height = startRect.height + 'px';
-      finalPerson.style.zIndex = '20';
-      finalPerson.style.transform = 'none';
-      finalPerson.style.transformOrigin = 'center center';
-      finalPerson.style.transition = 'left 1.05s cubic-bezier(.22, 1, .36, 1), top 1.05s cubic-bezier(.22, 1, .36, 1), width 1.05s cubic-bezier(.22, 1, .36, 1), height 1.05s cubic-bezier(.22, 1, .36, 1), filter .45s ease';
-      finalPerson.getBoundingClientRect();
-
-      finalTimer = window.setTimeout(() => {
-        scene.classList.add('is-pre-final');
-        if (shadow) shadow.style.opacity = '0';
-
-        window.setTimeout(() => {
-          scene.classList.add('is-final-moving');
-          requestAnimationFrame(() => {
-            finalPerson.style.left = (targetCenterX - targetWidth / 2) + 'px';
-            finalPerson.style.top = (targetCenterY - targetHeight / 2) + 'px';
-            finalPerson.style.width = targetWidth + 'px';
-            finalPerson.style.height = targetHeight + 'px';
-          });
-        }, 140);
-
-        window.setTimeout(() => {
-          scene.classList.add('is-final');
-          requestAnimationFrame(() => {
-            finalPerson.style.position = '';
-            finalPerson.style.left = '';
-            finalPerson.style.top = '';
-            finalPerson.style.width = '';
-            finalPerson.style.height = '';
-            finalPerson.style.zIndex = '';
-            finalPerson.style.transform = '';
-            finalPerson.style.transformOrigin = '';
-            finalPerson.style.transition = '';
-          });
-        }, 1300);
-      }, 90);
+      scene.classList.add('is-pre-final');
+      if (shadow) shadow.style.opacity = '0';
+      finalPerson.style.transform = 'scale(1.04)';
       window.setTimeout(() => {
         walkComplete = true;
         stepping = false;
-      }, 1500);
+      }, 260);
     }
 
     function advanceStep() {
