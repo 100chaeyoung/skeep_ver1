@@ -66,6 +66,12 @@
       inset: 0;
       z-index: 0;
       overflow: hidden;
+      /* fill the viewport responsively (cover) with a matching grey fallback */
+      background-color: #b9bec3;
+      background-image: url("assets/sensing-hero-people-3.png");
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
     }
     .sd-hero-bg video {
       position: absolute;
@@ -84,7 +90,7 @@
     .sd-hero-dim {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.80);
+      background: rgba(0, 0, 0, 0.42);
       z-index: 1;
     }
     .sd-hero h1 {
@@ -163,12 +169,8 @@
         opacity 1s ease,
         transform .86s cubic-bezier(.22, 1, .36, 1);
     }
-    @keyframes sdSensingIntroDissolve {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
     .sd-sensing-primary {
-      animation: sdSensingIntroDissolve 1s ease both;
+      opacity: 0;   /* revealed with a fade once the section scrolls into view (JS) */
     }
     .sd-sensing-detail {
       opacity: 0;
@@ -454,6 +456,55 @@
       box-sizing: border-box;
       isolation: isolate;
     }
+    /* full-bleed band behind the people; becomes a rounded blue card at the Input Logic step */
+    .sd-walk-box {
+      position: absolute;
+      z-index: 0;
+      left: 50%;
+      bottom: -18%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 92%;
+      background: #FFF3D1;
+      border-radius: 0;
+      pointer-events: none;
+      transition: background .7s ease,
+        width .85s cubic-bezier(.22, 1, .36, 1),
+        height .85s cubic-bezier(.22, 1, .36, 1),
+        bottom .85s cubic-bezier(.22, 1, .36, 1),
+        left .85s cubic-bezier(.22, 1, .36, 1),
+        border-radius .85s cubic-bezier(.22, 1, .36, 1),
+        transform .85s cubic-bezier(.22, 1, .36, 1);
+    }
+    /* pink gradient sits on a crossfading ::after layer so the yellow→pink change
+       eases in (CSS can't transition a gradient background directly) */
+    .sd-walk-box::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #FF0B6C 0%, #FF61A0 100%);
+      opacity: 0;
+      transition: opacity .8s ease;
+      pointer-events: none;
+    }
+    .sd-walk-scene.is-pre-final .sd-walk-box::after,
+    .sd-walk-scene.is-final .sd-walk-box::after {
+      opacity: 1;
+      transition-delay: .6s;
+    }
+    /* the row is slid right by translateX in .is-pre-final; center the box on the
+       person + "Input Logic" group (which sits left-of-row-center) so it wraps them */
+    .sd-walk-scene.is-pre-final .sd-walk-box,
+    .sd-walk-scene.is-final .sd-walk-box {
+      width: min(900px, 63vw);
+      height: clamp(320px, 44vh, 460px);
+      bottom: calc(50% - 95px);
+      left: calc(50% - clamp(220px, 17.2vw, 340px));
+      border-radius: clamp(24px, 2.5vw, 40px);
+      transform: translate(-50%, 50%);
+      transition-delay: .6s;
+    }
     .sd-walk-person {
       flex: 0 1 clamp(145px, 9.5vw, 195px);
       width: clamp(145px, 9.5vw, 195px);
@@ -490,7 +541,6 @@
     .sd-walk-scene.is-pre-final .sd-walk-person:not(.is-walk-final-person) {
       opacity: 0;
       transform: scale(.98);
-      transition: opacity .22s ease, transform .22s ease;
       pointer-events: none;
     }
     .sd-walk-scene.is-final .sd-walk-person:not(.is-walk-final-person) {
@@ -544,15 +594,15 @@
     .sd-walk-final-title {
       position: absolute;
       left: calc(50% - clamp(460px, 23vw, 640px));
-      top: calc(50% + 64px);
+      top: calc(50% + 80px);
       transform: translateY(-50%) translateX(32px);
       display: block;
       opacity: 0;
       font-size: clamp(56px, 6.1vw, 120px);
       line-height: 1.05;
-      font-weight: 700;
+      font-weight: 500;
       letter-spacing: -0.05em;
-      color: #000;
+      color: #fff;
       white-space: nowrap;
       pointer-events: none;
       transition: opacity .85s ease, transform .85s cubic-bezier(.22, 1, .36, 1);
@@ -573,16 +623,16 @@
       opacity: 0;
       transform: scale(.98);
       pointer-events: none;
-      transition: opacity .24s ease, transform .24s ease;
     }
     .sd-walk-scene.is-pre-final .sd-walk-final-title {
       opacity: 1;
       transform: translateY(-50%) translateX(0);
-      transition-delay: .16s;
+      transition-delay: .7s;
     }
     /* final: slide the whole person + "Input Logic" group to screen center */
     .sd-walk-scene.is-pre-final .sd-walk-row {
       transform: translateX(clamp(200px, 17vw, 340px));
+      transition-delay: .6s;
     }
     .sd-walk-row { transition: transform .9s cubic-bezier(.22, 1, .36, 1); }
     @media (max-width: 900px) {
@@ -690,7 +740,7 @@
       pointer-events: none;
       background:
         linear-gradient(180deg, rgba(14, 24, 37, .76) 0%, rgba(14, 24, 37, .64) 42%, rgba(14, 24, 37, .88) 100%),
-        radial-gradient(ellipse at 34% 88%, rgba(255, 7, 106, .62) 0%, rgba(255, 7, 106, .30) 35%, rgba(255, 7, 106, 0) 76%);
+        radial-gradient(ellipse at 34% 88%, rgba(0, 0, 0, .62) 0%, rgba(0, 0, 0, .30) 35%, rgba(0, 0, 0, 0) 76%);
     }
     .sd-card-glow {
       position: absolute;
@@ -716,7 +766,7 @@
     }
     .sd-card-text h3 {
       margin: 0;
-      font-size: clamp(22px,3.2vw,60px);
+      font-size: clamp(20px,2.85vw,52px);
       line-height: 1.3;
       font-weight: 600;
       letter-spacing: -0.03em;
@@ -724,7 +774,7 @@
     }
     .sd-card-text h3 span {
       display: block;
-      font-size: clamp(13px,1.6vw,28px);
+      font-size: clamp(12px,1.4vw,24px);
       font-weight: 500;
       color: #D0D7E0;
       letter-spacing: -0.02em;
@@ -732,7 +782,7 @@
     }
     .sd-card-text p {
       margin: 0;
-      font-size: clamp(13px,1.4vw,24px);
+      font-size: clamp(12px,1.25vw,21px);
       line-height: 1.5;
       font-weight: 500;
       color: #C4CCD7;
@@ -816,13 +866,12 @@
       --flow-active-opacity: 1;
       --flow-pause-blur: 0px;
       --flow-pause-in-blur: 12px;
-      width: min(calc(100% - 80px), 1760px);
-      height: calc(439px * var(--sd-flow-scale));
+      width: min(calc(100% - 80px), 1480px);
+      height: calc(336px * var(--sd-flow-scale));
       margin: 0 auto;
       border-radius: 32px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 127.56%),
-        #EBF0F5;
+      background: #0E1825;
+      transition: background .8s ease;
       position: sticky;
       top: 50%;
       transform: translateY(-50%);
@@ -833,12 +882,12 @@
       left: 0;
       top: 0;
       width: 1760px;
-      height: 439px;
+      height: 336px;
       transform: scale(var(--sd-flow-scale));
       transform-origin: top left;
       opacity: var(--flow-active-opacity);
       filter: blur(var(--flow-pause-blur));
-      transition: opacity 1s ease, filter 1s ease;
+      transition: opacity .28s ease, filter .28s ease;
       z-index: 1;
     }
     .sd-flow-side,
@@ -848,7 +897,7 @@
       filter: grayscale(var(--flow-break)) blur(var(--flow-blur)) contrast(calc(1 + var(--flow-break) * .35));
       opacity: var(--flow-opacity);
       will-change: filter, opacity;
-      transition: filter 1s ease, opacity 1s ease;
+      transition: filter .28s ease, opacity .28s ease;
     }
     .sd-flow-panel::after {
       content: "";
@@ -865,10 +914,12 @@
       transition: opacity 1s ease;
     }
     .sd-flow-panel.is-flow-blurred {
-      --flow-blur: 26px;
-      --flow-opacity: .82;
+      --flow-blur: 90px;
+      --flow-opacity: .25;
       --flow-break: 1;
       --flow-overlay: .92;
+      --flow-active-opacity: 0;
+      --flow-pause-blur: 48px;
     }
     .sd-flow-panel.is-paused {
       --flow-pause: 1;
@@ -882,7 +933,7 @@
       left: 0;
       top: 0;
       width: 1760px;
-      height: 439px;
+      height: 336px;
       z-index: 3;
       pointer-events: none;
       transform: scale(var(--sd-flow-scale));
@@ -955,9 +1006,9 @@
       transition: opacity .35s ease;
     }
     .sd-flow-time-card {
-      width: 1300px;
+      width: 1180px;
       height: 240px;
-      border-radius: 32px;
+      border-radius: 44px;
       background: #EBF0F5;
       display: flex;
       align-items: center;
@@ -1031,13 +1082,18 @@
     }
     .sd-pause-logic-standalone {
       background: #fff;
+      padding-top: clamp(40px, 5vw, 72px);
+      padding-bottom: clamp(24px, 3vw, 44px);
     }
     .sd-pause-logic-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: clamp(48px, 8vw, 160px);
-      min-height: clamp(240px, 26vw, 380px);
+      min-height: clamp(180px, 18vw, 260px);
+    }
+    .sd-summary-section {
+      padding-top: clamp(24px, 3.5vw, 52px);
     }
     .sd-pause-logic-en {
       font-size: clamp(48px, 5.6vw, 60pt);
@@ -1117,67 +1173,66 @@
       font-size: 40px;
       line-height: 1.2;
       letter-spacing: -0.03em;
-      margin: 0 0 73px;
+      margin: 0 0 26px;
       font-weight: 700;
+      color: #fff;
     }
     .sd-flow-side p {
       font-size: 20px;
       line-height: 1.5;
       letter-spacing: -0.03em;
       margin: 0;
-      font-weight: 500;
+      font-weight: 400;
+      color: #fff;
     }
     .sd-flow-cards {
       position: absolute;
       left: 356px;
       top: 33.75px;
-      width: 1345px;
+      width: 1362px;
       height: 322px;
+      display: flex;
+      gap: 25px;
     }
     .sd-flow-card {
-      flex: 0 0 232.316px;
-      width: 232.316px;
+      flex: 0 0 250px;
+      width: 250px;
       height: 249.916px;
       border-radius: 24.64px;
-      background: rgba(245,250,254,.72);
       padding: 35.825px 28.66px;
       display: flex;
       flex-direction: column;
       gap: 17.913px;
-      will-change: filter, opacity;
-    }
-    .sd-flow-card.active {
-      background: linear-gradient(180deg, #ff0b6c 0%, #ff61a0 100%);
       color: #fff;
-    }
-    .sd-flow-card.step2 { background: #e2e8ef; }
-    .sd-flow-card.step3 { background: #d8dee6; }
-    .sd-flow-card.step4 { background: #d0d7e0; }
-    .sd-flow-card.step5 { background: #c4ccd7; }
-    .sd-flow-card {
       position: relative;
       z-index: 1;
+      will-change: filter, opacity;
     }
+    .sd-flow-card.c1 { background: rgba(255,255,255,.10); }
+    .sd-flow-card.c2 { background: rgba(255,255,255,.15); }
+    .sd-flow-card.c3 { background: rgba(255,255,255,.20); }
+    .sd-flow-card.c4 { background: rgba(255,255,255,.25); }
+    .sd-flow-card.c5 { background: rgba(255,255,255,.30); }
     .sd-flow-card h4 {
       font-size: 36px;
       line-height: 1.2;
       letter-spacing: -0.04em;
-      font-weight: 700;
-      margin: 0;
-    }
-    .sd-flow-card:not(.active) h4 {
       font-weight: 600;
+      margin: 0;
+      color: #fff;
       opacity: .6;
     }
+    .sd-flow-card.c1 h4 { font-weight: 700; }
     .sd-flow-card span {
       font-family: 'Bebas Neue', 'Arial Narrow', 'Pretendard', sans-serif;
       font-weight: 400;
       font-size: 36px;
       line-height: .96;
-      opacity: .55;
       letter-spacing: -0.04em;
+      color: #fff;
+      opacity: .2;
     }
-    .sd-flow-card:not(.active) span { opacity: .2; }
+    .sd-flow-card.c1 span { color: #b5babf; opacity: .56; }
 
     /* ── flow card grouping (목적 연산/달성 구간) ── */
     .sd-flow-cards.grouped {
@@ -1245,15 +1300,16 @@
       color: rgba(0,0,0,.5);
     }
     .sd-summary-video-band {
-      width: 100%;
-      height: clamp(300px, 34vw, 440px);
+      width: min(100%, 520px);
+      height: auto;
+      aspect-ratio: 1 / 1;
       background: #FFE8F5;
       border-radius: clamp(24px, 2.4vw, 40px);
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: clamp(32px, 4vw, 64px);
+      margin: 0 auto clamp(32px, 4vw, 64px);
     }
     .sd-summary-video {
       flex: 0 0 auto;
@@ -1264,19 +1320,22 @@
     .sd-summary-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
     .sd-summary-copy {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: clamp(40px, 6vw, 110px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(18px, 2.2vw, 32px);
+      text-align: center;
       color: #000;
     }
-    .sd-summary-copy h2 { flex: 0 0 auto; }
-    .sd-summary-copy p { flex: 0 1 auto; }
+    .sd-summary-copy h2,
+    .sd-summary-copy p { width: 100%; }
     .sd-summary-copy h2 {
-      font-size: clamp(30px,3.6vw,58px);
+      font-size: clamp(16px,3.6vw,58px);
       line-height: 1.35;
       letter-spacing: -0.04em;
       font-weight: 600;
       margin: 0;
+      white-space: nowrap;
     }
     .sd-summary-copy h2 span {
       color: #ff076a;
@@ -1302,9 +1361,7 @@
       min-width: 0;
       height: clamp(180px, 16vw, 250px);
       border-radius: 28px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 127.56%),
-        #EBF0F5;
+      background: #F4F8FC;
       padding: clamp(30px, 3.2vw, 48px) clamp(28px, 3vw, 48px) clamp(26px, 2.6vw, 40px);
       display: flex;
       flex-direction: column;
@@ -1356,9 +1413,7 @@
         flex-basis: auto;
         flex-direction: column;
       }
-      .sd-summary-video-band {
-        height: clamp(220px, 54vw, 340px);
-      }
+      .sd-summary-video-band { width: min(100%, 440px); }
       .sd-summary-copy {
         flex-direction: column;
         gap: clamp(14px, 3vw, 22px);
@@ -1444,12 +1499,7 @@
 <body>
 
 <section class="sd-hero">
-  <div class="sd-hero-bg">
-    <video src="assets/hero-scene-1.mp4" autoplay muted playsinline class="active"></video>
-    <video src="assets/hero-scene-2.mp4" muted playsinline></video>
-    <video src="assets/hero-scene-4.mp4" muted playsinline></video>
-    <video src="assets/hero-scene-5.mp4" muted playsinline></video>
-  </div>
+  <div class="sd-hero-bg"></div>
   <div class="sd-hero-dim"></div>
   <h1>어떤 형태의 의도든 완벽하게<br>항상 준비되어 있으니까</h1>
 </section>
@@ -1467,7 +1517,7 @@
 <section class="sd-sensing-scene" id="sensing-scene-scroll">
   <div class="sd-sensing-sticky">
     <div class="sd-sensing-layer sd-sensing-primary">
-      <img class="sd-compass" src="assets/sensing-compass-new.png" alt="탐지를 상징하는 나침반 모티프">
+      <img class="sd-compass" src="assets/sensing-compass-v3.png" alt="탐지를 상징하는 나침반 모티프">
       <div class="sd-sensing-text">
         <h2 class="sd-sensing-title">Sensing Logic</h2>
         <p class="sd-caption-scroll">24시간 조용히 찰나를 준비하는 일<br>당신이 경험하는 모든 시간이 곧 스킵의 시간</p>
@@ -1481,13 +1531,13 @@
     <div class="sd-sensing-layer sd-sensing-detail">
       <div class="sd-two-col">
         <div class="sd-orbit-visual">
-          <img class="sd-orbit-radar" src="assets/sensing-radar-new.png" alt="발견을 상징하는 레이더 모티프">
-          <img class="sd-orbit-main-clock" src="assets/sensing-clock-new.png" alt="24시간 센싱을 상징하는 시계 모티프">
+          <img class="sd-orbit-radar" src="assets/sensing-radar-v3.png" alt="발견을 상징하는 레이더 모티프">
+          <img class="sd-orbit-main-clock" src="assets/sensing-clock-v3.png" alt="24시간 센싱을 상징하는 시계 모티프">
           <div class="sd-orbit-trail" aria-hidden="true">
-            <img src="assets/sensing-clock-new.png" alt="">
-            <img src="assets/sensing-clock-new.png" alt="">
-            <img src="assets/sensing-clock-new.png" alt="">
-            <img src="assets/sensing-clock-new.png" alt="">
+            <img src="assets/sensing-clock-v3.png" alt="">
+            <img src="assets/sensing-clock-v3.png" alt="">
+            <img src="assets/sensing-clock-v3.png" alt="">
+            <img src="assets/sensing-clock-v3.png" alt="">
           </div>
         </div>
         <div class="sd-text-right">
@@ -1511,6 +1561,7 @@
   <div class="sd-walk-sticky">
     <div class="sd-walk-content">
       <div class="sd-walk-row">
+        <div class="sd-walk-box" aria-hidden="true"></div>
         <img class="sd-walk-shadow" id="walk-shadow" src="assets/walk-shadow.svg" alt="">
         <img class="sd-walk-person is-walk-final-person" data-foot-x="0.554" src="assets/walk-person-1.png" alt="">
         <img class="sd-walk-person" data-foot-x="0.489" src="assets/walk-person-2.png" alt="">
@@ -1587,22 +1638,12 @@
       <h3>사용자<br>목적 구간</h3>
       <p>사용자의 목적이 최초로 발생한 시점부터 달성되는 시점까지의 시공간적 바운더리</p>
     </div>
-    <div class="sd-flow-cards grouped">
-      <div class="sd-flow-group">
-        <div class="sd-flow-group-row">
-          <div class="sd-flow-card active"><h4>사용자<br>목적 전달</h4><span>User Input</span></div>
-          <div class="sd-flow-card step2"><h4>의도<br>구조화</h4><span>Parsing</span></div>
-          <div class="sd-flow-card step3"><h4>실행 블록<br>생성</h4><span>Mapping</span></div>
-        </div>
-        <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 연산 구간</span></div>
-      </div>
-      <div class="sd-flow-group strong">
-        <div class="sd-flow-group-row">
-          <div class="sd-flow-card step4"><h4>실행 블록<br>처리</h4><span>Execution</span></div>
-          <div class="sd-flow-card step5"><h4>종료 및<br>개인화</h4><span>Feedback</span></div>
-        </div>
-        <div class="sd-flow-caption"><span class="bracket"></span><span class="sd-flow-caption-text">목적 달성 구간</span></div>
-      </div>
+    <div class="sd-flow-cards">
+      <div class="sd-flow-card c1"><h4>사용자<br>목적 전달</h4><span>User Input</span></div>
+      <div class="sd-flow-card c2"><h4>의도<br>구조화</h4><span>Parsing</span></div>
+      <div class="sd-flow-card c3"><h4>실행 블록<br>생성</h4><span>Mapping</span></div>
+      <div class="sd-flow-card c4"><h4>실행 블록<br>처리</h4><span>Execution</span></div>
+      <div class="sd-flow-card c5"><h4>종료 및<br>개인화</h4><span>Feedback</span></div>
     </div>
   </div>
   <div class="sd-flow-pause-state" aria-hidden="true">
@@ -1622,6 +1663,12 @@
     </div>
   </div>
 </section>
+
+<script>
+  // Refresh should always start at the top, not wherever the user left off.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('load', () => window.scrollTo(0, 0));
+</script>
 
 <script>
 (() => {
@@ -1660,7 +1707,7 @@
     </div>
   </div>
   <div class="sd-summary-copy">
-    <h2>Skip the noise<br>Skeep the <span>pause</span></h2>
+    <h2>Skip the noise Skeep the <span>pause</span></h2>
     <p>완벽한 스킵에게도 때로는 쉴 틈이 필요합니다.<br>명시적인 명령이 있거나 스킵 불가 영역을 마주할 때<br>작동하는 일시중단 로직은 시스템을 완전히 종료하는<br>대신에 목적 단위로 잠시 숨을 고르게 만들죠.</p>
   </div>
   <div class="sd-summary-visuals">
@@ -1987,7 +2034,7 @@
       const progress = total > 0 ? sc / total : 0;
 
       // Phase 1-2: reveal the Korean caption and cards as one smooth group.
-      const firstGroupOn = progress > 0.012 ? 1 : 0;
+      const firstGroupOn = progress > 0.11 ? 1 : 0;
       const p1 = firstGroupOn;
       const titleLarge = responsiveTitleSize(true);
       const titleSmall = responsiveTitleSize(false);
@@ -2033,6 +2080,12 @@
         else autoSettled = false;
       }
       if (nextStage !== sensingVisualStage) setSensingVisualStage(nextStage);
+
+      // Fade the closed form (left compass + big title) in as the section rises
+      // into view — before it pins and expands into the caption + cards.
+      if (sensingVisualStage === 0) {
+        sPrimary.style.opacity = (rect.top < window.innerHeight * 0.55) ? '1' : '0';
+      }
     }
 
     window.addEventListener('scroll', updateSensing, { passive: true });
@@ -2194,19 +2247,18 @@
       panel.dataset.flowState = 'running';
 
       const timers = [
+        // Dissolve the flow out first (blur + fade), then fade the chat bubble in.
+        // No is-paused during the run, so the standalone pause (⏸) never appears.
         window.setTimeout(() => {
           panel.classList.add('is-flow-blurred');
-        }, 0),
-        window.setTimeout(() => {
-          panel.classList.add('is-paused');
-        }, 1000),
+        }, 80),
         window.setTimeout(() => {
           panel.classList.add('is-time-visible');
-        }, 2400),
+        }, 430),
         window.setTimeout(() => {
           panel.dataset.flowState = 'time';
           sequenceTimers.delete(panel);
-        }, 3300),
+        }, 1050),
       ];
       sequenceTimers.set(panel, timers);
     }

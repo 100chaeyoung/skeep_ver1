@@ -4,11 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>스며들다 — Skeep Intelligence System™</title>
+  <script>
+    if (new URLSearchParams(window.location.search).get('embed') === 'morph') {
+      document.documentElement.classList.add('embed-morph');
+    }
+  </script>
   <link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable.css" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-snap-type: y proximity; }
     body {
       --edge-padding: clamp(24px, 8.3vw, 160px);
       background: #fff; color: #0e1825;
@@ -16,6 +21,37 @@
       -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
     p { margin: 0; }
+
+    html.embed-morph,
+    html.embed-morph body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      scroll-behavior: auto;
+      scroll-snap-type: none;
+      background: #E3EBF2;
+    }
+    html.embed-morph body > *:not(.morph-anim-band) {
+      display: none !important;
+    }
+    html.embed-morph body > .morph-anim-band {
+      display: block !important;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+      margin: 0;
+      border-radius: 0;
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      background: transparent;
+      overflow: hidden;
+    }
+    html.embed-morph body > .morph-anim-band canvas {
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      transform: translate(-2px, -2px);
+    }
 
     .sec-parsing-intro, .sec-detail, .pill-btn-wrap, .sec-ai-banner,
     .sec-ai-figma-summary, .sec-3cards, .sec-multilang, .sec-exec-card,
@@ -44,7 +80,7 @@
     }
     .hero-dim {
       position: absolute; inset: 0;
-      background: rgba(0, 0, 0, 0.80);
+      background: linear-gradient(90deg, rgba(14, 24, 37, .60) 0%, rgba(116, 116, 116, .60) 100%);
       z-index: 1;
     }
     .hero-title {
@@ -60,14 +96,41 @@
       padding: 0 var(--edge-padding);
       text-align: center;
     }
+    .keepon-title-scene,
+    .keepon-panel-page {
+      position: relative;
+      height: 190svh;
+    }
+    .keepon-title-sticky,
+    .keepon-panel-sticky {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #fff;
+    }
     .skeep-ai-label { font-size: 40px; font-weight: 700; line-height: 1.5; letter-spacing: -0.04em; }
     .keepon-title {
-      min-height: 100svh;
+      min-height: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4;
       letter-spacing: -0.04em; color: #0e1825; white-space: nowrap;
+    }
+    .keepon-title,
+    .keepon-panel {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .72s ease, transform .82s cubic-bezier(.22,1,.36,1);
+    }
+    .keepon-title-scene.is-entered .keepon-title,
+    .keepon-panel-page.is-entered .keepon-panel {
+      opacity: 1;
+      transform: translateY(0);
     }
     .keepon-cursor {
       color: #ff0b6c; margin-left: 2px; display: inline-block;
@@ -75,11 +138,8 @@
     }
     @keyframes keeponBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
     .keepon-panel-page {
-      min-height: 100svh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: clamp(80px, 9vh, 128px) 0;
+      min-height: 0;
+      padding: 0;
     }
     .keepon-panel {
       width: 100%;
@@ -95,6 +155,15 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
+    }
+    [data-center-reveal] {
+      opacity: 0;
+      transform: translateY(36px) scale(.985);
+      transition: opacity .8s ease, transform .9s cubic-bezier(.22,1,.36,1);
+    }
+    [data-center-reveal].is-centered {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
     .keepon-chain {
       display: flex; flex-direction: row; align-items: center; justify-content: center;
@@ -161,7 +230,11 @@
       background-size: cover;
       background-position: center center;
     }
-    .morph-bg-photo-a { background: #2B3542; opacity: 1; }
+    .morph-bg-photo-a {
+      inset: 0;
+      background: #2B3542 url('assets/morph-logic-background.png') center center / cover no-repeat;
+      opacity: 1;
+    }
     .morph-bg-pink {
       inset: 0;
       background: none;
@@ -223,6 +296,9 @@
       opacity: 0;
       top: 0;
       bottom: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       padding: clamp(24px, 3.6vh, 34px) clamp(48px, 6.25vw, 102px) clamp(34px, 3.2vw, 54px);
     }
     .full-card-title { font-size: clamp(22px,3.45vw,48px); font-weight: 600; line-height: 1.3; letter-spacing: -0.03em; margin-bottom: 18px; }
@@ -255,17 +331,17 @@
       will-change: opacity, transform;
     }
     .logic-card:nth-child(1) {
-      background: #FFF5D9;
+      background: #40B875;
       opacity: var(--logic-item-2-opacity, 0);
       transform: translateY(var(--logic-item-2-y, 56px));
     }
     .logic-card:nth-child(2) {
-      background: #D1ECFF;
+      background: #48B8F5;
       opacity: var(--logic-item-3-opacity, 0);
       transform: translateY(var(--logic-item-3-y, 56px));
     }
     .logic-card:nth-child(3) {
-      background: #F5F5F5;
+      background: #4E5968;
       opacity: var(--logic-item-4-opacity, 0);
       transform: translateY(var(--logic-item-4-y, 56px));
     }
@@ -275,8 +351,9 @@
       letter-spacing: -0.03em; text-transform: uppercase;
     }
     .logic-card-desc { font-size: clamp(12px,1.35vw,22px); font-weight: 500; line-height: 1.5; color: rgba(0,0,0,.55); letter-spacing: -0.03em;}
-    .logic-card-name { font-size: clamp(20px,1.85vw,32px); font-weight: 700; line-height: 1.15; letter-spacing: -0.04em; color: #111b2a; margin-bottom: clamp(10px,.9vw,16px); }
-    .logic-card-sub { font-size: clamp(14px,1.2vw,21px); font-weight: 500; line-height: 1.48; letter-spacing: -0.03em; color: #405062; }
+    .logic-card-num { font-size: clamp(14px,1.2vw,20px); font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: rgba(255,255,255,.75); margin-bottom: clamp(8px,.7vw,14px); }
+    .logic-card-name { font-size: clamp(20px,1.85vw,32px); font-weight: 700; line-height: 1.15; letter-spacing: -0.04em; color: #ffffff; margin-bottom: clamp(30px,3.2vw,56px); }
+    .logic-card-sub { font-size: clamp(14px,1.2vw,21px); font-weight: 500; line-height: 1.48; letter-spacing: -0.03em; color: rgba(255,255,255,.9); }
 
 
     /* ── "Parsing" letter-wave: each letter's own font-weight animates
@@ -378,9 +455,9 @@
     }
     .parsing-detail-video {
       width: 100%;
-      max-width: min(860px, 66vw);
+      max-width: min(820px, 64vw);
       display: block;
-      border-radius: 28px;
+      border-radius: 36px;
       object-fit: cover;
       overflow: hidden;
       margin-left: 0;
@@ -436,14 +513,21 @@
       font-size: clamp(12px, 1.2vw, 19px);
     }
     /* ── PILL BTN ── */
-    .pill-btn-wrap { background: #fff; padding: 0 var(--edge-padding) clamp(56px, 8vw, 84px); }
+    .pill-btn-wrap {
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      padding: 0 var(--edge-padding) clamp(200px, 20vw, 300px);
+      margin-top: clamp(-180px, -8vw, -96px);
+    }
     .pill-detail {
-      display: inline-block; background: #9e9e9e; border-radius: 100px;
+      display: inline-block; background: #000; border-radius: 100px;
       padding: 16px 30px; font-size: 32px; font-weight: 600; line-height: 1.1;
       letter-spacing: -0.04em; color: #fff; cursor: default;
     }
 
     /* ── 8. SKEEP AI™ BANNER ── */
+    .sec-ai-banner.fi { transition: opacity 1.5s ease, transform 1.5s ease; }
     .sec-ai-banner {
       width: min(calc(100% - (var(--edge-padding) * 2)), 1800px);
       min-height: clamp(190px, 25vw, 360px);
@@ -478,20 +562,27 @@
 
     .ai-sphere-scroll {
       position: relative;
-      height: 108vh;
+      height: 180vh;
       margin-top: clamp(360px, 62vh, 820px);
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
     .sec-ai-figma-summary {
-      background: #0E1825;
+      background: linear-gradient(to bottom, #0E1825 0%, #000000 100%);
       width: 100%;
-      padding: clamp(56px, 8vw, 116px) var(--edge-padding);
+      padding: clamp(44px, 6vw, 88px) var(--edge-padding);
       position: sticky;
       top: 0;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
     }
+    .sec-ai-figma-summary .ai-figma-label { margin-top: auto; }
     .sec-ai-figma-summary.sec-dissolve { opacity: 0; transition: opacity 1s ease; }
     .sec-ai-figma-summary.sec-dissolve.vis { opacity: 1; }
-    .ai-sphere { width: 100%; height: clamp(300px, 38vw, 520px); margin-bottom: clamp(36px, 4.5vw, 64px); }
+    .ai-sphere { width: 100%; height: clamp(340px, 54vh, 660px); margin-bottom: 0; flex: 0 0 auto; }
     .ai-sphere canvas { display: block; width: 100%; height: 100%; }
     .sec-ai-figma-summary .ai-figma-label,
     .sec-ai-figma-summary .ai-figma-h,
@@ -506,7 +597,7 @@
       background: #fff;
       width: 100%;
       margin-top: 0;
-      padding: clamp(28px, 3.6vw, 60px) var(--edge-padding) clamp(56px, 8vw, 116px);
+      padding: clamp(86px, 8.5vw, 148px) var(--edge-padding) clamp(132px, 12vw, 216px);
     }
     .cards-row { display: flex; gap: clamp(16px, 1.8vw, 32px); min-height: 0; }
     .feat-card {
@@ -699,17 +790,17 @@
     /* ── 14. 스킵하다 스며들다 BANNER ── */
     .sec-skip-banner {
       background: #d8e8f5 url('assets/smeur-skip-banner-bg.png') center center / cover no-repeat;
-      width: 100%; padding: clamp(84px, 8.5vw, 150px) var(--edge-padding);
+      width: 100%; padding: clamp(52px, 5.5vw, 96px) var(--edge-padding);
+      margin-top: clamp(80px, 10vw, 160px);
       display: flex; align-items: center; justify-content: space-between; gap: 48px;
-      border-top: 1px solid rgba(0,0,0,0.06);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
     .skip-banner-t { font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4; letter-spacing: -0.04em; flex-shrink: 0; }
     .skip-banner-t .dim { color: rgba(0, 0, 0, .5); }
     .skip-banner-desc { font-size: clamp(14px,1.8vw,24px); font-weight: 400; line-height: 1.5; letter-spacing: -0.03em; text-align: right; max-width: 757px; }
 
     /* ── 15. MORPHING DETAIL ── */
-    .sec-morphing-detail { background: #fff; width: 100%; padding: clamp(56px, 8vw, 116px) var(--edge-padding); }
+    .morphing-detail-left.fi { transition: opacity 1.5s ease, transform 1.5s ease; }
+    .sec-morphing-detail { background: #fff; width: 100%; padding: clamp(170px, 17vw, 260px) var(--edge-padding) clamp(56px, 8vw, 116px); }
     .morphing-detail-row { display: flex; align-items: flex-start; justify-content: space-between; gap: clamp(48px, 7vw, 120px); }
     .morphing-detail-left { display: flex; flex-direction: column; gap: clamp(12px, 1.6vw, 28px); flex-shrink: 0; max-width: 760px; }
     .morphing-detail-h { font-size: clamp(32px,4.8vw,72px); font-weight: 600; line-height: 1.4; letter-spacing: -0.04em; }
@@ -844,24 +935,30 @@
 </section>
 
 <!-- ══ 2. KEEP ON KEEPIN' ON ══ -->
-<section class="sec-keepon fi">
-  <p class="keepon-title" id="keeponTitle"><span class="keepon-typed"></span><span class="keepon-cursor">|</span></p>
+<section class="sec-keepon">
+  <div class="keepon-title-scene">
+    <div class="keepon-title-sticky">
+      <p class="keepon-title" id="keeponTitle"><span class="keepon-typed"></span><span class="keepon-cursor">|</span></p>
+    </div>
+  </div>
   <div class="keepon-panel-page">
-    <div class="keepon-panel">
-      <div class="keepon-chain">
-        <span class="chain-prefix">That's How <strong>Skeep AI™</strong></span>
-        <div class="keepon-chain-viewport">
-          <div class="keepon-chain-track" id="keeponChainTrack">
-            <p class="chain-word">Plans</p>
-            <p class="chain-word">Acts</p>
-            <p class="chain-word">Reads</p>
-            <p class="chain-word">Thinks</p>
-            <p class="chain-word">Works</p>
-            <p class="chain-word">Plans</p>
-            <p class="chain-word">Acts</p>
-            <p class="chain-word">Reads</p>
-            <p class="chain-word">Thinks</p>
-            <p class="chain-word">Works</p>
+    <div class="keepon-panel-sticky">
+      <div class="keepon-panel">
+        <div class="keepon-chain">
+          <span class="chain-prefix">That's How <strong>Skeep AI™</strong></span>
+          <div class="keepon-chain-viewport">
+            <div class="keepon-chain-track" id="keeponChainTrack">
+              <p class="chain-word">Plans</p>
+              <p class="chain-word">Acts</p>
+              <p class="chain-word">Reads</p>
+              <p class="chain-word">Thinks</p>
+              <p class="chain-word">Works</p>
+              <p class="chain-word">Plans</p>
+              <p class="chain-word">Acts</p>
+              <p class="chain-word">Reads</p>
+              <p class="chain-word">Thinks</p>
+              <p class="chain-word">Works</p>
+            </div>
           </div>
         </div>
       </div>
@@ -909,20 +1006,23 @@
     <div class="two-right" data-logic-cards>
       <div class="logic-card">
         <div>
+          <p class="logic-card-num">01</p>
           <p class="logic-card-name">Parsing Logic</p>
-          <p class="logic-card-sub">사용자 의도를 기반으로 목적을 태스크로 구조화하는 단계</p>
+          <p class="logic-card-sub">사용자 의도를 기반으로 목적을 태스크로<br>구조화하는 단계</p>
         </div>
       </div>
       <div class="logic-card">
         <div>
+          <p class="logic-card-num">02</p>
           <p class="logic-card-name">Mapping Logic</p>
-          <p class="logic-card-sub">구조화된 태스크를 실행 가능한 형태로 변환하는 단계</p>
+          <p class="logic-card-sub">구조화된 태스크를 실행 가능한 형태로<br>변환하는 단계</p>
         </div>
       </div>
       <div class="logic-card">
         <div>
+          <p class="logic-card-num">03</p>
           <p class="logic-card-name">Morphing Logic</p>
-          <p class="logic-card-sub">실행 블록이 담긴 패킷을 스키퍼블에 전송하는 단계</p>
+          <p class="logic-card-sub">실행 블록이 담긴 패킷을 스키퍼블에<br>전송하는 단계</p>
         </div>
       </div>
     </div>
@@ -952,7 +1052,7 @@
 <!-- ══ 7. PARSING DETAIL ══ -->
 <section class="sec-detail parsing-detail-visual fi">
   <div class="detail-head-row">
-    <video class="parsing-detail-video" src="assets/parsing-detail-visual.mp4" autoplay loop muted playsinline></video>
+    <video class="parsing-detail-video" src="assets/parsing-detail-visual.mp4?v=3" autoplay loop muted playsinline></video>
     <div>
       <p class="detail-h">
         툭 던진 생각 너머,<br>내 안의 진짜 목적을 읽다
@@ -1053,7 +1153,7 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     cx = W / 2; cy = H / 2;
     const minD = Math.min(W, H);
-    SCALE = (minD * 0.30) / R; FOCAL = SCALE * 15; DOT = SCALE * 0.14;
+    SCALE = (minD * 0.28) / R; FOCAL = SCALE * 15; DOT = SCALE * 0.14;
   }
   new ResizeObserver(resize).observe(cv);
   resize();
@@ -1072,10 +1172,15 @@
     const CYCLE = 8;
     const ph = reduce ? 0.35 : (t % CYCLE) / CYCLE;
     let expand = 1, gatherA = 1, fadeOthers = 1, coreMix = 0, coreA = 1;
-    if (ph < 0.14) { const k = easeIO(ph / 0.14); expand = 1.8 - 0.8 * k; gatherA = k; }
+    if (ph < 0.14) { const k = easeIO(ph / 0.14); expand = 1.7 - 0.7 * k; gatherA = k; }
     else if (ph < 0.55) { /* hold + rotate */ }
-    else if (ph < 0.90) { const k = easeIO((ph - 0.55) / 0.35); expand = 1 + 2.6 * k; fadeOthers = 1 - k; coreMix = k; }
-    else { const k = easeIO((ph - 0.90) / 0.10); expand = 4.4; fadeOthers = 0; coreMix = 1; coreA = 1 - k; }
+    else if (ph < 0.90) {
+      // dots spread outward & fade FIRST, then the pink core grows AFTER they're gone
+      const kSpread = easeIO(Math.min(1, (ph - 0.55) / 0.26));
+      const kCore   = easeIO(Math.max(0, (ph - 0.74) / 0.16));
+      expand = 1 + 0.7 * kSpread; fadeOthers = 1 - kSpread; coreMix = kCore;
+    }
+    else { const k = easeIO((ph - 0.90) / 0.10); expand = 2.4; fadeOthers = 0; coreMix = 1; coreA = 1 - k; }
 
     const ax = reduce ? 0.5 : t * 0.28;
     const ay = reduce ? 0.7 : t * 0.5;
@@ -1089,8 +1194,10 @@
     glow.addColorStop(0.4, 'rgba(150,150,235,0.09)');
     glow.addColorStop(0.7, 'rgba(95,205,225,0.05)');
     glow.addColorStop(1.0, 'rgba(14,24,37,0)');
+    ctx.globalAlpha = 1 - coreMix;   // fades out as the core zooms up, fades back in each loop
     ctx.fillStyle = glow;
     ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
 
     const proj = [];
     let core = null;
@@ -1114,25 +1221,30 @@
     }
     proj.sort((a, b) => a.z - b.z);
 
+    // dots blur out as they scatter/fade (fadeOthers 1→0)
+    const dotBlur = (1 - fadeOthers) * 9;
+    const blurring = dotBlur > 0.4;
+    ctx.filter = blurring ? `blur(${dotBlur.toFixed(1)}px)` : 'none';
     for (const q of proj) {
       if (q.a <= 0.004) continue;
       ctx.beginPath();
       const c = q.col;
       ctx.fillStyle = `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${q.a})`;
-      ctx.shadowBlur = q.r * 1.7;
+      ctx.shadowBlur = blurring ? 0 : q.r * 1.7;
       ctx.shadowColor = `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${q.a})`;
       ctx.arc(q.sx, q.sy, q.r, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.filter = 'none';
 
     if (core) {
-      const cc = core.col;   // white, stays white through the zoom
+      const bc = core.col;   // pink at rest → fades to white as it zooms up
+      const cc = [bc[0] + (255 - bc[0]) * coreMix, bc[1] + (255 - bc[1]) * coreMix, bc[2] + (255 - bc[2]) * coreMix];
       const cr = Math.max(2, DOT * 0.95) * (1 + coreMix * 22);
       const caph = Math.min(1, gatherA * coreA);
       ctx.beginPath();
       ctx.fillStyle = `rgba(${cc[0]}, ${cc[1]}, ${cc[2]}, ${caph})`;
-      ctx.shadowBlur = cr * (0.7 + coreMix * 0.6);
-      ctx.shadowColor = `rgba(${cc[0]}, ${cc[1]}, ${cc[2]}, ${caph})`;
+      ctx.shadowBlur = 0;
       ctx.arc(cx, cy, cr, 0, Math.PI * 2);
       ctx.fill();
     }
@@ -1308,11 +1420,14 @@
     const rot=lerp(ROT[i],ROT[(i+1)%M],k)+Math.sin(t*0.55)*0.015;
     const S=Math.min(W,H)*0.34*(1+Math.sin(t*0.8)*0.01);
     const co=Math.cos(rot),si=Math.sin(rot);
-    ctx.fillStyle=rgb(bg);ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#FF5BBB';ctx.fillRect(0,0,W,H);
     const P=new Array(NP);
     for(let j=0;j<NP;j++){const x=lerp(A.outer[j][0],B.outer[j][0],k),y=lerp(A.outer[j][1],B.outer[j][1],k);
       P[j]=[cx+(x*co-y*si)*S,cy+(x*si+y*co)*S];}
-    ctx.beginPath();subpath(P);ctx.fillStyle=rgb(fig);ctx.fill();
+    const grd=ctx.createLinearGradient(cx-S,cy-S,cx+S,cy+S);
+    grd.addColorStop(0,'rgba(255,255,255,1)');
+    grd.addColorStop(1,'rgba(255,255,255,0.55)');
+    ctx.beginPath();subpath(P);ctx.fillStyle=grd;ctx.fill();
   }
   requestAnimationFrame(draw);
 })();
@@ -1329,9 +1444,9 @@
 </section>
 
 <!-- ══ 16. MORPHING DETAIL (로마에 가면) ══ -->
-<section class="sec-morphing-detail fi">
+<section class="sec-morphing-detail">
   <div class="morphing-detail-row">
-    <div class="morphing-detail-left">
+    <div class="morphing-detail-left fi">
       <p class="morphing-detail-h">
         로마에 가면<br>로바 법을 따르듯, 모핑
       </p>
@@ -1374,6 +1489,18 @@
   }, { threshold: 0.07 });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
 
+  // Fade each of the first two sticky scenes in once roughly 45% of the
+  // viewport has been occupied by that scene.
+  const stickyIntroScenes = document.querySelectorAll('.keepon-title-scene, .keepon-panel-page');
+  const stickyIntroIo = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-entered');
+      stickyIntroIo.unobserve(entry.target);
+    });
+  }, { rootMargin: '0px 0px -45% 0px', threshold: 0 });
+  stickyIntroScenes.forEach(scene => stickyIntroIo.observe(scene));
+
   // delayed dissolve for the dot-sphere section (reveal when centered)
   const aiSphereSec = document.getElementById('aiSphereSec');
   if (aiSphereSec) {
@@ -1381,6 +1508,36 @@
       if (es[0].isIntersecting) { aiSphereSec.classList.add('vis'); io2.disconnect(); }
     }, { rootMargin: '0px 0px -90% 0px', threshold: 0 });
     io2.observe(aiSphereSec);
+  }
+
+  // Reveal the first three scenes only when their visual center reaches
+  // the viewport center, then let each sticky wrapper hold the scene.
+  const centerRevealItems = [...document.querySelectorAll('[data-center-reveal]')];
+  if (centerRevealItems.length) {
+    let centerRevealTicking = false;
+
+    const updateCenterReveals = () => {
+      centerRevealTicking = false;
+      const viewportCenter = window.innerHeight * .54;
+      centerRevealItems.forEach(item => {
+        if (item.classList.contains('is-centered')) return;
+        const rect = item.getBoundingClientRect();
+        const itemCenter = rect.top + rect.height / 2;
+        if (itemCenter <= viewportCenter && rect.bottom > 0) {
+          item.classList.add('is-centered');
+        }
+      });
+    };
+
+    const requestCenterRevealUpdate = () => {
+      if (centerRevealTicking) return;
+      centerRevealTicking = true;
+      requestAnimationFrame(updateCenterReveals);
+    };
+
+    updateCenterReveals();
+    window.addEventListener('scroll', requestCenterRevealUpdate, { passive: true });
+    window.addEventListener('resize', requestCenterRevealUpdate);
   }
 
   const keeponTitle = document.getElementById('keeponTitle');
@@ -1452,23 +1609,26 @@
     void chainTrack.offsetHeight;
     chainTrack.style.transition = '';
 
-    chainTrack.addEventListener('transitionend', (e) => {
-      if (e.propertyName !== 'transform') return;
-      if (chainIdx === 2 + cycleLen) {
-        chainTrack.style.transition = 'none';
-        chainIdx = 2;
-        applyChainTransform();
-        applyChainOpacity();
-        applyChainWeight();
-        void chainTrack.offsetHeight;
-        chainTrack.style.transition = '';
-      }
-    });
+    function snapChainBack() {
+      chainTrack.style.transition = 'none';
+      chainIdx = 2;
+      applyChainTransform();
+      applyChainOpacity();
+      applyChainWeight();
+      void chainTrack.offsetHeight;
+      chainTrack.style.transition = '';
+    }
     setInterval(() => {
+      // safety: if a wrap was ever missed (e.g. tab backgrounded), never run off
+      if (chainIdx >= 2 + cycleLen) snapChainBack();
       chainIdx++;
       applyChainTransform();
       applyChainOpacity();
       applyChainWeight();
+      // deterministic wrap that does not depend on transitionend firing
+      if (chainIdx === 2 + cycleLen) {
+        setTimeout(snapChainBack, 600);
+      }
     }, 1600);
   }
 
@@ -1706,6 +1866,9 @@
     const morphPink   = logicTransition.querySelector('[data-morph-pink]');
     const morphTextA  = logicTransition.querySelector('[data-morph-text-a]');
     const morphTextB  = logicTransition.querySelector('[data-morph-text-b]');
+    const leftVideoEl = logicTransition.querySelector('.two-left-video');
+    const leftParaEl  = logicTransition.querySelector('.two-left-p');
+    const stickyEl    = logicTransition.querySelector('.logic-transition-sticky');
     const logicCards  = logicTransition.querySelector('[data-logic-cards]');
 
     let logicTicking = false;
@@ -1733,9 +1896,9 @@
       const full  = { top: 0, left: 0, width: vw, height: vh, radius: 0 };
       const rightPanelW = clampNum(vw * 0.36, 480, 640);
       const finalPadX = clampNum(vw * 0.0415, 54, 80);
-      const finalGap = clampNum(vw * 0.016, 14, 26);
-      const cardTop = clampNum(vh * 0.044, 34, 48);
+      const finalGap = clampNum(vw * 0.011, 10, 18);
       const cardsHeight = clampNum(vh * 0.80, 640, 790);
+      const cardTop = clampNum((vh - cardsHeight) / 2, 34, 260);
       const finalLeft = {
         top: 0,
         left: 0,
@@ -1808,12 +1971,21 @@
         logicCards.style.height = `${stripH}px`;
       } else {
         morphTextB.style.top = '0';
-        morphTextB.style.bottom = 'auto';
-        logicCards.style.top = `${cardTop}px`;
+        morphTextB.style.bottom = '0';
+        // Align the cards column to the left content's top/bottom edges
+        // (domino video top → body-copy bottom) so both columns end evenly.
+        let alignTop = cardTop, alignHeight = cardsHeight;
+        if (leftVideoEl && leftParaEl && stickyEl) {
+          const stickyTop = stickyEl.getBoundingClientRect().top;
+          const vTop = leftVideoEl.getBoundingClientRect().top - stickyTop;
+          const pBot = leftParaEl.getBoundingClientRect().bottom - stickyTop;
+          if (pBot > vTop) { alignTop = vTop; alignHeight = (pBot - vTop) * 0.93; }
+        }
+        logicCards.style.top = `${alignTop}px`;
         logicCards.style.bottom = 'auto';
         logicCards.style.left = `${finalLeft.width + finalPadX}px`;
         logicCards.style.width = `${rightPanelW - finalPadX * 2}px`;
-        logicCards.style.height = `${cardsHeight}px`;
+        logicCards.style.height = `${alignHeight}px`;
       }
     }
 
