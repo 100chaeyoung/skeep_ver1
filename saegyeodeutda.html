@@ -797,7 +797,7 @@
       width: 100%;
       height: 100vh;
       padding: 0 var(--edge-padding);
-      background: url('assets/active-layer-bg.png') center center / cover no-repeat;
+      background: #F4F8FC;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -808,6 +808,31 @@
       position: sticky;
       top: 0;
     }
+    .sd-summary-hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .sd-summary-hero::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      width: min(1080px, 78vw);
+      height: min(420px, 42vh);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .72);
+      filter: blur(76px);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .sd-summary-hero-label,
+    .sd-summary-hero-body { position: relative; z-index: 2; }
     .sd-summary-hero.sd-summary-dissolve {
       opacity: 0;
       transform: none;
@@ -818,7 +843,7 @@
       transform: none;
     }
     .sd-summary-hero-label {
-      color: rgba(255,255,255,.5);
+      color: rgba(14,24,37,.72);
       font-size: clamp(18px,2.2vw,32px);
       font-weight: 600;
       line-height: 1.3;
@@ -832,14 +857,14 @@
       max-width: 900px;
     }
     .sd-summary-hero h2 {
-      color: #fff;
+      color: #0e1825;
       font-size: clamp(28px,4.5vw,60px);
       font-weight: 700;
       line-height: 1.5;
       letter-spacing: -0.03em;
     }
     .sd-summary-hero p {
-      color: #fff;
+      color: rgba(14,24,37,.82);
       font-size: clamp(14px,1.8vw,24px);
       font-weight: 400;
       line-height: 1.5;
@@ -1621,6 +1646,7 @@
 
 <div class="input-hero-scroll">
 <section class="sd-summary-hero sd-summary-dissolve" id="inputHeroSec">
+  <video class="sd-summary-hero-video" id="inputHeroVideo" src="assets/input-logic-hero-bg.mp4" autoplay muted playsinline preload="auto" aria-hidden="true"></video>
   <p class="sd-summary-hero-label fi d1">Input Logic</p>
   <div class="sd-summary-hero-body">
     <h2 class="fi dd2">액티브 레이어를 여는 첫 단추</h2>
@@ -1762,6 +1788,37 @@
     v.addEventListener('ended', () => {
       reverseStart = null;
       rafId = requestAnimationFrame(stepReverse);
+    });
+  })();
+
+  // Input Logic hero: play to the end, then seek backward frame-by-frame
+  // before starting forward playback again for a seamless ping-pong loop.
+  (function () {
+    const v = document.getElementById('inputHeroVideo');
+    if (!v) return;
+    let reverseStart = null;
+    let reverseFromTime = 0;
+
+    function stepReverse(ts) {
+      if (reverseStart === null) {
+        reverseStart = ts;
+        reverseFromTime = v.currentTime;
+      }
+      const elapsed = (ts - reverseStart) / 1000;
+      const targetTime = reverseFromTime - elapsed;
+      if (targetTime <= 0) {
+        v.currentTime = 0;
+        reverseStart = null;
+        v.play().catch(() => {});
+        return;
+      }
+      v.currentTime = targetTime;
+      requestAnimationFrame(stepReverse);
+    }
+
+    v.addEventListener('ended', () => {
+      reverseStart = null;
+      requestAnimationFrame(stepReverse);
     });
   })();
 
